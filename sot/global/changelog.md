@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.23 — Fix Strategic Campaign Call 1 Execution and Webhook Routing (24/07/2026)
+- Memisahkan T2I Start Frame dari Call 1 agar Gemini Ideation selesai instan dalam 3-5 detik
+- Mengarahkan Webhook Client ke Node 2 secara otomatis pada Node 1 Gateway
+
 ## V1.1.22 — Fix Strategic Campaign Semi-Otomatis Background Execution on Gateway (24/07/2026)
 - Memperbaiki eksekusi otomatis AI Single-Pass Engine pada Node 1 Gateway saat tombol Run Semi-Otomatis diaktifkan
 
