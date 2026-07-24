@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.6 — Fix Auth Fallback & Password Reset Hash Matching (24/07/2026)
+- Memperbaiki fallback auth saat unauthenticated pada environment lokal
+- Menambahkan auto trimming dan case-insensitive username matching
+
 ## V1.1.5 — Fitur Modal Khusus Ubah Password User (24/07/2026)
 - Menambahkan tombol dan modal khusus 🔑 Ubah Password pada halaman User Management
 - Membuat API endpoint /api/admin/users/[userId]/reset-password
