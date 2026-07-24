@@ -626,7 +626,7 @@ export default function StrategicCampaignDashboard() {
 
                         <div>
                           <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                            <span>👤 Nama Akun Media Sosial (TAB Target):</span>
+                            <span>👤 Nama Akun Media Sosial / Brand:</span>
                             {inputMode === 'planner_import' && <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>🔒 Terkunci dari Content Planner</span>}
                           </label>
                           <input
@@ -634,30 +634,7 @@ export default function StrategicCampaignDashboard() {
                             value={accountName}
                             onChange={e => setAccountName(e.target.value)}
                             readOnly={inputMode === 'planner_import'}
-                            placeholder="cth: sabeq_store (digunakan sebagai Nama TAB Google Sheet)"
-                            style={{
-                              width: '100%', padding: '10px',
-                              background: inputMode === 'planner_import' ? '#18181b' : '#09090b',
-                              border: '1px solid #27272a',
-                              color: inputMode === 'planner_import' ? '#fbbf24' : '#fff',
-                              borderRadius: '8px',
-                              cursor: inputMode === 'planner_import' ? 'not-allowed' : 'text',
-                              fontWeight: inputMode === 'planner_import' ? 700 : 400
-                            }}
-                          />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                            <span>📊 Google Spreadsheet ID:</span>
-                            {inputMode === 'planner_import' && <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>🔒 Terkunci dari Content Planner</span>}
-                          </label>
-                          <input
-                            type="text"
-                            value={targetSpreadsheetId}
-                            onChange={e => setTargetSpreadsheetId(e.target.value)}
-                            readOnly={inputMode === 'planner_import'}
-                            placeholder="Spreadsheet ID untuk penulisan otomatis"
+                            placeholder="cth: sabeq_store"
                             style={{
                               width: '100%', padding: '10px',
                               background: inputMode === 'planner_import' ? '#18181b' : '#09090b',

@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.21 — Remove Google Spreadsheet ID from Strategic Campaign Modal (24/07/2026)
+- Menghapus input Google Spreadsheet ID pada modal pembuatan dan import Strategic Campaign
+
 ## V1.1.20 — Inherit Brand Profile ID from Content Planner to Strategic Campaign (24/07/2026)
 - Menjamin brand_profile_id dan account_name dari Content Planner diwariskan 100% secara otomatis ke Strategic Campaign saat import
 
