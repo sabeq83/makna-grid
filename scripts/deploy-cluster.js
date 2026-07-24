@@ -49,11 +49,16 @@ async function deploy() {
       rm -rf /home/sabeqmursyid/makna-grid
       mv /home/sabeqmursyid/makna-grid-tmp /home/sabeqmursyid/makna-grid
     fi
+    export PATH=/home/sabeqmursyid/.local/bin:$PATH
     cd /home/sabeqmursyid/makna-grid
     git fetch origin main
     git reset --hard origin/main
     bash scripts/setup-node1-gateway.sh
-    echo "Node 1 updated to latest git commit!"
+    npm install
+    npm run build
+    pkill -f 'next-server' 2>/dev/null || true
+    PORT=3000 nohup npm start -- -p 3000 > gateway.log 2>&1 &
+    echo "Node 1 production build & service active on http://100.65.62.63:3000!"
   `;
   runSsh('makna-ui', node1Cmd);
 

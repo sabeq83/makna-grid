@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.12 — Otomatisasi Production Build Node 1 UI Gateway (24/07/2026)
+- Mengonfigurasi Node 1 UI Gateway agar otomatis memproses npm run build dan npm start (242ms ultra-fast production mode)
+
 ## V1.1.11 — Fix Hard Page Reload On Login Cookie Set (24/07/2026)
 - Menggunakan window.location.href = '/' pasca login sukses agar cookie sesi dimuat penuh oleh browser
 
