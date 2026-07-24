@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.5 — Fitur Modal Khusus Ubah Password User (24/07/2026)
+- Menambahkan tombol dan modal khusus 🔑 Ubah Password pada halaman User Management
+- Membuat API endpoint /api/admin/users/[userId]/reset-password
+
 ## V1.1.4 — Fix Layout Margin & Alignment User Management Page (24/07/2026)
 - Menggunakan class page-container standar MAKNA Grid agar tata letak halaman User Management rapi dan simetris di tengah
 
