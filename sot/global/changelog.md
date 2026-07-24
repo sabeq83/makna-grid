@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.27 — Migrate G-Labs Webhook Connection to Direct Tailscale IP (100.117.59.92:8765) (24/07/2026)
+- Membuka port 8765 di Windows Firewall Node 2 dan mengarahkan seluruh komunikasi G-Labs Webhook secara langsung ke IP Tailscale 100.117.59.92:8765
+
 ## V1.1.26 — Upgrade Default Gemini Model Engine to gemini-3.5-flash (24/07/2026)
 - Memperbarui seluruh pemanggilan model Gemini AI ke gemini-3.5-flash dengan fallback ke gemini-flash-latest
 
