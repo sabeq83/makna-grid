@@ -10,7 +10,13 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ success: false, error: 'Akses ditolak. Khusus Admin.' }, { status: 403 });
     }
 
-    const { userId } = params;
+    const resolvedParams = await Promise.resolve(params);
+    const userId = resolvedParams?.userId;
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'User ID tidak valid' }, { status: 400 });
+    }
+
     const body = await req.json();
     const { email, password, role, status, allowedMenuKeys = [], assignedBrandIds = [] } = body;
 
@@ -23,7 +29,7 @@ export async function PUT(req, { params }) {
 
     // Update user info
     if (password && password.trim() !== '') {
-      const hashedPassword = hashPassword(password);
+      const hashedPassword = hashPassword(password.trim());
       db.prepare(`
         UPDATE users SET email = ?, password_hash = ?, role = ?, status = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
@@ -74,7 +80,13 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ success: false, error: 'Akses ditolak. Khusus Admin.' }, { status: 403 });
     }
 
-    const { userId } = params;
+    const resolvedParams = await Promise.resolve(params);
+    const userId = resolvedParams?.userId;
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'User ID tidak valid' }, { status: 400 });
+    }
+
     const db = getDb();
 
     // Prevent deleting default admin

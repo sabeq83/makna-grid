@@ -10,7 +10,13 @@ export async function POST(req, { params }) {
       return NextResponse.json({ success: false, error: 'Akses ditolak. Khusus Admin.' }, { status: 403 });
     }
 
-    const { userId } = params;
+    const resolvedParams = await Promise.resolve(params);
+    const userId = resolvedParams?.userId;
+
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'User ID tidak valid' }, { status: 400 });
+    }
+
     const body = await req.json();
     const { newPassword } = body;
 

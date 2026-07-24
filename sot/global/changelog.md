@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.13 — Fix Next.js 16 Dynamic Route Params Resolution for Reset Password (24/07/2026)
+- Menambahkan await Promise.resolve(params) pada route [userId] dan [userId]/reset-password untuk resolusi userId yang presisi
+
 ## V1.1.12 — Otomatisasi Production Build Node 1 UI Gateway (24/07/2026)
 - Mengonfigurasi Node 1 UI Gateway agar otomatis memproses npm run build dan npm start (242ms ultra-fast production mode)
 
