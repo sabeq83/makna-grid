@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.17 — Fix Network Host Binding 0.0.0.0 for Node 1 Gateway (24/07/2026)
+- Mengonfigurasi Next.js production server agar melakukan binding ke HOSTNAME=0.0.0.0 agar dapat diakses dari IP jaringan 100.65.62.63
+
 ## V1.1.16 — Fix Next.js 16 Dynamic Route Params & Deployment Error Handling (24/07/2026)
 - Menangani Next.js 16 dynamic route params Promise pada API reset-password dan merapikan penanganan error npm run build pada deploy script
 
