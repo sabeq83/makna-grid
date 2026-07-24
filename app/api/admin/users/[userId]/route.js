@@ -1,0 +1,91 @@
+import { NextResponse } from 'next/server';
+import { getDb } from '@/lib/db';
+import { getCurrentUser } from '@/lib/auth';
+import { hashPassword, ALL_MENU_KEYS } from '@/lib/schema/user-schema';
+
+export async function PUT(req, { params }) {
+  try {
+    const currentUser = getCurrentUser(req);
+    if (!currentUser || currentUser.role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Akses ditolak. Khusus Admin.' }, { status: 403 });
+    }
+
+    const { userId } = params;
+    const body = await req.json();
+    const { email, password, role, status, allowedMenuKeys = [], assignedBrandIds = [] } = body;
+
+    const db = getDb();
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+
+    if (!user) {
+      return NextResponse.json({ success: false, error: 'User tidak ditemukan' }, { status: 404 });
+    }
+
+    // Update user info
+    if (password && password.trim() !== '') {
+      const hashedPassword = hashPassword(password);
+      db.prepare(`
+        UPDATE users SET email = ?, password_hash = ?, role = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).run(email || user.email, hashedPassword, role || user.role, status || user.status, userId);
+    } else {
+      db.prepare(`
+        UPDATE users SET email = ?, role = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).run(email || user.email, role || user.role, status || user.status, userId);
+    }
+
+    // Update menu permissions
+    db.prepare('DELETE FROM user_menu_permissions WHERE user_id = ?').run(userId);
+    const insertPerm = db.prepare(`
+      INSERT INTO user_menu_permissions (id, user_id, menu_key, can_read, can_write)
+      VALUES (?, ?, ?, 1, 1)
+    `);
+
+    const menuKeysToGrant = role === 'admin' ? ALL_MENU_KEYS.map(m => m.key) : allowedMenuKeys;
+    for (const key of menuKeysToGrant) {
+      insertPerm.run(`perm_${userId}_${key}`, userId, key);
+    }
+
+    // Update assigned brands
+    db.prepare('DELETE FROM user_brands WHERE user_id = ?').run(userId);
+    const insertBrand = db.prepare(`
+      INSERT INTO user_brands (id, user_id, brand_id)
+      VALUES (?, ?, ?)
+    `);
+    for (const brandId of assignedBrandIds) {
+      insertBrand.run(`ub_${userId}_${brandId}`, userId, brandId);
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `User ${user.username} berhasil diperbarui`
+    });
+  } catch (error) {
+    console.error('[API Admin User PUT Error]', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    const currentUser = getCurrentUser(req);
+    if (!currentUser || currentUser.role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Akses ditolak. Khusus Admin.' }, { status: 403 });
+    }
+
+    const { userId } = params;
+    const db = getDb();
+
+    // Prevent deleting default admin
+    if (userId === 'usr_admin_default') {
+      return NextResponse.json({ success: false, error: 'Default Admin tidak dapat dihapus' }, { status: 400 });
+    }
+
+    db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+    return NextResponse.json({ success: true, message: 'User berhasil dihapus' });
+  } catch (error) {
+    console.error('[API Admin User DELETE Error]', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## V1.1.0 — Implementasi Multi-User, RBAC, dan Data Isolation (24/07/2026)
+- Implementasi Database Schema Multi-User (users, sessions, user_menu_permissions, user_brands)
+- Autentikasi Session Cookie HTTP-Only & Login Portal
+- Halaman UI Admin User Management & Menu Privileges
+- Multi-Brand Assignment Scoping & Menu Access Guard
+
 ## V1.0.1 — SOP Panduan Menjalankan MAKNA Grid (24/07/2026)
 - Menambahkan SOP Panduan Menjalankan MAKNA Grid 3-Node Cluster di sot/global/SOP_MENJALANKAN_MAKNA_GRID.md
 
