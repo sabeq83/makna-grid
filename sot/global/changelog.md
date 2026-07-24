@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.3 — Fix Layout Sidebar di User Management Page (24/07/2026)
+- Menambahkan <Sidebar /> dan <div className='app-container'> pada halaman User Management /settings/users
+
 ## V1.1.2 — Fix Port 3005 Default Script (24/07/2026)
 - Mengubah script npm run dev di package.json agar langsung menggunakan flag -p 3005 secara otomatis
 
