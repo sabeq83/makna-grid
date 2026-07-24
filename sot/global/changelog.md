@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.26 — Upgrade Default Gemini Model Engine to gemini-3.5-flash (24/07/2026)
+- Memperbarui seluruh pemanggilan model Gemini AI ke gemini-3.5-flash dengan fallback ke gemini-flash-latest
+
 ## V1.1.25 — Fix Permanent Background Service Persistence on Node 1 Gateway (24/07/2026)
 - Memperbaiki penanganan proses latar belakang Next.js di Node 1 agar tetap berjalan permanen tanpa terputus koneksi SSH
 
