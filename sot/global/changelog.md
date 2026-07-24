@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.22 — Fix Strategic Campaign Semi-Otomatis Background Execution on Gateway (24/07/2026)
+- Memperbaiki eksekusi otomatis AI Single-Pass Engine pada Node 1 Gateway saat tombol Run Semi-Otomatis diaktifkan
+
 ## V1.1.21 — Remove Google Spreadsheet ID from Strategic Campaign Modal (24/07/2026)
 - Menghapus input Google Spreadsheet ID pada modal pembuatan dan import Strategic Campaign
 

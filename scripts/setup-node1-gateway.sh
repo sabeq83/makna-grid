@@ -10,7 +10,7 @@ echo "🚀 Starting MAKNA Grid Node 1 (Ubuntu UI Gateway) Setup..."
 cat << 'EOF' > .env.local
 NODE_ENV=production
 NODE_ROLE=gateway
-ENABLE_SCHEDULER_WORKER=false
+ENABLE_SCHEDULER_WORKER=true
 PORT=3000
 
 # Central Master Database Node 3
