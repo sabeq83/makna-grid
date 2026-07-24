@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.15 — Fix Webpack Dynamic Require PDF Parse (24/07/2026)
+- Menggunakan eval require agar Next.js Webpack build berjalan 100% mulus tanpa error paket opsional pdf-parse
+
 ## V1.1.14 — Fix Webpack PDF Parse Resolution in Brand Extract API (24/07/2026)
 - Gunakan require safe resolution untuk modul pdf-parse opsional agar npm run build berjalan 100% mulus di seluruh Node
 

@@ -22,7 +22,8 @@ export async function POST(req) {
     if (filename.endsWith('.pdf')) {
       // Dynamic import pdf-parse only when needed
       try {
-        const pdfParse = require('pdf-parse');
+        const reqFunc = eval('require');
+        const pdfParse = reqFunc('pdf-parse');
         const pdfData = await pdfParse(buffer);
         rawText = pdfData.text;
       } catch (e) {
