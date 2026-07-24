@@ -29,6 +29,7 @@ export default function UserManagementPage() {
   const [passwordTargetUser, setPasswordTargetUser] = useState(null);
   const [newPasswordInput, setNewPasswordInput] = useState('');
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+  const [passwordModalError, setPasswordModalError] = useState('');
 
   const fetchData = async () => {
     setLoading(true);
@@ -93,7 +94,15 @@ export default function UserManagementPage() {
   const openPasswordModal = (user) => {
     setPasswordTargetUser(user);
     setNewPasswordInput('');
+    setPasswordModalError('');
     setIsPasswordModalOpen(true);
+  };
+
+  const closePasswordModal = () => {
+    setIsPasswordModalOpen(false);
+    setPasswordTargetUser(null);
+    setNewPasswordInput('');
+    setPasswordModalError('');
   };
 
   const handleMenuToggle = (key) => {
@@ -150,8 +159,10 @@ export default function UserManagementPage() {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    setPasswordModalError('');
+
     if (!newPasswordInput || newPasswordInput.trim() === '') {
-      alert('Password baru wajib diisi');
+      setPasswordModalError('Password baru tidak boleh kosong');
       return;
     }
 
@@ -169,12 +180,13 @@ export default function UserManagementPage() {
       const data = await res.json();
       if (data.success) {
         setSuccessMsg(data.message || `Password ${passwordTargetUser.username} berhasil diubah!`);
-        setIsPasswordModalOpen(false);
+        closePasswordModal();
+        fetchData();
       } else {
-        setError(data.error || 'Gagal mereset password');
+        setPasswordModalError(data.error || 'Gagal mereset password');
       }
     } catch (err) {
-      setError('Kesalahan jaringan saat mereset password');
+      setPasswordModalError('Kesalahan jaringan saat mereset password');
     } finally {
       setPasswordSubmitting(false);
     }
@@ -440,9 +452,15 @@ export default function UserManagementPage() {
                 <h2 style={{ fontSize: '1.3rem', margin: '0 0 8px 0', color: '#facc15' }}>
                   🔑 Ubah Password: {passwordTargetUser.username}
                 </h2>
-                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '20px' }}>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '16px' }}>
                   Masukkan password baru untuk akun pengguna ini.
                 </p>
+
+                {passwordModalError && (
+                  <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', color: '#fca5a5', padding: '10px', borderRadius: '6px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                    ⚠️ {passwordModalError}
+                  </div>
+                )}
 
                 <form onSubmit={handlePasswordSubmit}>
                   <div style={{ marginBottom: '20px' }}>
@@ -463,7 +481,7 @@ export default function UserManagementPage() {
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                     <button
                       type="button"
-                      onClick={() => setIsPasswordModalOpen(false)}
+                      onClick={closePasswordModal}
                       style={{ padding: '10px 16px', background: 'rgba(148, 163, 184, 0.2)', border: 'none', borderRadius: '6px', color: '#cbd5e1', cursor: 'pointer' }}
                     >
                       Batal

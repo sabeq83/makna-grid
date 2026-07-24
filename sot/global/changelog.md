@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.7 — Fix Password Modal Auto Close & Error Notification (24/07/2026)
+- Menambahkan fungsi closePasswordModal() agar modal otomatis menutup dan mereset state saat sukses
+- Menampilkan pesan kesalahan langsung di dalam modal jika gagal
+
 ## V1.1.6 — Fix Auth Fallback & Password Reset Hash Matching (24/07/2026)
 - Memperbaiki fallback auth saat unauthenticated pada environment lokal
 - Menambahkan auto trimming dan case-insensitive username matching
