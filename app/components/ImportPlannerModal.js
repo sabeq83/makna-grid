@@ -57,7 +57,7 @@ export default function ImportPlannerModal({
   const [bridgeDurationClips, setBridgeDurationClips] = useState(1);
   const [bridgingMode, setBridgingMode] = useState('manual_input'); // 'manual_input' | 'select_existing' | 'url_extract'
 
-  // Accordion 4: VSO Engine (Lengkap SC)
+  // Accordion 4: Visual Swap Overrides (100% Copy Persis dari Mass OPC app/pillar-campaigns/page.js)
   const [isVsoActive, setIsVsoActive] = useState(false);
   const [characterConcept, setCharacterConcept] = useState('faceless');
   const [subjectDemographic, setSubjectDemographic] = useState('syari_classic');
@@ -262,7 +262,7 @@ export default function ImportPlannerModal({
             <span>📊 Mode Impor Content Planner Master ke Engine Produksi Autopilot OPC</span>
           </div>
 
-          {/* Structured 4 Accordions Stack (100% SC-Identical Layout) */}
+          {/* Structured 4 Accordions Stack */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
             
             {/* ACCORDION 1: Basic Creative Strategy & Planner Master */}
@@ -493,7 +493,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 2: Aesthetics & Visual Engine Settings (Persis SC) */}
+            {/* ACCORDION 2: Aesthetics & Visual Engine Settings */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(1)}
@@ -616,7 +616,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 3: Product Bridging Settings (Lengkap SC & Autofetch Foto Produk) */}
+            {/* ACCORDION 3: Product Bridging Settings */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(2)}
@@ -684,7 +684,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 4: Visual Swap Overrides (VSO Engine Lengkap SC) */}
+            {/* ACCORDION 4: Visual Swap Overrides (100% Copy Persis dari Mass OPC app/pillar-campaigns/page.js) */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(3)}
@@ -694,89 +694,207 @@ export default function ImportPlannerModal({
                   cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                 }}
               >
-                <span>4. Visual Swap Overrides (VSO Engine)</span>
+                <span>4. Visual Swap Overrides</span>
                 <span>{activeAccordion === 3 ? '▲' : '▼'}</span>
               </div>
 
               {activeAccordion === 3 && (
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: '#f3f4f6', fontWeight: 600 }}>
-                    <input type="checkbox" checked={isVsoActive} onChange={e => setIsVsoActive(e.target.checked)} />
-                    Aktifkan Visual Swap Overrides (VSO Override Directives)
-                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <input
+                      type="checkbox"
+                      id="vsoToggleModal"
+                      checked={isVsoActive}
+                      onChange={e => setIsVsoActive(e.target.checked)}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    <label htmlFor="vsoToggleModal" style={{ cursor: 'pointer', fontSize: '14px', fontWeight: 700, color: '#fff' }}>
+                      🎭 Aktifkan Visual Swap Overrides
+                    </label>
+                  </div>
 
                   {isVsoActive && (
-                    <>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                         <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Karakter / Subjek Konsep:</label>
-                          <select value={characterConcept} onChange={e => setCharacterConcept(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                            <option value="faceless">Faceless (Framing Tangan / Produk)</option>
-                            <option value="human_model">Human Model (Model Manusia)</option>
-                            <option value="mascot_3d">3D Mascot Universe</option>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Konsep Karakter (Framing)</label>
+                          <select
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                            value={characterConcept}
+                            onChange={e => setCharacterConcept(e.target.value)}
+                          >
+                            <option value="faceless">Faceless (Wajah Terpotong - Fokus Tangan)</option>
+                            <option value="pov">POV (First Person View)</option>
+                            <option value="silhouette">Siluet Bayangan (Aesthetic Shadow)</option>
+                            <option value="stylized_3d">3D Stylized Claymation</option>
+                            <option value="cartoon_face">Mascot Universe (Cartoon Face)</option>
                           </select>
                         </div>
 
                         <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Demografi Subjek:</label>
-                          <select value={subjectDemographic} onChange={e => setSubjectDemographic(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                            <option value="syari_classic">Wanita Indonesia Syar'i (Hijab)</option>
-                            <option value="caucasian_male">Pria Kaukasia / Barat</option>
-                            <option value="asian_modern">Wanita Asia Modern</option>
-                            <option value="mascot_universe_claymation">3D Claymation Universe</option>
-                            <option value="mascot_universe_anime">Anime 3D Render Universe</option>
-                            <option value="mascot_universe_furry">3D Furry Mascot Universe</option>
-                            <option value="mascot_universe_chibi">Chibi Mascot Universe</option>
-                            <option value="mascot_universe_cyberpunk">Cyberpunk Mascot Universe</option>
-                            <option value="mascot_universe_pixel">Pixel Art Mascot Universe</option>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Demografi Subjek / Model</label>
+                          <select
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                            value={subjectDemographic}
+                            onChange={e => {
+                              const val = e.target.value;
+                              setSubjectDemographic(val);
+                              setWardrobeStyle('random');
+                              if (val.startsWith('mascot_universe_')) {
+                                setCharacterConcept('cartoon_face');
+                              } else if (val.startsWith('stylized_3d_')) {
+                                setCharacterConcept('stylized_3d');
+                              } else {
+                                setCharacterConcept('faceless');
+                              }
+                            }}
+                          >
+                            <optgroup label="── Manusia Terpercaya ──">
+                              <option value="syari_classic">Wanita Gamis Syar'iy (Hanya Tangan)</option>
+                              <option value="caucasian_male">Pria Kaukasia (Hanya Tangan)</option>
+                              <option value="stylized_3d_muslimah">Wanita 3D Stylized (Clay Art)</option>
+                              <option value="stylized_3d_male">Pria 3D Stylized (Clay Art)</option>
+                              <option value="stylized_3d_duo">Duo 3D Stylized - 2 Karakter (Clay Art)</option>
+                            </optgroup>
+                            <optgroup label="── Semesta Maskot Otonom ──">
+                              <option value="mascot_universe_herbal">🌿 Semesta Herbal (Jahe, Kunyit, Mint...)</option>
+                              <option value="mascot_universe_kitchen">🍳 Semesta Dapur (Wajan, Blender, Tomat...)</option>
+                              <option value="mascot_universe_home_living">🏠 Semesta Rumah (Vacuum, Sofa, Lampu...)</option>
+                              <option value="mascot_universe_pet">🐾 Semesta Hewan Peliharaan (Kucing, Anjing...)</option>
+                            </optgroup>
                           </select>
                         </div>
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                      {/* Gaya Animasi — hanya muncul saat mode Semesta Maskot */}
+                      {subjectDemographic.startsWith('mascot_universe_') && (
                         <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Wardrobe / Style Preset:</label>
-                          <select value={wardrobeStyle} onChange={e => setWardrobeStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                            <option value="amber_terracotta">Terracotta & Amber Warm</option>
-                            <option value="sage_green">Sage Green & Natural Earthy</option>
-                            <option value="mocca_soft">Soft Mocca & Cream Neutral</option>
-                            <option value="claymation_cozy">Cozy Sweater & Clay Textures</option>
-                            <option value="custom">✏️ Custom Wardrobe Directive...</option>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>🎨 Gaya Estetika Animasi Maskot</label>
+                          <select
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                            value={visualStylePreset}
+                            onChange={e => setVisualStylePreset(e.target.value)}
+                          >
+                            <option value="3d_claymation_cozy">3D Claymation Cozy (Shaun the Sheep Look)</option>
+                            <option value="kawaii_flat_vector">2D Kawaii Flat Vector (Minimalis Jepang)</option>
+                            <option value="ghibli_watercolor">Studio Ghibli Watercolor (Cat Air Magis)</option>
                           </select>
+                        </div>
+                      )}
 
+                      {/* Wardrobe — disembunyikan saat mode Semesta Maskot */}
+                      {!subjectDemographic.startsWith('mascot_universe_') && (
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Pakaian / Wardrobe</label>
+                          <select
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                            value={wardrobeStyle}
+                            onChange={e => setWardrobeStyle(e.target.value)}
+                          >
+                            <option value="random">🎲 Random (Acak)</option>
+                            <option value="sequential">🔄 Sequential (Urut per baris)</option>
+                            {subjectDemographic === 'stylized_3d_muslimah' ? (
+                              <optgroup label="Pakaian 3D Muslimah">
+                                <option value="3d_fem_emerald">Gamis Hijau Emerald 3D</option>
+                                <option value="3d_fem_pastel_pink">Gamis Pastel Pink 3D</option>
+                                <option value="3d_fem_jetblack">Abaya Hitam Legam 3D</option>
+                                <option value="3d_fem_mocca">Gamis Mocca 3D</option>
+                              </optgroup>
+                            ) : subjectDemographic === 'stylized_3d_male' ? (
+                              <optgroup label="Pakaian 3D Pria">
+                                <option value="3d_male_tan_knit">Sweater Tan Rajut 3D</option>
+                                <option value="3d_male_sage_jacket">Jaket Kasual Sage Green 3D</option>
+                                <option value="3d_male_charcoal_tshirt">Kaos Charcoal Katun 3D</option>
+                                <option value="3d_male_terracotta_flannel">Kemeja Flanel Terracotta 3D</option>
+                              </optgroup>
+                            ) : subjectDemographic === 'stylized_3d_duo' ? (
+                              <optgroup label="Harmoni Pakaian Duo Terkoordinasi">
+                                <option value="3d_duo_earth">Tema 1: Earthy Warmth (Tan Sweater & Cream Abaya)</option>
+                                <option value="3d_duo_contrast">Tema 2: Urban Contrast (Terracotta Jacket & Sage Abaya)</option>
+                                <option value="3d_duo_monochrome">Tema 3: Minimalist Monochrome (Off-White T-shirt & Black Abaya)</option>
+                                <option value="3d_duo_pastel">Tema 4: Soft Pastel Harmony (Mint Polo & Lilac Abaya)</option>
+                                <option value="3d_duo_cool">Tema 5: Professional Cool Tones (Grey Flannel & Teal Abaya)</option>
+                              </optgroup>
+                            ) : subjectDemographic === 'caucasian_male' ? (
+                              <optgroup label="Preset Warna Pria Kaukasia">
+                                <option value="male_terracotta">Pria: Terracotta</option>
+                                <option value="male_caramel">Pria: Caramel Latte</option>
+                                <option value="male_khaki_tan">Pria: Khaki / Tan</option>
+                                <option value="male_navy_blue">Pria: Navy Blue</option>
+                                <option value="male_forest_green">Pria: Forest Green</option>
+                                <option value="male_charcoal">Pria: Charcoal Grey</option>
+                                <option value="male_burgundy">Pria: Burgundy Maroon</option>
+                                <option value="male_sage_muted">Pria: Sage Green Muted</option>
+                                <option value="male_steel_blue">Pria: Steel Blue</option>
+                                <option value="male_cloud_dancer">Pria: Off-White (Cloud Dancer)</option>
+                              </optgroup>
+                            ) : (
+                              <>
+                                <optgroup label="1. Earth Tones & Warm Neutrals">
+                                  <option value="amber_terracotta">Amber Haze & Terracotta</option>
+                                  <option value="mocca_caramel">Mocca, Taupe & Caramel Latte</option>
+                                  <option value="warm_grey">Warm Grey</option>
+                                </optgroup>
+                                <optgroup label="2. Muted Pastels (Pastel Refined)">
+                                  <option value="sage_muted">Sage Green Muted</option>
+                                  <option value="lavender_lilac">Lavender Soft & Soft Lilac</option>
+                                  <option value="butter_yellow">Butter Yellow (Butter Cream)</option>
+                                </optgroup>
+                                <optgroup label="3. Modern Cool & Deep Tones">
+                                  <option value="teal_navy">Transformative Teal & Navy Blue</option>
+                                  <option value="olive_modern">Olive Green Modern</option>
+                                  <option value="mahogany_maroon">Mahogany & Maroon</option>
+                                </optgroup>
+                                <optgroup label="4. Netral Klasik Modern">
+                                  <option value="cloud_dancer">Cloud Dancer (Off-White Modern)</option>
+                                </optgroup>
+                              </>
+                            )}
+                            <option value="custom">-- Tulis Custom --</option>
+                          </select>
                           {wardrobeStyle === 'custom' && (
                             <input
                               type="text"
+                              style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
+                              placeholder={
+                                subjectDemographic.startsWith('stylized_3d_') 
+                                  ? "Ketik pakaian 3D kustom..." 
+                                  : subjectDemographic === 'caucasian_male' 
+                                    ? "Ketik pakaian kustom..." 
+                                    : "Ketik warna hijab kustom..."
+                              }
                               value={wardrobeStyleCustom}
                               onChange={e => setWardrobeStyleCustom(e.target.value)}
-                              placeholder="Masukkan deskripsi pakaian/hijab..."
-                              style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
                             />
                           )}
                         </div>
+                      )}
 
-                        <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Lighting Style:</label>
-                          <select value={lightingStyle} onChange={e => setLightingStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                            <option value="window_daylight">Natural Window Daylight</option>
-                            <option value="warm_indoor">Warm Ambient Indoor</option>
-                            <option value="studio_bright">Bright Studio Softbox</option>
-                            <option value="cinematic_mood">Cinematic Mood Lighting</option>
-                            <option value="custom">✏️ Custom Lighting Directive...</option>
-                          </select>
-
-                          {lightingStyle === 'custom' && (
-                            <input
-                              type="text"
-                              value={lightingStyleCustom}
-                              onChange={e => setLightingStyleCustom(e.target.value)}
-                              placeholder="Masukkan deskripsi pencahayaan..."
-                              style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
-                            />
-                          )}
-                        </div>
+                      <div>
+                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Pencahayaan & Atmosfer (Lighting Ambiance)</label>
+                        <select
+                          style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                          value={lightingStyle}
+                          onChange={e => setLightingStyle(e.target.value)}
+                        >
+                          <option value="random">🎲 Random (Acak)</option>
+                          <option value="window_daylight">Soft Window Daylight (Cahaya jendela natural)</option>
+                          <option value="golden_hour">Golden Hour Warm Sunset (Sorot sore keemasan)</option>
+                          <option value="studio_softbox">Clean Professional Studio Softbox</option>
+                          <option value="cyber_neon">Moody Cyberpunk Blue-Pink Neon</option>
+                          <option value="custom">-- Tulis Custom --</option>
+                        </select>
+                        {lightingStyle === 'custom' && (
+                          <input
+                            type="text"
+                            style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
+                            placeholder="Ketik pencahayaan kustom..."
+                            value={lightingStyleCustom}
+                            onChange={e => setLightingStyleCustom(e.target.value)}
+                          />
+                        )}
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               )}

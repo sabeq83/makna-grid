@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.31 — Copy 100% VSO Engine dari Mass OPC ke ImportPlannerModal (24/07/2026)
+- VSO Engine di ImportPlannerModal 100% identik dengan Mass OPC (app/pillar-campaigns/page.js)
+- Termasuk 3D Mascot Universes, Wardrobe optgroups dinamis, & Custom Text Inputs
+- Verifikasi build & deployment ke Node 1
+
 ## V1.1.30 — Penyelarasan 100% Modal Ingest OPC dengan Strategic Campaign (24/07/2026)
 - Face Visibility (4 opsi SC) & Visual Mode (2 opsi SC) selaras SC
 - Input number bebas untuk Jumlah Klip (N) dan Mulai Bridging Klip Ke
