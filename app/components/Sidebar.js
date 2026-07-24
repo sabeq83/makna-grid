@@ -7,10 +7,10 @@ import { useState, useEffect } from 'react';
 const menuKeyMap = {
   '/instant-factory': 'instant_campaign',
   '/re-campaigns': 'opc_mass_bridging',
-  '/pillar-campaigns': 'strategic_campaign',
+  '/pillar-campaigns': 'pillar_campaign',
   '/content-planner': 'content_planner',
   '/strategic-campaigns': 'strategic_campaign',
-  '/products': 'strategic_campaign',
+  '/products': 'product_database',
   '/deconstruct': 'opc_mass_bridging',
   '/multiplier-lab': 'bridge_injector',
   '/recipe-labs': 'recipe_labs',
@@ -20,6 +20,7 @@ const menuKeyMap = {
   '/video-studio': 'ffmpeg_studio',
   '/tts-studio': 'tts_studio',
   '/scraper': 'video_library',
+  '/sync': 'system_settings',
   '/settings/brand-profiles': 'brand_profiles',
   '/settings/users': 'admin_only',
   '/settings': 'system_settings',
@@ -76,20 +77,29 @@ export default function Sidebar() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
-    router.push('/login');
+    window.location.href = '/login';
   };
 
   const isMenuAllowed = (item) => {
     if (item.href === '/') return true;
-    if (!user) return true; // Default fallback if auth is not initialized
+    if (!user) return false;
     if (user.role === 'admin') return true;
-
     if (item.adminOnly) return false;
-    const requiredKey = menuKeyMap[item.href];
-    if (!requiredKey) return true;
 
-    return user.menuPermissions && user.menuPermissions.includes(requiredKey);
+    const requiredKey = menuKeyMap[item.href];
+    if (!requiredKey) return false;
+
+    return Array.isArray(user.menuPermissions) && user.menuPermissions.includes(requiredKey);
   };
+
+  const visibleItems = navItems.filter((item, idx, arr) => {
+    if (item.section) {
+      const nextSectionIdx = arr.findIndex((x, i) => i > idx && x.section);
+      const childItems = arr.slice(idx + 1, nextSectionIdx === -1 ? arr.length : nextSectionIdx);
+      return childItems.some(child => !child.section && isMenuAllowed(child));
+    }
+    return isMenuAllowed(item);
+  });
 
   return (
     <aside className="sidebar">
@@ -99,12 +109,10 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item, i) => {
+        {visibleItems.map((item, i) => {
           if (item.section) {
-            return <div key={i} className="nav-section">{item.section}</div>;
+            return <div key={`sec_${i}`} className="nav-section">{item.section}</div>;
           }
-
-          if (!isMenuAllowed(item)) return null;
 
           const isActive = pathname === item.href;
           return (
@@ -120,58 +128,29 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User Profile & Auth Footer */}
-      <div className="sidebar-user-footer" style={{
-        marginTop: 'auto',
-        padding: '12px 16px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(0, 0, 0, 0.2)'
-      }}>
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#e2e8f0', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                👤 {user.username}
-              </div>
-              <div style={{ fontSize: '0.7rem', color: user.role === 'admin' ? '#38bdf8' : '#94a3b8', textTransform: 'uppercase' }}>
-                Role: {user.role}
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              title="Logout"
-              style={{
-                background: 'rgba(239, 68, 68, 0.2)',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: '#f87171',
-                padding: '4px 8px',
-                borderRadius: '4px',
-                fontSize: '0.75rem',
-                cursor: 'pointer'
-              }}
-            >
-              Logout
-            </button>
+      {user && (
+        <div className="sidebar-footer" style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto' }}>
+          <div style={{ fontSize: '0.85rem', color: '#a0aec0', marginBottom: '0.5rem' }}>
+            Logged in as: <strong style={{ color: '#fff' }}>{user.username}</strong> ({user.role})
           </div>
-        ) : (
-          <Link
-            href="/login"
+          <button
+            onClick={handleLogout}
             style={{
-              display: 'block',
-              textAlign: 'center',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-              color: '#ffffff',
-              padding: '6px 12px',
+              width: '100%',
+              padding: '0.4rem 0.8rem',
               borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 500,
-              textDecoration: 'none'
+              border: 'none',
+              background: 'rgba(239, 68, 68, 0.2)',
+              color: '#f87171',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 500
             }}
           >
-            🔐 Sign In / Login
-          </Link>
-        )}
-      </div>
+            🚪 Logout
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

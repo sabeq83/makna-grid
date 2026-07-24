@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.18 — Strict Sidebar Menu Isolation & Dynamic Section Filtering (24/07/2026)
+- Mengisolasi pemetaan rute sidebar secara ketat per menu key
+- Menyembunyikan judul seksi (WORKFLOW, TOOLS, SYSTEM) jika seluruh menunya ditutup untuk user biasa
+
 ## V1.1.17 — Fix Network Host Binding 0.0.0.0 for Node 1 Gateway (24/07/2026)
 - Mengonfigurasi Next.js production server agar melakukan binding ke HOSTNAME=0.0.0.0 agar dapat diakses dari IP jaringan 100.65.62.63
 
