@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.25 — Fix Permanent Background Service Persistence on Node 1 Gateway (24/07/2026)
+- Memperbaiki penanganan proses latar belakang Next.js di Node 1 agar tetap berjalan permanen tanpa terputus koneksi SSH
+
 ## V1.1.24 — Integrate SSH Port Forwarding Tunnel for G-Labs Webhook Access across Cluster (24/07/2026)
 - Menghubungkan 127.0.0.1:8765 pada Node 1 Gateway langsung ke G-Labs Webhook Node 2 via SSH Tunneling otomatis
 

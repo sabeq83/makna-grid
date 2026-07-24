@@ -56,8 +56,7 @@ async function deploy() {
     bash scripts/setup-node1-gateway.sh
     npm install
     npm run build || true
-    pkill -f 'next-server' 2>/dev/null || true
-    HOSTNAME=0.0.0.0 PORT=3000 nohup node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 > gateway.log 2>&1 &
+    HOSTNAME=0.0.0.0 PORT=3000 nohup node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
     echo "Node 1 production build & service active on http://100.65.62.63:3000!"
   `;
   runSsh('makna-ui', node1Cmd);
