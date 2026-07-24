@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.11 — Fix Hard Page Reload On Login Cookie Set (24/07/2026)
+- Menggunakan window.location.href = '/' pasca login sukses agar cookie sesi dimuat penuh oleh browser
+
 ## V1.1.10 — Strict Auth Middleware Redirect to /login (24/07/2026)
 - Menambahkan middleware.js untuk mengalihkan secara ketat pengguna unauthenticated ke /login
 - Menghapus dev fallback pada lib/auth.js

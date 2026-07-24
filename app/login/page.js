@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       const data = await res.json();
       if (data.success) {
-        router.push('/');
+        window.location.href = '/';
       } else {
         setError(data.error || 'Login gagal. Periksa username & password.');
       }
