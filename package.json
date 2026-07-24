@@ -1,9 +1,9 @@
 {
   "name": "makna-grid",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3005",
+    "dev": "next dev --webpack -p 3005",
     "dev:port": "next dev -p 3005",
     "deploy:cluster": "node scripts/deploy-cluster.js",
     "build": "next build --webpack",

@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.9 — Gunakan Webpack Dev Mode untuk Stabilitas Server (24/07/2026)
+- Menambahkan flag --webpack pada script dev agar Next.js dev server berjalan stabil pada seluruh Node
+
 ## V1.1.8 — Skrip Otomatisasi Deploy 3-Node Cluster (24/07/2026)
 - Menambahkan skrip node scripts/deploy-cluster.js dan command npm run deploy:cluster untuk deployment otomatis ke Node 1, Node 2, dan Node 3
 
