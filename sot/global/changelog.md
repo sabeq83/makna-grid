@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.29 — Revisi Modal Ingest OPC & Veo Omni Flash (24/07/2026)
+- Auto-Detect Mode Narasi dari Content Planner
+- Model Veo Omni Flash & Opsi Durasi 4s/6s/8s/10s
+- Penyederhanaan UI Ingest OPC selaras Mass OPC
+
 ## V1.1.28 — Integrasi Content Planner ke Menu OPC (24/07/2026)
 - Fitur Ingest Content Planner ke Organic Pillar (OPC)
 - Modal UI Ingest berstruktur 4 Accordion SC dengan kontrol footer di bawah

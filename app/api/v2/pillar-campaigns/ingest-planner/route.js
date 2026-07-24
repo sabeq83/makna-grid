@@ -8,6 +8,34 @@ function extractSpreadsheetId(input) {
   return match ? match[1] : input.trim();
 }
 
+function autoDetectNarrativeMode(row) {
+  if (row.narrative_mode && row.narrative_mode !== 'Storytelling' && row.narrative_mode !== 'auto') {
+    return row.narrative_mode;
+  }
+  const textToScan = `${row.pillar || ''} ${row.category_cep || ''} ${row.vfo || ''} ${row.strategic_angle || ''}`.toLowerCase();
+  
+  if (
+    textToScan.includes('edukasi') ||
+    textToScan.includes('tips') ||
+    textToScan.includes('tutorial') ||
+    textToScan.includes('review') ||
+    textToScan.includes('pengetahuan')
+  ) {
+    return 'Educational Review';
+  }
+  if (
+    textToScan.includes('promo') ||
+    textToScan.includes('diskon') ||
+    textToScan.includes('hard sell') ||
+    textToScan.includes('hardsell') ||
+    textToScan.includes('beli') ||
+    textToScan.includes('penawaran')
+  ) {
+    return 'Promo Hard Sell';
+  }
+  return 'Storytelling';
+}
+
 export async function POST(request) {
   try {
     const {
@@ -55,7 +83,7 @@ export async function POST(request) {
       visual_action_guideline: rows[0]?.visual_action || 'Planner Visual Action',
       custom_instruction: global_settings.custom_instruction || planner.product_description || '',
       brand_profile_id: global_settings.brand_profile_id || planner.brand_id || null,
-      narrative_mode: global_settings.narrative_mode || rows[0]?.narrative_mode || 'Storytelling',
+      narrative_mode: global_settings.narrative_mode || 'auto',
       visual_style: global_settings.visual_style || 'Cinematic',
       face_visibility: global_settings.face_visibility || 'Faceless',
       is_bridging_active: global_settings.is_bridging_active !== undefined ? (global_settings.is_bridging_active ? 1 : 0) : 1,
@@ -81,7 +109,7 @@ export async function POST(request) {
       target_spreadsheet_id: extractSpreadsheetId(global_settings.target_spreadsheet_id || planner.google_sheet_id),
       voice_provider: global_settings.voice_provider || 'minimax',
       voice_persona: global_settings.voice_persona || 'Indonesian_casual_reporter_vv2',
-      words_per_clip: global_settings.words_per_clip || '17-19 kata',
+      words_per_clip: global_settings.words_per_clip || '20-22 kata',
       tts_model_quality: global_settings.tts_model_quality || 'speech-2.8-turbo',
       voice_speed: global_settings.voice_speed !== undefined ? Number(global_settings.voice_speed) : 1.0,
       voice_volume: global_settings.voice_volume !== undefined ? Number(global_settings.voice_volume) : 1.0,
@@ -110,6 +138,11 @@ export async function POST(request) {
         const hasImage = Boolean((planner.product_ref_image && planner.product_ref_image.trim() !== '') || (planner.product_photo_url && planner.product_photo_url.trim() !== ''));
         const generationStatus = (hasUrl && !hasImage) ? 'pending_sourcing' : 'pending';
 
+        let rowNarrative = global_settings.narrative_mode;
+        if (!rowNarrative || rowNarrative === 'auto') {
+          rowNarrative = autoDetectNarrativeMode(row);
+        }
+
         const payload = {
           row_number: i + 1,
           content_pillar: row.pillar || '',
@@ -123,7 +156,7 @@ export async function POST(request) {
           product_ref_image_path: planner.product_ref_image || planner.product_photo_url || null,
           visual_mode: global_settings.visual_mode || 'hybrid_lock',
           generation_status: generationStatus,
-          narrative_mode: row.narrative_mode || global_settings.narrative_mode || 'Storytelling'
+          narrative_mode: rowNarrative
         };
 
         const stmt = db.prepare(`

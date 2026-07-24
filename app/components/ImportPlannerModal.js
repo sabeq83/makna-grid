@@ -2,33 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-const GEMINI_VOICES = [
-  { id: 'Kore', name: 'Kore (Female)', avatar: '👩', desc: 'Standard Female (Skincare/Cosmetic)' },
-  { id: 'Fenrir', name: 'Fenrir (Male)', avatar: '🧔', desc: 'Deep/Heavy Male (Otomotif/High-End)' },
-  { id: 'Puck', name: 'Puck (Male)', avatar: '👦', desc: 'Ceria, Playful (Makanan/Promo Kilat)' },
-  { id: 'Charon', name: 'Charon (Male)', avatar: '👨', desc: 'Formal, News Style (Review Tech/Finansial)' },
-  { id: 'Leda', name: 'Leda (Female)', avatar: '👵', desc: 'Hangat, Ramah (Edukasi/Ibu Anak)' },
-  { id: 'Zephyr', name: 'Zephyr (Male)', avatar: '👨‍🦱', desc: 'Kasual, Santai (Storytelling/Daily Vlog)' },
-  { id: 'Orus', name: 'Orus (Male)', avatar: '🧔', desc: 'Tegas, Optimis (Motivasi/Online Course)' },
-  { id: 'Aoede', name: 'Aoede (Female)', avatar: '👩‍🎨', desc: 'Artistik, Ekspresif (Fashion/Seni)' },
-  { id: 'Callirrhoe', name: 'Callirrhoe (Female)', avatar: '👩‍💼', desc: 'Berenergi, Dinamis (Olahraga/Lifestyle)' },
-  { id: 'Autonoe', name: 'Autonoe (Female)', avatar: '👩‍🎓', desc: 'Dewasa, Profesional (Bisnis/Corporate)' },
-  { id: 'Enceladus', name: 'Enceladus (Male)', avatar: '👨‍🎤', desc: 'Misterius, Berat (Teaser/Trailer)' },
-  { id: 'Iapetus', name: 'Iapetus (Male)', avatar: '👴', desc: 'Bijaksana, Ramah (Mentor/Tips Hidup)' },
-  { id: 'Umbriel', name: 'Umbriel (Male)', avatar: '👨‍🔬', desc: 'Dingin, Fokus (Dokumenter/Sains)' },
-  { id: 'Despina', name: 'Despina (Female)', avatar: '👧', desc: 'Cepat, Riang (TikTok/Tips Singkat)' },
-];
-
-const MINIMAX_VOICES = [
-  { id: 'Indonesian_casual_reporter_vv2', name: 'Casual Reporter (Male)', avatar: '👨', desc: 'Laki-laki (Casual Reporter - Vv2)' },
-  { id: 'Indonesian_compelling_storyteller_vv2', name: 'Compelling Storyteller (Male)', avatar: '👨', desc: 'Laki-laki (Storyteller - Vv2)' },
-  { id: 'Indonesian_expressive_podcaster_vv2', name: 'Expressive Podcaster (Male)', avatar: '👨', desc: 'Laki-laki (Podcaster - Vv2)' },
-  { id: 'Indonesian_energetic_streamer_vv2', name: 'Energetic Streamer (Male)', avatar: '👨', desc: 'Laki-laki (Streamer - Vv2)' },
-  { id: 'Indonesian_intellectual_commentator_vv2', name: 'Intellectual Commentator (Female)', avatar: '👩', desc: 'Perempuan (Commentator - Vv2)' },
-  { id: 'Indonesian_professional_anchor_vv2', name: 'Professional Anchor (Female)', avatar: '👩', desc: 'Perempuan (Anchor - Vv2)' },
-  { id: 'Indonesian_crisp_reporter_vv2', name: 'Crisp Reporter (Female)', avatar: '👩', desc: 'Perempuan (Crisp Reporter - Vv2)' }
-];
-
 export default function ImportPlannerModal({
   isOpen,
   onClose,
@@ -44,26 +17,34 @@ export default function ImportPlannerModal({
   const [submitting, setSubmitting] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(0);
 
-  // Form State Aligning with SC & OPC
+  // Form State Aligning with Mass OPC
   const [campaignName, setCampaignName] = useState('');
+  const [accountName, setAccountName] = useState('');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
+  const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
+  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Production_Final');
 
-  // Accordion 2: Aesthetics & Visual Settings
-  const [narrativeMode, setNarrativeMode] = useState('Storytelling');
+  // Accordion 1: Strategy & Compliance
+  const [narrativeMode, setNarrativeMode] = useState('auto'); // 'auto' | 'Storytelling' | 'Promo Hard Sell' | 'Educational Review'
+  const [sfxSetting, setSfxSetting] = useState('without_sfx');
+  const [enableVoAudit, setEnableVoAudit] = useState(0);
+  const [enableAudioSegment, setEnableAudioSegment] = useState(false);
+
+  // Accordion 2: Aesthetics & Veo Engine Settings
   const [visualStyle, setVisualStyle] = useState('Cinematic');
   const [targetAi, setTargetAi] = useState('Google Veo (8s)');
   const [videoModel, setVideoModel] = useState('veo_31_lite');
+  const [clipDuration, setClipDuration] = useState(8); // 4, 6, 8, 10
   const [aspectRatio, setAspectRatio] = useState('9:16');
   const [faceVisibility, setFaceVisibility] = useState('Faceless');
   const [targetClipsCount, setTargetClipsCount] = useState(4);
-  const [wordsPerClip, setWordsPerClip] = useState('17-19 kata');
+  const [wordsPerClip, setWordsPerClip] = useState('20-22 kata');
 
   // Accordion 3: Product Bridging Settings
   const [isBridgingActive, setIsBridgingActive] = useState(true);
   const [bridgeAtClip, setBridgeAtClip] = useState(2);
   const [bridgeDurationClips, setBridgeDurationClips] = useState(1);
-  const [promotionStyle, setPromotionStyle] = useState('Softselling');
 
   // Accordion 4: VSO Engine
   const [isVsoActive, setIsVsoActive] = useState(false);
@@ -72,15 +53,6 @@ export default function ImportPlannerModal({
   const [wardrobeStyle, setWardrobeStyle] = useState('amber_terracotta');
   const [lightingStyle, setLightingStyle] = useState('window_daylight');
   const [visualStylePreset, setVisualStylePreset] = useState('3d_claymation_cozy');
-
-  // Voice & Workflow
-  const [voiceProvider, setVoiceProvider] = useState('minimax');
-  const [voicePersona, setVoicePersona] = useState('Indonesian_casual_reporter_vv2');
-  const [targetLanguage, setTargetLanguage] = useState('id-ID');
-  const [enableVoAudit, setEnableVoAudit] = useState(0);
-  const [enableTts, setEnableTts] = useState(true);
-  const [enableFfmpeg, setEnableFfmpeg] = useState(true);
-  const [enableSocialPost, setEnableSocialPost] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -127,7 +99,9 @@ export default function ImportPlannerModal({
         setRows(rList);
         setSelectedRowIds(rList.map(r => r.id));
         setCampaignName(`[OPC Planner] ${data.planner.title || data.planner.product_name}`);
+        setAccountName(data.planner.account_name || 'Umum');
         if (data.planner.brand_id) setSelectedBrandId(data.planner.brand_id);
+        if (data.planner.google_sheet_id) setTargetSpreadsheetId(data.planner.google_sheet_id);
       }
     } catch (e) {
       console.error('[ImportPlannerModal] Load planner detail error:', e);
@@ -143,6 +117,7 @@ export default function ImportPlannerModal({
       setPlanner(null);
       setRows([]);
       setSelectedRowIds([]);
+      setAccountName('');
     }
   }
 
@@ -181,8 +156,9 @@ export default function ImportPlannerModal({
           brand_profile_id: selectedBrandId || null,
           narrative_mode: narrativeMode,
           visual_style: visualStyle,
-          target_ai: targetAi,
+          target_ai: videoModel === 'omni_flash' ? 'Google Veo Omni Flash' : targetAi,
           video_model: videoModel,
+          clip_duration: Number(clipDuration),
           aspect_ratio: aspectRatio,
           face_visibility: faceVisibility,
           target_clips_count: targetClipsCount,
@@ -190,14 +166,11 @@ export default function ImportPlannerModal({
           is_bridging_active: isBridgingActive ? 1 : 0,
           bridge_at_clip: bridgeAtClip,
           bridge_duration_clips: bridgeDurationClips,
-          promotion_style: promotionStyle,
-          enable_tts: enableTts ? 1 : 0,
-          enable_ffmpeg: enableFfmpeg ? 1 : 0,
-          enable_social_post: enableSocialPost ? 1 : 0,
-          voice_provider: voiceProvider,
-          voice_persona: voicePersona,
-          target_language: targetLanguage,
           enable_vo_audit: enableVoAudit,
+          enable_audio_segment: enableAudioSegment ? 1 : 0,
+          sfx_setting: sfxSetting,
+          nextcloud_parent_folder: nextcloudParentFolder.trim(),
+          target_spreadsheet_id: targetSpreadsheetId.trim(),
           visual_overrides_json: isVsoActive ? JSON.stringify({
             is_vso_active: true,
             character_concept: characterConcept,
@@ -312,7 +285,7 @@ export default function ImportPlannerModal({
                         </button>
                       </div>
 
-                      <div style={{ maxHeight: '150px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', background: '#09090b', padding: '8px', borderRadius: '6px', border: '1px solid #27272a' }}>
+                      <div style={{ maxHeight: '140px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', background: '#09090b', padding: '8px', borderRadius: '6px', border: '1px solid #27272a' }}>
                         {rows.map(r => (
                           <label key={r.id} style={{ fontSize: '12px', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                             <input
@@ -340,37 +313,84 @@ export default function ImportPlannerModal({
                     />
                   </div>
 
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <span>👤 Nama Akun Media Sosial / Brand:</span>
+                      <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>🔒 Terkunci dari Content Planner</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={accountName}
+                      readOnly
+                      placeholder="Terisi otomatis dari Content Planner..."
+                      style={{
+                        width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a',
+                        color: '#fbbf24', borderRadius: '8px', cursor: 'not-allowed', fontWeight: 700
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Mode Narasi:</label>
+                    <select
+                      value={narrativeMode}
+                      onChange={e => setNarrativeMode(e.target.value)}
+                      style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                    >
+                      <option value="auto">✨ Auto-Detect dari Content Planner (Rekomendasi)</option>
+                      <option value="Storytelling">Storytelling (Bercerita / Vlog)</option>
+                      <option value="Promo Hard Sell">Promo Hard Sell (Langsung Penawaran)</option>
+                      <option value="Educational Review">Educational Review (Edukasi & Ulasan)</option>
+                    </select>
+                  </div>
+
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>🔊 TTS Voice Provider:</label>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>SFX Setting:</label>
                       <select
-                        value={voiceProvider}
-                        onChange={e => {
-                          const prov = e.target.value;
-                          setVoiceProvider(prov);
-                          if (prov === 'gemini') setVoicePersona('Kore');
-                          else setVoicePersona('Indonesian_casual_reporter_vv2');
-                        }}
+                        value={sfxSetting}
+                        onChange={e => setSfxSetting(e.target.value)}
                         style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
                       >
-                        <option value="minimax">MiniMax Speech</option>
-                        <option value="gemini">Google Gemini TTS</option>
+                        <option value="without_sfx">🔇 Without SFX (Default)</option>
+                        <option value="with_sfx">🔊 With SFX</option>
                       </select>
                     </div>
 
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>🗣 Voice Persona:</label>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Audit Kepatuhan TikTok Safe:</label>
                       <select
-                        value={voicePersona}
-                        onChange={e => setVoicePersona(e.target.value)}
+                        value={enableVoAudit}
+                        onChange={e => setEnableVoAudit(Number(e.target.value))}
                         style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
                       >
-                        {voiceProvider === 'gemini' ? (
-                          GEMINI_VOICES.map(v => <option key={v.id} value={v.id}>{v.avatar} {v.name}</option>)
-                        ) : (
-                          MINIMAX_VOICES.map(v => <option key={v.id} value={v.id}>{v.avatar} {v.name}</option>)
-                        )}
+                        <option value={1}>✅ Yes (Audit Compliance & Render 2 Versi VO)</option>
+                        <option value={0}>❌ No (Tanpa Audit Compliance)</option>
                       </select>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>📁 Parent Folder Nextcloud:</label>
+                      <input
+                        type="text"
+                        value={nextcloudParentFolder}
+                        onChange={e => setNextcloudParentFolder(e.target.value)}
+                        placeholder="cth: MAKNA_Production_Final"
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>📊 Target Spreadsheet ID (Opsional):</label>
+                      <input
+                        type="text"
+                        value={targetSpreadsheetId}
+                        onChange={e => setTargetSpreadsheetId(e.target.value)}
+                        placeholder="Spreadsheet ID..."
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      />
                     </div>
                   </div>
 
@@ -393,7 +413,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 2: Aesthetics & Visual Settings */}
+            {/* ACCORDION 2: Aesthetics & Veo Engine Settings */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(1)}
@@ -403,7 +423,7 @@ export default function ImportPlannerModal({
                   cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                 }}
               >
-                <span>2. Aesthetics & Visual Settings</span>
+                <span>2. Aesthetics & Visual Engine Settings</span>
                 <span>{activeAccordion === 1 ? '▲' : '▼'}</span>
               </div>
 
@@ -411,37 +431,60 @@ export default function ImportPlannerModal({
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Mode Narasi:</label>
-                      <select value={narrativeMode} onChange={e => setNarrativeMode(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Storytelling">Storytelling (Bercerita / Vlog)</option>
-                        <option value="Promo Hard Sell">Promo Hard Sell (Langsung Penawaran)</option>
-                        <option value="Educational Review">Educational Review (Edukasi & Ulasan)</option>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Model Video Veo:</label>
+                      <select
+                        value={videoModel}
+                        onChange={e => {
+                          const mod = e.target.value;
+                          setVideoModel(mod);
+                          if (mod !== 'omni_flash' && clipDuration === 10) setClipDuration(8);
+                        }}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value="veo_31_lite">Google Veo 3.1 Lite (Standar Cepat)</option>
+                        <option value="veo_31_fast">Google Veo 3.1 Fast</option>
+                        <option value="veo_31_quality">Google Veo 3.1 Quality (Kualitas Tinggi)</option>
+                        <option value="veo_31_lite_relaxed">Google Veo 3.1 Relaxed</option>
+                        <option value="omni_flash">⚡ Google Veo Omni Flash (Support 10s Clip)</option>
                       </select>
                     </div>
 
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Gaya Visual & Mood:</label>
-                      <select value={visualStyle} onChange={e => setVisualStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Cinematic">Cinematic (Estetik Sinematik)</option>
-                        <option value="Photorealistic Studio">Photorealistic Studio (Foto Produk Terang)</option>
-                        <option value="Warm Cozy Home">Warm Cozy Home (Hangat Rumahan)</option>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Durasi per Klip Video:</label>
+                      <select
+                        value={clipDuration}
+                        onChange={e => setClipDuration(Number(e.target.value))}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value={4}>4s per klip</option>
+                        <option value={6}>6s per klip</option>
+                        <option value={8}>8s per klip (Default)</option>
+                        {videoModel === 'omni_flash' && (
+                          <option value={10}>10s per klip (Khusus Omni Flash)</option>
+                        )}
                       </select>
                     </div>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Target AI Engine:</label>
-                      <select value={targetAi} onChange={e => setTargetAi(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Google Veo (8s)">Google Veo (8s)</option>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Gaya Visual & Mood:</label>
+                      <select value={visualStyle} onChange={e => setVisualStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                        <option value="Cinematic">Cinematic (Estetik Sinematik)</option>
+                        <option value="Photorealistic Studio">Photorealistic Studio (Foto Produk Terang)</option>
+                        <option value="Warm Cozy Home">Warm Cozy Home (Hangat Rumahan)</option>
+                        <option value="3D Claymation">3D Claymation</option>
+                        <option value="Vintage Film">Vintage Film</option>
+                        <option value="Commercial High-End">Commercial High-End</option>
                       </select>
                     </div>
 
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Model Video Veo:</label>
-                      <select value={videoModel} onChange={e => setVideoModel(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="veo_31_lite">Veo 3.1 Lite (Cepat & Hemat Quota)</option>
-                        <option value="veo_31_standard">Veo 3.1 Standard (Kualitas Maksimal)</option>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Batasan Kata per Klip:</label>
+                      <select value={wordsPerClip} onChange={e => setWordsPerClip(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                        <option value="20-22 kata">20-22 kata (Default)</option>
+                        <option value="17-19 kata">17-19 kata</option>
+                        <option value="15-16 kata">15-16 kata</option>
                       </select>
                     </div>
                   </div>
@@ -451,6 +494,8 @@ export default function ImportPlannerModal({
                       <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Aspect Ratio:</label>
                       <select value={aspectRatio} onChange={e => setAspectRatio(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
                         <option value="9:16">9:16 (Vertical Short/Reels/TikTok)</option>
+                        <option value="16:9">16:9 (Horizontal YouTube)</option>
+                        <option value="1:1">1:1 (Square Feed)</option>
                       </select>
                     </div>
 
@@ -467,6 +512,7 @@ export default function ImportPlannerModal({
                       <select value={targetClipsCount} onChange={e => setTargetClipsCount(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
                         <option value={4}>4 Klip adegan (~32d)</option>
                         <option value={5}>5 Klip adegan (~40d)</option>
+                        <option value={3}>3 Klip adegan (~24d)</option>
                       </select>
                     </div>
                   </div>
@@ -496,12 +542,13 @@ export default function ImportPlannerModal({
                   </label>
 
                   {isBridgingActive && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                       <div>
                         <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Mulai Bridging Klip Ke:</label>
                         <select value={bridgeAtClip} onChange={e => setBridgeAtClip(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
                           <option value={2}>Klip 2</option>
                           <option value={3}>Klip 3</option>
+                          <option value={4}>Klip 4</option>
                         </select>
                       </div>
 
@@ -510,14 +557,6 @@ export default function ImportPlannerModal({
                         <select value={bridgeDurationClips} onChange={e => setBridgeDurationClips(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
                           <option value={1}>1 Klip</option>
                           <option value={2}>2 Klip</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Gaya Promosi:</label>
-                        <select value={promotionStyle} onChange={e => setPromotionStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                          <option value="Softselling">Softselling (Menyatu)</option>
-                          <option value="Hardsell">Hardsell (Direct)</option>
                         </select>
                       </div>
                     </div>
