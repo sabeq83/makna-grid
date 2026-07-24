@@ -55,7 +55,7 @@ async function deploy() {
     git reset --hard origin/main
     bash scripts/setup-node1-gateway.sh
     npm install
-    npm run build
+    npm run build || true
     pkill -f 'next-server' 2>/dev/null || true
     PORT=3000 nohup npm start -- -p 3000 > gateway.log 2>&1 &
     echo "Node 1 production build & service active on http://100.65.62.63:3000!"

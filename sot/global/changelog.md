@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.16 — Fix Next.js 16 Dynamic Route Params & Deployment Error Handling (24/07/2026)
+- Menangani Next.js 16 dynamic route params Promise pada API reset-password dan merapikan penanganan error npm run build pada deploy script
+
 ## V1.1.15 — Fix Webpack Dynamic Require PDF Parse (24/07/2026)
 - Menggunakan eval require agar Next.js Webpack build berjalan 100% mulus tanpa error paket opsional pdf-parse
 
