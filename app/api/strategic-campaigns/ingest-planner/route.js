@@ -24,6 +24,7 @@ export async function POST(request) {
       selected_row_ids: rowIdsToIngest,
       input_mode: 'planner_import',
       account_name: planner.account_name,
+      brand_profile_id: planner.brand_id || null,
       target_spreadsheet_id: planner.google_sheet_id,
       product_name: planner.product_name,
       product_description: planner.product_description,

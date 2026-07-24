@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.20 — Inherit Brand Profile ID from Content Planner to Strategic Campaign (24/07/2026)
+- Menjamin brand_profile_id dan account_name dari Content Planner diwariskan 100% secara otomatis ke Strategic Campaign saat import
+
 ## V1.1.19 — Revisi Modal Generator Content Planner (24/07/2026)
 - Menghapus input Nama Akun dan Sheet ID
 - Menambahkan dropdown Brand Profile tepat di atas Judul Planner
