@@ -1,5 +1,11 @@
 # Changelog
 
+## V1.1.30 — Penyelarasan 100% Modal Ingest OPC dengan Strategic Campaign (24/07/2026)
+- Face Visibility (4 opsi SC) & Visual Mode (2 opsi SC) selaras SC
+- Input number bebas untuk Jumlah Klip (N) dan Mulai Bridging Klip Ke
+- Autofetch Foto Studio Produk dari Content Planner
+- Custom Instruction & VSO Engine lengkap dari SC
+
 ## V1.1.29 — Revisi Modal Ingest OPC & Veo Omni Flash (24/07/2026)
 - Auto-Detect Mode Narasi dari Content Planner
 - Model Veo Omni Flash & Opsi Durasi 4s/6s/8s/10s

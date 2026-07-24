@@ -17,19 +17,28 @@ export default function ImportPlannerModal({
   const [submitting, setSubmitting] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(0);
 
-  // Form State Aligning with Mass OPC
+  // Form State Aligning with Mass OPC & SC
   const [campaignName, setCampaignName] = useState('');
   const [accountName, setAccountName] = useState('');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
   const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Production_Final');
+  const [customInstruction, setCustomInstruction] = useState('');
 
   // Accordion 1: Strategy & Compliance
   const [narrativeMode, setNarrativeMode] = useState('auto'); // 'auto' | 'Storytelling' | 'Promo Hard Sell' | 'Educational Review'
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
   const [enableVoAudit, setEnableVoAudit] = useState(0);
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [voiceProvider, setVoiceProvider] = useState('minimax');
+
+  // Product Data from Planner
+  const [productName, setProductName] = useState('');
+  const [productDesc, setProductDesc] = useState('');
+  const [productUsp, setProductUsp] = useState('');
+  const [productRefImage, setProductRefImage] = useState('');
 
   // Accordion 2: Aesthetics & Veo Engine Settings
   const [visualStyle, setVisualStyle] = useState('Cinematic');
@@ -37,21 +46,25 @@ export default function ImportPlannerModal({
   const [videoModel, setVideoModel] = useState('veo_31_lite');
   const [clipDuration, setClipDuration] = useState(8); // 4, 6, 8, 10
   const [aspectRatio, setAspectRatio] = useState('9:16');
-  const [faceVisibility, setFaceVisibility] = useState('Faceless');
-  const [targetClipsCount, setTargetClipsCount] = useState(4);
+  const [faceVisibility, setFaceVisibility] = useState('Faceless'); // 'Faceless' | 'POV' | 'Silhouette' | 'cartoon_face'
+  const [targetClipsCount, setTargetClipsCount] = useState(4); // Isian bebas number
   const [wordsPerClip, setWordsPerClip] = useState('20-22 kata');
+  const [visualMode, setVisualMode] = useState('hybrid_lock'); // 'hybrid_lock' | 'pure_t2v'
 
   // Accordion 3: Product Bridging Settings
   const [isBridgingActive, setIsBridgingActive] = useState(true);
-  const [bridgeAtClip, setBridgeAtClip] = useState(2);
+  const [bridgeAtClip, setBridgeAtClip] = useState(2); // Isian bebas number
   const [bridgeDurationClips, setBridgeDurationClips] = useState(1);
+  const [bridgingMode, setBridgingMode] = useState('manual_input'); // 'manual_input' | 'select_existing' | 'url_extract'
 
-  // Accordion 4: VSO Engine
+  // Accordion 4: VSO Engine (Lengkap SC)
   const [isVsoActive, setIsVsoActive] = useState(false);
   const [characterConcept, setCharacterConcept] = useState('faceless');
   const [subjectDemographic, setSubjectDemographic] = useState('syari_classic');
   const [wardrobeStyle, setWardrobeStyle] = useState('amber_terracotta');
+  const [wardrobeStyleCustom, setWardrobeStyleCustom] = useState('');
   const [lightingStyle, setLightingStyle] = useState('window_daylight');
+  const [lightingStyleCustom, setLightingStyleCustom] = useState('');
   const [visualStylePreset, setVisualStylePreset] = useState('3d_claymation_cozy');
 
   useEffect(() => {
@@ -94,14 +107,21 @@ export default function ImportPlannerModal({
       const res = await fetch(`/api/content-planner/${id}`);
       const data = await res.json();
       if (data.success && data.planner) {
-        setPlanner(data.planner);
-        const rList = data.planner.rows || [];
+        const p = data.planner;
+        setPlanner(p);
+        const rList = p.rows || [];
         setRows(rList);
         setSelectedRowIds(rList.map(r => r.id));
-        setCampaignName(`[OPC Planner] ${data.planner.title || data.planner.product_name}`);
-        setAccountName(data.planner.account_name || 'Umum');
-        if (data.planner.brand_id) setSelectedBrandId(data.planner.brand_id);
-        if (data.planner.google_sheet_id) setTargetSpreadsheetId(data.planner.google_sheet_id);
+        setCampaignName(`[OPC Planner] ${p.title || p.product_name}`);
+        setAccountName(p.account_name || 'Umum');
+        setProductName(p.product_name || '');
+        setProductDesc(p.product_description || '');
+        setProductUsp(p.product_usp || '');
+        setProductRefImage(p.product_ref_image || p.product_photo_url || '');
+        setCustomInstruction(p.product_description || '');
+
+        if (p.brand_id) setSelectedBrandId(p.brand_id);
+        if (p.google_sheet_id) setTargetSpreadsheetId(p.google_sheet_id);
       }
     } catch (e) {
       console.error('[ImportPlannerModal] Load planner detail error:', e);
@@ -118,6 +138,11 @@ export default function ImportPlannerModal({
       setRows([]);
       setSelectedRowIds([]);
       setAccountName('');
+      setProductName('');
+      setProductDesc('');
+      setProductUsp('');
+      setProductRefImage('');
+      setCustomInstruction('');
     }
   }
 
@@ -154,6 +179,7 @@ export default function ImportPlannerModal({
         campaign_name: campaignName,
         global_settings: {
           brand_profile_id: selectedBrandId || null,
+          custom_instruction: customInstruction,
           narrative_mode: narrativeMode,
           visual_style: visualStyle,
           target_ai: videoModel === 'omni_flash' ? 'Google Veo Omni Flash' : targetAi,
@@ -161,22 +187,27 @@ export default function ImportPlannerModal({
           clip_duration: Number(clipDuration),
           aspect_ratio: aspectRatio,
           face_visibility: faceVisibility,
-          target_clips_count: targetClipsCount,
+          target_clips_count: Number(targetClipsCount),
           words_per_clip: wordsPerClip,
+          visual_mode: visualMode,
           is_bridging_active: isBridgingActive ? 1 : 0,
-          bridge_at_clip: bridgeAtClip,
-          bridge_duration_clips: bridgeDurationClips,
+          bridge_at_clip: Number(bridgeAtClip),
+          bridge_duration_clips: Number(bridgeDurationClips),
+          bridging_mode: bridgingMode,
+          product_ref_image_path: productRefImage || null,
           enable_vo_audit: enableVoAudit,
           enable_audio_segment: enableAudioSegment ? 1 : 0,
           sfx_setting: sfxSetting,
+          voice_provider: voiceProvider,
+          target_language: targetLanguage,
           nextcloud_parent_folder: nextcloudParentFolder.trim(),
           target_spreadsheet_id: targetSpreadsheetId.trim(),
           visual_overrides_json: isVsoActive ? JSON.stringify({
             is_vso_active: true,
             character_concept: characterConcept,
             subject_demographic: subjectDemographic,
-            wardrobe_style: wardrobeStyle,
-            lighting_style: lightingStyle,
+            wardrobe_style: wardrobeStyle === 'custom' ? wardrobeStyleCustom : wardrobeStyle,
+            lighting_style: lightingStyle === 'custom' ? lightingStyleCustom : lightingStyle,
             visual_style_preset: visualStylePreset
           }) : null
         }
@@ -211,7 +242,7 @@ export default function ImportPlannerModal({
     }}>
       <div style={{
         background: '#121318', border: '1px solid #27272a', borderRadius: '16px',
-        width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '28px',
+        width: '100%', maxWidth: '820px', maxHeight: '92vh', overflowY: 'auto', padding: '28px',
         boxShadow: '0 20px 50px rgba(0,0,0,0.5)', color: '#f3f4f6'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -231,7 +262,7 @@ export default function ImportPlannerModal({
             <span>📊 Mode Impor Content Planner Master ke Engine Produksi Autopilot OPC</span>
           </div>
 
-          {/* Structured 4 Accordions Stack (SC-Identical Layout) */}
+          {/* Structured 4 Accordions Stack (100% SC-Identical Layout) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
             
             {/* ACCORDION 1: Basic Creative Strategy & Planner Master */}
@@ -344,6 +375,55 @@ export default function ImportPlannerModal({
                     </select>
                   </div>
 
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Custom Instruction (Instruksi Tambahan AI):</label>
+                    <textarea
+                      value={customInstruction}
+                      onChange={e => setCustomInstruction(e.target.value)}
+                      rows={3}
+                      placeholder="Instruksi tambahan untuk prompt generator AI..."
+                      style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px', fontSize: '12px', resize: 'vertical' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>TTS Voice Provider:</label>
+                      <select
+                        value={voiceProvider}
+                        onChange={e => setVoiceProvider(e.target.value)}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value="minimax">MiniMax AI Voice (Indonesian)</option>
+                        <option value="gemini">Gemini Live TTS</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Bahasa Naskah Voiceover:</label>
+                      <select
+                        value={targetLanguage}
+                        onChange={e => setTargetLanguage(e.target.value)}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value="id-ID">Bahasa Indonesia (id-ID)</option>
+                        <option value="en-US">English (en-US)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Audio Segmenting:</label>
+                      <select
+                        value={enableAudioSegment ? 'enabled' : 'disabled'}
+                        onChange={e => setEnableAudioSegment(e.target.value === 'enabled')}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value="disabled">Disabled (Single VO File)</option>
+                        <option value="enabled">Enabled (Segment Per Clip)</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
                       <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>SFX Setting:</label>
@@ -413,7 +493,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 2: Aesthetics & Veo Engine Settings */}
+            {/* ACCORDION 2: Aesthetics & Visual Engine Settings (Persis SC) */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(1)}
@@ -429,6 +509,30 @@ export default function ImportPlannerModal({
 
               {activeAccordion === 1 && (
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Visual Style (Gaya Visual):</label>
+                      <select value={visualStyle} onChange={e => setVisualStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                        <option value="Cinematic">Cinematic (Sinematik Raw Photography)</option>
+                        <option value="Photorealistic Studio">Photorealistic Studio (Foto Studio Terang Minimalis)</option>
+                        <option value="Warm Cozy Home">Warm Cozy Home (Rumahan Hangat Natural)</option>
+                        <option value="3D Claymation">3D Claymation (Gaya tanah liat 3D cozy)</option>
+                        <option value="Vintage 90s Film">Vintage 90s Film (Gaya Retro 90an Analog)</option>
+                        <option value="Cyberpunk Neon">Cyberpunk Neon (Gaya Cyberpunk Neon Glow)</option>
+                        <option value="Commercial High-End">Commercial High-End (Iklan TV Komersial Mewah)</option>
+                        <option value="Minimalist Modern">Minimalist Modern (Minimalis Modern Bersih)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Visual Mode (Metode Generasi):</label>
+                      <select value={visualMode} onChange={e => setVisualMode(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                        <option value="hybrid_lock">Double-Pass Pixel Lock (Nano Banana Pro T2I ➜ Veo 3.1 I2V)</option>
+                        <option value="pure_t2v">Pure Text-To-Video (T2V Langsung)</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
                       <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Model Video Veo:</label>
@@ -466,17 +570,28 @@ export default function ImportPlannerModal({
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '14px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Gaya Visual & Mood:</label>
-                      <select value={visualStyle} onChange={e => setVisualStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Cinematic">Cinematic (Estetik Sinematik)</option>
-                        <option value="Photorealistic Studio">Photorealistic Studio (Foto Produk Terang)</option>
-                        <option value="Warm Cozy Home">Warm Cozy Home (Hangat Rumahan)</option>
-                        <option value="3D Claymation">3D Claymation</option>
-                        <option value="Vintage Film">Vintage Film</option>
-                        <option value="Commercial High-End">Commercial High-End</option>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Face Visibility:</label>
+                      <select value={faceVisibility} onChange={e => setFaceVisibility(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                        <option value="Faceless">Faceless (Tanpa Wajah - Fokus Aksi Tangan)</option>
+                        <option value="POV">POV (Sudut Pandang Utama)</option>
+                        <option value="Silhouette">Silhouette (Siluet Estetik)</option>
+                        <option value="cartoon_face">Cartoon Face (Kartun Ekspresif)</option>
                       </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Jumlah Klip Video (N):</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="12"
+                        value={targetClipsCount}
+                        onChange={e => setTargetClipsCount(Number(e.target.value))}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                        required
+                      />
                     </div>
 
                     <div>
@@ -487,32 +602,13 @@ export default function ImportPlannerModal({
                         <option value="15-16 kata">15-16 kata</option>
                       </select>
                     </div>
-                  </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
                     <div>
                       <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Aspect Ratio:</label>
                       <select value={aspectRatio} onChange={e => setAspectRatio(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="9:16">9:16 (Vertical Short/Reels/TikTok)</option>
+                        <option value="9:16">9:16 (Vertical TikTok/Reels)</option>
                         <option value="16:9">16:9 (Horizontal YouTube)</option>
                         <option value="1:1">1:1 (Square Feed)</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Visibilitas Wajah:</label>
-                      <select value={faceVisibility} onChange={e => setFaceVisibility(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Faceless">Faceless (Tangan & Pundak Saja)</option>
-                        <option value="Full Face">Full Face (Tampak Wajah)</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Jumlah Klip Target:</label>
-                      <select value={targetClipsCount} onChange={e => setTargetClipsCount(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value={4}>4 Klip adegan (~32d)</option>
-                        <option value={5}>5 Klip adegan (~40d)</option>
-                        <option value={3}>3 Klip adegan (~24d)</option>
                       </select>
                     </div>
                   </div>
@@ -520,7 +616,7 @@ export default function ImportPlannerModal({
               )}
             </div>
 
-            {/* ACCORDION 3: Product Bridging Settings */}
+            {/* ACCORDION 3: Product Bridging Settings (Lengkap SC & Autofetch Foto Produk) */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(2)}
@@ -542,30 +638,53 @@ export default function ImportPlannerModal({
                   </label>
 
                   {isBridgingActive && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                      <div>
-                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Mulai Bridging Klip Ke:</label>
-                        <select value={bridgeAtClip} onChange={e => setBridgeAtClip(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                          <option value={2}>Klip 2</option>
-                          <option value={3}>Klip 3</option>
-                          <option value={4}>Klip 4</option>
-                        </select>
+                    <>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Mulai Bridging Klip Ke:</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="10"
+                            value={bridgeAtClip}
+                            onChange={e => setBridgeAtClip(Number(e.target.value))}
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Durasi Bridging:</label>
+                          <select value={bridgeDurationClips} onChange={e => setBridgeDurationClips(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value={1}>1 Klip</option>
+                            <option value={2}>2 Klip</option>
+                            <option value={0}>0 (Sisa Seluruh Klip)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Metode Penyertaan Produk:</label>
+                          <select value={bridgingMode} onChange={e => setBridgingMode(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value="manual_input">📸 Autofetch dari Content Planner Master</option>
+                            <option value="select_existing">📦 Pilih Produk Terdaftar</option>
+                            <option value="url_extract">🔗 Extract dari URL Marketplace</option>
+                          </select>
+                        </div>
                       </div>
 
-                      <div>
-                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Durasi Bridging:</label>
-                        <select value={bridgeDurationClips} onChange={e => setBridgeDurationClips(Number(e.target.value))} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                          <option value={1}>1 Klip</option>
-                          <option value={2}>2 Klip</option>
-                        </select>
+                      {/* Autofetch Visual Status Badge */}
+                      <div style={{ padding: '12px 14px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px', color: '#10b981', fontSize: '12px' }}>
+                        <div style={{ fontWeight: 700, marginBottom: '2px' }}>✓ Data & Foto Studio Produk Terhubung ke Content Planner:</div>
+                        <div>• Produk: <b>{productName || 'Mengikuti Planner'}</b></div>
+                        <div>• Foto Ref: <b>{productRefImage || 'Tersedia di Planner Master'}</b></div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               )}
             </div>
 
-            {/* ACCORDION 4: Visual Swap Overrides (VSO Engine) */}
+            {/* ACCORDION 4: Visual Swap Overrides (VSO Engine Lengkap SC) */}
             <div style={{ background: '#18181b', borderRadius: '10px', border: '1px solid #27272a', overflow: 'hidden' }}>
               <div
                 onClick={() => setActiveAccordion(3)}
@@ -587,25 +706,77 @@ export default function ImportPlannerModal({
                   </label>
 
                   {isVsoActive && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                      <div>
-                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Demografi Subjek:</label>
-                        <select value={subjectDemographic} onChange={e => setSubjectDemographic(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                          <option value="syari_classic">Wanita Indonesia Syar'i</option>
-                          <option value="caucasian_male">Pria Kaukasia / Barat</option>
-                          <option value="asian_modern">Wanita Asia Modern</option>
-                        </select>
+                    <>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Karakter / Subjek Konsep:</label>
+                          <select value={characterConcept} onChange={e => setCharacterConcept(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value="faceless">Faceless (Framing Tangan / Produk)</option>
+                            <option value="human_model">Human Model (Model Manusia)</option>
+                            <option value="mascot_3d">3D Mascot Universe</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Demografi Subjek:</label>
+                          <select value={subjectDemographic} onChange={e => setSubjectDemographic(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value="syari_classic">Wanita Indonesia Syar'i (Hijab)</option>
+                            <option value="caucasian_male">Pria Kaukasia / Barat</option>
+                            <option value="asian_modern">Wanita Asia Modern</option>
+                            <option value="mascot_universe_claymation">3D Claymation Universe</option>
+                            <option value="mascot_universe_anime">Anime 3D Render Universe</option>
+                            <option value="mascot_universe_furry">3D Furry Mascot Universe</option>
+                            <option value="mascot_universe_chibi">Chibi Mascot Universe</option>
+                            <option value="mascot_universe_cyberpunk">Cyberpunk Mascot Universe</option>
+                            <option value="mascot_universe_pixel">Pixel Art Mascot Universe</option>
+                          </select>
+                        </div>
                       </div>
 
-                      <div>
-                        <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Lighting Style:</label>
-                        <select value={lightingStyle} onChange={e => setLightingStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                          <option value="window_daylight">Natural Window Daylight</option>
-                          <option value="warm_indoor">Warm Ambient Indoor</option>
-                          <option value="studio_bright">Bright Studio Softbox</option>
-                        </select>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Wardrobe / Style Preset:</label>
+                          <select value={wardrobeStyle} onChange={e => setWardrobeStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value="amber_terracotta">Terracotta & Amber Warm</option>
+                            <option value="sage_green">Sage Green & Natural Earthy</option>
+                            <option value="mocca_soft">Soft Mocca & Cream Neutral</option>
+                            <option value="claymation_cozy">Cozy Sweater & Clay Textures</option>
+                            <option value="custom">✏️ Custom Wardrobe Directive...</option>
+                          </select>
+
+                          {wardrobeStyle === 'custom' && (
+                            <input
+                              type="text"
+                              value={wardrobeStyleCustom}
+                              onChange={e => setWardrobeStyleCustom(e.target.value)}
+                              placeholder="Masukkan deskripsi pakaian/hijab..."
+                              style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
+                            />
+                          )}
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Lighting Style:</label>
+                          <select value={lightingStyle} onChange={e => setLightingStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
+                            <option value="window_daylight">Natural Window Daylight</option>
+                            <option value="warm_indoor">Warm Ambient Indoor</option>
+                            <option value="studio_bright">Bright Studio Softbox</option>
+                            <option value="cinematic_mood">Cinematic Mood Lighting</option>
+                            <option value="custom">✏️ Custom Lighting Directive...</option>
+                          </select>
+
+                          {lightingStyle === 'custom' && (
+                            <input
+                              type="text"
+                              value={lightingStyleCustom}
+                              onChange={e => setLightingStyleCustom(e.target.value)}
+                              placeholder="Masukkan deskripsi pencahayaan..."
+                              style={{ width: '100%', marginTop: '8px', padding: '8px 10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '6px', fontSize: '12px' }}
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               )}

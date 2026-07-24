@@ -73,6 +73,8 @@ export async function POST(request) {
     const campaignId = `opc_planner_${Date.now()}`;
     const finalCampaignName = campaign_name?.trim() || `[OPC Planner] ${planner.title || planner.product_name}`;
 
+    const refImage = global_settings.product_ref_image_path || planner.product_ref_image || planner.product_photo_url || null;
+
     // 3. Create global pillar campaign row
     createPillarCampaign({
       id: campaignId,
@@ -87,8 +89,8 @@ export async function POST(request) {
       visual_style: global_settings.visual_style || 'Cinematic',
       face_visibility: global_settings.face_visibility || 'Faceless',
       is_bridging_active: global_settings.is_bridging_active !== undefined ? (global_settings.is_bridging_active ? 1 : 0) : 1,
-      target_clips_count: global_settings.target_clips_count || 4,
-      bridge_at_clip: global_settings.bridge_at_clip || 2,
+      target_clips_count: global_settings.target_clips_count ? Number(global_settings.target_clips_count) : 4,
+      bridge_at_clip: global_settings.bridge_at_clip ? Number(global_settings.bridge_at_clip) : 2,
       bridge_duration_clips: global_settings.bridge_duration_clips !== undefined ? Number(global_settings.bridge_duration_clips) : 1,
       bridging_mode: global_settings.bridging_mode || 'manual_input',
       target_product_id: null,
@@ -97,7 +99,7 @@ export async function POST(request) {
       target_ai: global_settings.target_ai || 'Google Veo (8s)',
       video_model: global_settings.video_model || 'veo_31_lite',
       visual_mode: global_settings.visual_mode || 'hybrid_lock',
-      product_ref_image_path: planner.product_ref_image || planner.product_photo_url || null,
+      product_ref_image_path: refImage,
       product_filename_declare: global_settings.product_filename_declare || null,
       visual_overrides_json: global_settings.visual_overrides_json || null,
       enable_tts: global_settings.enable_tts !== undefined ? (global_settings.enable_tts ? 1 : 0) : 1,
@@ -135,7 +137,7 @@ export async function POST(request) {
         const row = rows[i];
         
         const hasUrl = Boolean(planner.product_url && planner.product_url.trim() !== '');
-        const hasImage = Boolean((planner.product_ref_image && planner.product_ref_image.trim() !== '') || (planner.product_photo_url && planner.product_photo_url.trim() !== ''));
+        const hasImage = Boolean(refImage && refImage.trim() !== '');
         const generationStatus = (hasUrl && !hasImage) ? 'pending_sourcing' : 'pending';
 
         let rowNarrative = global_settings.narrative_mode;
@@ -153,7 +155,7 @@ export async function POST(request) {
           product_name: row.product || planner.product_name || '',
           product_desc: planner.product_description || '',
           product_usp: planner.product_usp || '',
-          product_ref_image_path: planner.product_ref_image || planner.product_photo_url || null,
+          product_ref_image_path: refImage,
           visual_mode: global_settings.visual_mode || 'hybrid_lock',
           generation_status: generationStatus,
           narrative_mode: rowNarrative
