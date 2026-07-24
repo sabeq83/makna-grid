@@ -1,8 +1,11 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'MAKNA — AI Video Content Generator',
-  description: 'Industrial-grade AI content engine for strategic video production',
+  title: 'MAKNA GRID — Decoupled Multi-Node Cluster',
+  description: 'Industrial-grade AI content engine for strategic video production & multi-node orchestration',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }) {

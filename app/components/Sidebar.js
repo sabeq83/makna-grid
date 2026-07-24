@@ -104,8 +104,43 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h1>MAKNA GRID</h1>
-        <p>Decoupled Multi-Node Cluster</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '38px',
+            height: '38px',
+            borderRadius: '10px',
+            background: 'linear-gradient(135deg, rgba(0,242,254,0.15), rgba(16,185,129,0.15))',
+            border: '1px solid rgba(0,242,254,0.3)',
+            boxShadow: '0 0 12px rgba(0,242,254,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <svg viewBox="0 0 64 64" fill="none" style={{ width: '24px', height: '24px' }}>
+              <defs>
+                <linearGradient id="gridGradM_sb" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00F2FE" />
+                  <stop offset="50%" stopColor="#3B82F6" />
+                  <stop offset="100%" stopColor="#10B981" />
+                </linearGradient>
+              </defs>
+              <circle cx="32" cy="32" r="22" fill="rgba(0,242,254,0.1)"/>
+              <path d="M16 48 L16 16 L32 34 L48 16 L48 48" stroke="url(#gridGradM_sb)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M16 28 L24 28 L32 37 L40 28 L48 28" stroke="#00F2FE" strokeWidth="1.5" opacity="0.6" strokeDasharray="2 2"/>
+              <path d="M16 38 L48 38" stroke="#10B981" strokeWidth="1.5" opacity="0.5" strokeDasharray="2 2"/>
+              <circle cx="16" cy="16" r="3.5" fill="#00F2FE"/>
+              <circle cx="48" cy="16" r="3.5" fill="#00F2FE"/>
+              <circle cx="32" cy="34" r="4" fill="#10B981"/>
+              <circle cx="16" cy="48" r="3.5" fill="#00F2FE"/>
+              <circle cx="48" cy="48" r="3.5" fill="#00F2FE"/>
+            </svg>
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.15rem', lineHeight: '1.2' }}>MAKNA GRID</h1>
+            <p style={{ margin: '2px 0 0 0', fontSize: '0.65rem' }}>Decoupled Multi-Node Cluster</p>
+          </div>
+        </div>
       </div>
 
       <nav className="sidebar-nav">

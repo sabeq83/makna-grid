@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.32 — Logo Konsep 2 & Favicon MAKNA Grid (25/07/2026)
+- Integrasi favicon SVG Neural Monogram Grid M
+- Update logo MAKNA Grid pada Halaman Login dan Sidebar Menu
+
 ## V1.1.31 — Copy 100% VSO Engine dari Mass OPC ke ImportPlannerModal (24/07/2026)
 - VSO Engine di ImportPlannerModal 100% identik dengan Mass OPC (app/pillar-campaigns/page.js)
 - Termasuk 3D Mascot Universes, Wardrobe optgroups dinamis, & Custom Text Inputs
