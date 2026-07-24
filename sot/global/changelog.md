@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.0.1 — SOP Panduan Menjalankan MAKNA Grid (24/07/2026)
+- Menambahkan SOP Panduan Menjalankan MAKNA Grid 3-Node Cluster di sot/global/SOP_MENJALANKAN_MAKNA_GRID.md
+
 ## [v1.0.0] — Initial Release: MAKNA Grid Distributed 3-Node Architecture (24/07/2026)
 - **Node Role Isolation**: Implemented `lib/node-config.js` to decouple Node 1 UI Gateway (`100.65.62.63`), Node 2 Worker GPU (`100.117.59.92`), and Node 3 Central DB & Media Vault (`100.78.186.123`).
 - **Central DB & Vault Adapters**: Added `lib/db-adapter.js` and `lib/storage-vault.js` targeting Central DB and ContentFlow API (`http://100.78.186.123:3001/api/v1/content/ingest`).
