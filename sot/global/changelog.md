@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.8 — Skrip Otomatisasi Deploy 3-Node Cluster (24/07/2026)
+- Menambahkan skrip node scripts/deploy-cluster.js dan command npm run deploy:cluster untuk deployment otomatis ke Node 1, Node 2, dan Node 3
+
 ## V1.1.7 — Fix Password Modal Auto Close & Error Notification (24/07/2026)
 - Menambahkan fungsi closePasswordModal() agar modal otomatis menutup dan mereset state saat sukses
 - Menampilkan pesan kesalahan langsung di dalam modal jika gagal
