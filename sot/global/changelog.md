@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.2 — Fix Port 3005 Default Script (24/07/2026)
+- Mengubah script npm run dev di package.json agar langsung menggunakan flag -p 3005 secara otomatis
+
 ## V1.1.1 — Konfigurasi Port Pengujian 3005 (24/07/2026)
 - Mengubah default PORT di .env.local menjadi 3005 agar tidak bentrok dengan maknagen (Port 3000)
 - Menambahkan script npm run dev:port
