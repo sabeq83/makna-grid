@@ -22,11 +22,11 @@ export async function POST(req) {
     if (filename.endsWith('.pdf')) {
       // Dynamic import pdf-parse only when needed
       try {
-        const pdfParse = (await import('pdf-parse')).default;
+        const pdfParse = require('pdf-parse');
         const pdfData = await pdfParse(buffer);
         rawText = pdfData.text;
       } catch (e) {
-        // Fallback: try reading as text
+        // Fallback: read as utf-8 text
         rawText = buffer.toString('utf-8');
       }
     } else {

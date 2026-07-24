@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.14 — Fix Webpack PDF Parse Resolution in Brand Extract API (24/07/2026)
+- Gunakan require safe resolution untuk modul pdf-parse opsional agar npm run build berjalan 100% mulus di seluruh Node
+
 ## V1.1.13 — Fix Next.js 16 Dynamic Route Params Resolution for Reset Password (24/07/2026)
 - Menambahkan await Promise.resolve(params) pada route [userId] dan [userId]/reset-password untuk resolusi userId yang presisi
 
