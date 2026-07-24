@@ -156,16 +156,17 @@ export default function UserManagementPage() {
   return (
     <div className="app-container">
       <Sidebar />
-      <main className="main-content" style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto', color: '#f8fafc', width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 700, margin: 0, background: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              👥 User Management & Menu Privileges
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '4px' }}>
-              Kelola pengguna, matriks izin menu, dan penugasan Akun Brand (Multi-Tenant RBAC)
-            </p>
-          </div>
+      <main className="main-content">
+        <div className="page-container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+            <div>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 700, margin: 0, background: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                👥 User Management & Menu Privileges
+              </h1>
+              <p style={{ color: 'var(--text-secondary, #94a3b8)', fontSize: '0.9rem', marginTop: '6px' }}>
+                Kelola pengguna, matriks izin menu, dan penugasan Akun Brand (Multi-Tenant RBAC)
+              </p>
+            </div>
           <button
             onClick={openCreateModal}
             style={{
@@ -379,6 +380,7 @@ export default function UserManagementPage() {
             </div>
           </div>
         )}
+        </div>
       </main>
     </div>
   );

@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.4 — Fix Layout Margin & Alignment User Management Page (24/07/2026)
+- Menggunakan class page-container standar MAKNA Grid agar tata letak halaman User Management rapi dan simetris di tengah
+
 ## V1.1.3 — Fix Layout Sidebar di User Management Page (24/07/2026)
 - Menambahkan <Sidebar /> dan <div className='app-container'> pada halaman User Management /settings/users
 
