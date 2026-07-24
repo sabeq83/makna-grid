@@ -1,6 +1,7 @@
 'use client';
 
 import Sidebar from '../../components/Sidebar';
+import ImportPlannerModal from '../../components/ImportPlannerModal';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -19,6 +20,7 @@ export default function ContentPlannerWorkbench() {
 
   const [executing, setExecuting] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [showOpcModal, setShowOpcModal] = useState(false);
 
   useEffect(() => {
     if (plannerId) {
@@ -215,6 +217,12 @@ export default function ContentPlannerWorkbench() {
 
           {/* Export & Sync Action Bar */}
           <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => setShowOpcModal(true)}
+              style={{ padding: '8px 14px', background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)', color: '#ffffff', border: '1px solid #6366f1', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', fontSize: '13px', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)' }}
+            >
+              🌱 Ingest ke OPC (Organic Pillar)
+            </button>
             <button
               onClick={handleSyncContentFlow}
               disabled={syncing}
@@ -458,6 +466,17 @@ export default function ContentPlannerWorkbench() {
             </table>
           </div>
         )}
+
+        {/* Import Planner Modal for OPC */}
+        <ImportPlannerModal
+          isOpen={showOpcModal}
+          onClose={() => setShowOpcModal(false)}
+          initialPlannerId={plannerId}
+          onSuccess={(res) => {
+            showToast(`Berhasil di-ingest ke OPC Kampanye: ${res.campaign_name} (${res.ingested_count} item)`);
+            router.push('/pillar-campaigns');
+          }}
+        />
       </main>
     </div>
   );

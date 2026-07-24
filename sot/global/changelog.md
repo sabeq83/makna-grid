@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.28 — Integrasi Content Planner ke Menu OPC (24/07/2026)
+- Fitur Ingest Content Planner ke Organic Pillar (OPC)
+- Modal UI Ingest berstruktur 4 Accordion SC dengan kontrol footer di bawah
+- API endpoint /api/v2/pillar-campaigns/ingest-planner
+
 ## V1.1.27 — Migrate G-Labs Webhook Connection to Direct Tailscale IP (100.117.59.92:8765) (24/07/2026)
 - Membuka port 8765 di Windows Firewall Node 2 dan mengarahkan seluruh komunikasi G-Labs Webhook secara langsung ke IP Tailscale 100.117.59.92:8765
 

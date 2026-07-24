@@ -1,6 +1,7 @@
 'use client';
 
 import Sidebar from '../components/Sidebar';
+import ImportPlannerModal from '../components/ImportPlannerModal';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
@@ -53,6 +54,7 @@ export default function OrganicPillarPage() {
   const [toast, setToast] = useState(null);
   const [processingId, setProcessingId] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showPlannerModal, setShowPlannerModal] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
 
@@ -949,6 +951,13 @@ export default function OrganicPillarPage() {
               <p className="page-subtitle">Rancang storyboard & video organik sandwich (Hook ➜ Product Bridge ➜ Educational Value)</p>
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
+              <button 
+                className="btn" 
+                style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)', border: '1px solid #6366f1', color: '#ffffff', fontWeight: 600 }} 
+                onClick={() => setShowPlannerModal(true)}
+              >
+                📋 Import Content Planner
+              </button>
               <button 
                 className="btn" 
                 style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border)', color: 'var(--text-primary)' }} 
@@ -2048,6 +2057,16 @@ export default function OrganicPillarPage() {
             </div>
           </div>
         )}
+
+        <ImportPlannerModal
+          isOpen={showPlannerModal}
+          onClose={() => setShowPlannerModal(false)}
+          onSuccess={(res) => {
+            showToast(`Kampanye OPC "${res.campaign_name}" (${res.ingested_count} video) berhasil dibuat dari Content Planner.`);
+            fetchCampaigns();
+            pollLogs();
+          }}
+        />
 
       </main>
     </div>
