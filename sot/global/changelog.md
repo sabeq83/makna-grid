@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.24 — Integrate SSH Port Forwarding Tunnel for G-Labs Webhook Access across Cluster (24/07/2026)
+- Menghubungkan 127.0.0.1:8765 pada Node 1 Gateway langsung ke G-Labs Webhook Node 2 via SSH Tunneling otomatis
+
 ## V1.1.23 — Fix Strategic Campaign Call 1 Execution and Webhook Routing (24/07/2026)
 - Memisahkan T2I Start Frame dari Call 1 agar Gemini Ideation selesai instan dalam 3-5 detik
 - Mengarahkan Webhook Client ke Node 2 secara otomatis pada Node 1 Gateway
