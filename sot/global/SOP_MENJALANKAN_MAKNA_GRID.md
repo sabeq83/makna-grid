@@ -35,11 +35,11 @@ Sebelum startup, pastikan file `.env.local` pada masing-masing node telah sesuai
 NODE_ENV=production
 NODE_ROLE=gateway
 ENABLE_SCHEDULER_WORKER=false
-PORT=3000
+PORT=3005
 DATABASE_HOST=100.78.186.123
 CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 ```
-> **Catatan**: Node 1 **TIDAK** menjalankan Background Queue Worker (`ENABLE_SCHEDULER_WORKER=false`) untuk menjaga performa antarmuka pengguna dan Gemini AI Fase 1.
+> **Catatan Port**: Untuk pengujian lokal di komputer development agar tidak bentrok dengan `maknagen` yang menggunakan Port `3000`, gunakan Port **`3005`** (`PORT=3005`). Node 1 **TIDAK** menjalankan Background Queue Worker (`ENABLE_SCHEDULER_WORKER=false`).
 
 ### 💻 Node 2 (Windows Worker GPU — `100.117.59.92`)
 ```env

@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.1 — Konfigurasi Port Pengujian 3005 (24/07/2026)
+- Mengubah default PORT di .env.local menjadi 3005 agar tidak bentrok dengan maknagen (Port 3000)
+- Menambahkan script npm run dev:port
+- Memperbarui SOP Pengujian Lokal di sot/global/SOP_MENJALANKAN_MAKNA_GRID.md
+
 ## V1.1.0 — Implementasi Multi-User, RBAC, dan Data Isolation (24/07/2026)
 - Implementasi Database Schema Multi-User (users, sessions, user_menu_permissions, user_brands)
 - Autentikasi Session Cookie HTTP-Only & Login Portal
