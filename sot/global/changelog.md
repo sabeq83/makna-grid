@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.10 — Strict Auth Middleware Redirect to /login (24/07/2026)
+- Menambahkan middleware.js untuk mengalihkan secara ketat pengguna unauthenticated ke /login
+- Menghapus dev fallback pada lib/auth.js
+
 ## V1.1.9 — Gunakan Webpack Dev Mode untuk Stabilitas Server (24/07/2026)
 - Menambahkan flag --webpack pada script dev agar Next.js dev server berjalan stabil pada seluruh Node
 
