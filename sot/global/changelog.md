@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.19 — Revisi Modal Generator Content Planner (24/07/2026)
+- Menghapus input Nama Akun dan Sheet ID
+- Menambahkan dropdown Brand Profile tepat di atas Judul Planner
+
 ## V1.1.18 — Strict Sidebar Menu Isolation & Dynamic Section Filtering (24/07/2026)
 - Mengisolasi pemetaan rute sidebar secara ketat per menu key
 - Menyembunyikan judul seksi (WORKFLOW, TOOLS, SYSTEM) jika seluruh menunya ditutup untuk user biasa

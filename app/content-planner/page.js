@@ -84,14 +84,17 @@ export default function ContentPlannerDashboard() {
 
   async function handleGenerate(e) {
     e.preventDefault();
-    if (!accountName.trim()) {
-      showToast('Nama Akun Wajib Diisi', 'error');
-      return;
-    }
     if (!productName || !productDesc) {
       showToast('Nama Produk dan Deskripsi Wajib Diisi', 'error');
       return;
     }
+
+    const selectedBrand = brandProfiles.find(b => b.id === selectedBrandId);
+    const effectiveAccountName = (
+      selectedBrand?.brand_name ||
+      accountName ||
+      productName
+    ).trim();
 
     try {
       setGenerating(true);
@@ -100,8 +103,8 @@ export default function ContentPlannerDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: title || `Planner - ${productName}`,
-          account_name: accountName.trim(),
-          google_sheet_id: googleSheetId.trim(),
+          account_name: effectiveAccountName,
+          google_sheet_id: (googleSheetId || '').trim(),
           input_mode: inputMode,
           brand_id: selectedBrandId || null,
           product_id: selectedProductId || null,
@@ -354,31 +357,6 @@ export default function ContentPlannerDashboard() {
               </div>
 
               <form onSubmit={handleGenerate}>
-                {/* Account Name & Google Sheet ID */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px' }}>Nama Akun *:</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="misal: sabeq_skincare"
-                      value={accountName}
-                      onChange={e => setAccountName(e.target.value)}
-                      style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px' }}>Google Sheet ID (Opsional):</label>
-                    <input
-                      type="text"
-                      placeholder="1BxiMVs0XRA5nFMdKvB..."
-                      value={googleSheetId}
-                      onChange={e => setGoogleSheetId(e.target.value)}
-                      style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
-                    />
-                  </div>
-                </div>
-
                 {/* Input Mode Selector */}
                 <div style={{ marginBottom: '20px', background: '#18181b', padding: '4px', borderRadius: '10px', display: 'flex' }}>
                   <button
@@ -476,6 +454,32 @@ export default function ContentPlannerDashboard() {
                     </div>
                   </div>
                 )}
+
+                {/* Brand Profile Dropdown (Taruh di atas Judul Planner) */}
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px', fontWeight: 600 }}>
+                    🧬 Brand Profile (Akun Brand):
+                  </label>
+                  <select
+                    value={selectedBrandId}
+                    onChange={e => {
+                      const bId = e.target.value;
+                      setSelectedBrandId(bId);
+                      const b = brandProfiles.find(item => item.id === bId);
+                      if (b) {
+                        setAccountName(b.brand_name || '');
+                      }
+                    }}
+                    style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
+                  >
+                    <option value="">-- Pilih Brand Profile (Opsional) --</option>
+                    {brandProfiles.map(b => (
+                      <option key={b.id} value={b.id}>
+                        {b.brand_name} {b.niche ? `(${b.niche})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 <div style={{ marginBottom: '16px' }}>
                   <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px' }}>Judul Planner (Opsional):</label>
