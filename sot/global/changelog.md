@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.47 — Redesain Dashboard Utama Menjadi Command Center Simpel & Realtime Stats (25/07/2026)
+- Penyederhanaan Dashboard Utama ke Judul  dengan 4 Kartu Metric Real-time
+- Quick Action Launchpad Akses 1-Klik ke Kampanye OPC, Import Sheet, ContentFlow Hub & Recipe Labs
+- Integrasi List 5 Konten Siap Publish Terbaru & Bar Progress Publikasi Platform TikTok, FB, IG
+
 ## V1.1.46 — PemberSIhan Hint Admin & Penambahan Eye Toggle Password Halaman Login (25/07/2026)
 - Pembersihan Hint Teks Default Admin pada Halaman Login Portal
 - Penambahan Icon Eye/EyeOff Toggle untuk Melihat atau Menyembunyikan Karakter Password
