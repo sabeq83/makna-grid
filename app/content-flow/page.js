@@ -64,6 +64,14 @@ const getBrandBadgeStyle = (accountName) => {
       boxShadow: '0 2px 10px rgba(239, 68, 68, 0.35)'
     };
   }
+  if (acc === 'siasatsehat' || acc.includes('sehat') || acc.includes('health')) {
+    return {
+      background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.3) 0%, rgba(16, 185, 129, 0.3) 100%)',
+      border: '1px solid #10b981',
+      color: '#6ee7b7',
+      boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)'
+    };
+  }
   // Fallback Option D (Sleek Emerald Green)
   return {
     background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.25) 0%, rgba(16, 185, 129, 0.25) 100%)',

@@ -33,6 +33,9 @@ export default function Dashboard() {
     if (acc === 'dummybrand02' || acc.includes('red') || acc.includes('food')) {
       return { background: 'rgba(220, 38, 38, 0.2)', border: '1px solid #ef4444', color: '#fca5a5' };
     }
+    if (acc === 'siasatsehat' || acc.includes('sehat') || acc.includes('health')) {
+      return { background: 'rgba(5, 150, 105, 0.25)', border: '1px solid #10b981', color: '#6ee7b7' };
+    }
     return { background: 'rgba(5, 150, 105, 0.2)', border: '1px solid #10b981', color: '#6ee7b7' };
   };
 

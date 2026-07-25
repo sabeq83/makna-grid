@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.50 — Populasi Atribut Brand siasatsehat & Format Video ID RE-SS-001 s/d RE-SS-024 (25/07/2026)
+- Penetapan Atribut Profil Brand  pada Kampanye RE eef644d9-d74c-4a5a-834f-38c230fd9b21
+- Populasi Otomatis Format : RE-SS-001 s/d RE-SS-024 untuk 24 Item Konten RE di ContentFlow Hub
+- Penambahan Theme Warna Brand  (Emerald/Teal Glow) dan Penetapan Hak Akses RBAC User
+
 ## V1.1.49 — Migrasi & Impor 100% Kampanye RE Legacy Node 1 eef644d9-d74c-4a5a-834f-38c230fd9b21 (25/07/2026)
 - Penyalinan & Impor Otomatis Kampanye RE Legacy eef644d9-d74c-4a5a-834f-38c230fd9b21 dari Node 1 (100.65.62.63:3003)
 - Pengunduhan 54 File Start Frame PNG & 54 File Voice-Over MP3 ke Repositori Lokal
