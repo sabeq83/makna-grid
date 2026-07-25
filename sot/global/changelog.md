@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.7 — Standarisasi Baku Campaign ID & Video ID MAKNA Grid V2.0 (25/07/2026)
+- Penambahan utilitas terpusat lib/id-generator.js untuk pembentukan Campaign ID dan Video ID baku
+- Skrip sanitasi scripts/sanitize-and-standardize-ids.js untuk merapikan 142 baris data video_id lama di PostgreSQL Node 3 & SQLite
+- Integrasi generateVideoId pada scanning contentflow-ingest.js
+
 ## V2.0.6 — Fix Next.js start bin path di deploy-cluster.js & Node 1 server restart (25/07/2026)
 - Fix jalur eksekusi binary next start pada node_modules/.bin/next
 - Verifikasi konektivitas HTTP 200 OK pada 100.65.62.63:3000

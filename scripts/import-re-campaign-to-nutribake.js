@@ -1,5 +1,6 @@
 const { pgQuery } = require('../lib/db-pg');
 const { getDb } = require('../lib/db');
+const { generateVideoId } = require('../lib/id-generator.js');
 
 async function importReCampaignToNutribake() {
   const CAMPAIGN_ID = '66b4d649-8045-4edf-b3e4-375428108797';
@@ -54,7 +55,13 @@ async function importReCampaignToNutribake() {
   let insertedCount = 0;
 
   for (const item of items) {
-    const videoId = `nutribake_re_66b4d649_${item.id}`;
+    insertedCount++;
+    const videoId = generateVideoId({
+      accountName: TARGET_ACCOUNT,
+      modulePrefix: 're',
+      campaignId: CAMPAIGN_ID,
+      sequence: insertedCount
+    });
     const cfId = `cf_nutribake_re_${item.id}`;
 
     // Extract caption
@@ -158,9 +165,6 @@ async function importReCampaignToNutribake() {
       );
     } catch (sqErr) {
       console.warn(`[SQLite Node 1 Error] Item ${item.id}:`, sqErr.message);
-    }
-
-    insertedCount++;
     console.log(`  [Item ${insertedCount}/${items.length}] Ingested video_id: "${videoId}" for account: "${TARGET_ACCOUNT}"`);
   }
 
