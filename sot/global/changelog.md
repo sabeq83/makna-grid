@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.0.14 — Penyempurnaan OPC, RE & Standarisasi Campaign ID Terpusat (25/07/2026)
+- Standarisasi baku Campaign ID terpusat (opc_YYMMDD_6HEX, re_YYMMDD_6HEX, sc_YYMMDD_6HEX) pada lib/id-generator.js
+- Penyederhanaan Social Media Package menjadi 1 Single Universal Caption pada lib/prompts.js
+- Penyempurnaan RE: hapus field Spreadsheet ID, default Nextcloud /MAKNA_Assets, auto-fill Product Bridging dari pustaka
+- Default FFmpeg SFX Vol = 0.0 & BGM Vol = 0.0 pada form OPC & RE
+
 ## V2.0.13 — Fix OPC & RE Campaign Scheduler Default Active Check (25/07/2026)
 - Fix opc_campaigns_scheduler_active dan re_campaigns_scheduler_active check dari === true menjadi !== false di lib/campaign-scheduler.js
 - Mengaktifkan pemrosesan otomatis kampanye OPC & RE berstatus running secara default

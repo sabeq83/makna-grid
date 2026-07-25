@@ -40,7 +40,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Kategori resep wajib diisi.' }, { status: 400 });
     }
 
-    const campaignId = `rcamp_${Date.now()}_${crypto.randomBytes(3).toString('hex')}`;
+    const campaignId = generateCampaignId('recipe');
     const count = Math.max(1, Math.min(20, Number(target_recipe_count) || 1));
 
     // 1. Buat Kampanye Utama

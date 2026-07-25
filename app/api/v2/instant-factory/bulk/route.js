@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createInstantCampaign, createInstantCampaignItem, getDb } from '@/lib/db';
+import { generateCampaignId } from '@/lib/id-generator';
 
 export async function POST(request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'rows_data must be a non-empty array' }, { status: 400 });
     }
 
-    const campaignId = `if_batch_${Date.now()}`;
+    const campaignId = generateCampaignId('instant');
     const db = getDb();
 
     // 1. Create the parent instant campaign

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { createPillarCampaign, createPillarCampaignItem, getDb } from '@/lib/db';
+import { generateCampaignId } from '@/lib/id-generator';
 
 function extractSpreadsheetId(input) {
   if (!input) return null;
@@ -19,7 +20,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'rows_data must be a non-empty array' }, { status: 400 });
     }
 
-    const campaignId = `opc_batch_${Date.now()}`;
+    const campaignId = generateCampaignId('opc');
     const db = getDb();
 
     // 1. Create the global campaign row

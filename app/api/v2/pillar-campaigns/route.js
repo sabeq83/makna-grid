@@ -9,6 +9,7 @@ import {
   getDb,
   getSetting
 } from '../../../../lib/db';
+import { generateCampaignId } from '../../../../lib/id-generator';
 
 function extractSpreadsheetId(input) {
   if (!input) return null;
@@ -51,7 +52,7 @@ export async function POST(request) {
     let productRefImagePath = null;
     let productFilenameDeclare = null;
 
-    const id = uuidv4();
+    const id = generateCampaignId('opc');
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData();

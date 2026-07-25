@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createPillarCampaign, createPillarCampaignItem, getDb } from '@/lib/db';
+import { generateCampaignId } from '@/lib/id-generator';
 import { startCampaignScheduler } from '@/lib/campaign-scheduler';
 
 function extractSpreadsheetId(input) {
@@ -70,7 +71,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Tidak ada baris strategi konten yang dapat di-ingest' }, { status: 400 });
     }
 
-    const campaignId = `opc_planner_${Date.now()}`;
+    const campaignId = generateCampaignId('opc');
     const finalCampaignName = campaign_name?.trim() || `[OPC Planner] ${planner.title || planner.product_name}`;
 
     const refImage = global_settings.product_ref_image_path || planner.product_ref_image || planner.product_photo_url || null;

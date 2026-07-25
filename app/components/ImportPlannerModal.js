@@ -203,6 +203,8 @@ export default function ImportPlannerModal({
           voice_provider: voiceProvider,
           target_language: targetLanguage,
           nextcloud_parent_folder: nextcloudParentFolder.trim(),
+          ffmpeg_sfx_volume: 0.0,
+          ffmpeg_bgm_volume: 0.0,
           target_spreadsheet_id: '',
           visual_overrides_json: isVsoActive ? JSON.stringify({
             is_vso_active: true,

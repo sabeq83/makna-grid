@@ -64,7 +64,7 @@ export async function POST(request) {
     }
 
     // 3. Save to database
-    const campaignId = `scamp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const campaignId = generateCampaignId('sheets');
     const newCampaign = {
       id: campaignId,
       campaign_name,

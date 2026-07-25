@@ -51,7 +51,6 @@ export default function RECampaignsPage() {
   const [submitStatus, setSubmitStatus] = useState('running');
   const [showForm, setShowForm] = useState(false);
   const [campaignName, setCampaignName] = useState('');
-  const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
   const [urlsText, setUrlsText] = useState('');
   const [aspectRatio, setAspectRatio] = useState('9:16');
   const [targetAi, setTargetAi] = useState('Google Veo (8s)');
@@ -123,7 +122,7 @@ export default function RECampaignsPage() {
   const [enableFfmpeg, setEnableFfmpeg] = useState(false);
   const [enableSocialPost, setEnableSocialPost] = useState(false);
   const [ttsModelQuality, setTtsModelQuality] = useState('speech-2.8-turbo');
-  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Production_Final');
+  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('/MAKNA_Assets');
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [voiceCast, setVoiceCast] = useState([]); // [{id, name, gemini_voice_id, minimax_voice_id}]
@@ -508,7 +507,7 @@ export default function RECampaignsPage() {
       formData.append('angle_multiplier', String(angleMultiplier));
       formData.append('tts_model_quality', ttsModelQuality);
       formData.append('nextcloud_parent_folder', nextcloudParentFolder);
-      formData.append('target_spreadsheet_id', targetSpreadsheetId.trim());
+      formData.append('target_spreadsheet_id', '');
       formData.append('sfx_setting', sfxSetting);
       formData.append('enable_audio_segment', enableAudioSegment);
       if (voiceCast.length > 0) formData.append('voice_cast_json', JSON.stringify({ characters: voiceCast }));
@@ -874,19 +873,10 @@ export default function RECampaignsPage() {
                       />
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
-                      <label className="form-label">Google Spreadsheet ID (Opsional)</label>
-                      <input
-                        className="form-input"
-                        placeholder="Contoh: 1aBcDeFgHiJkLmNoP..."
-                        value={targetSpreadsheetId}
-                        onChange={e => setTargetSpreadsheetId(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label">Parent Folder Nextcloud</label>
                       <input
                         className="form-input"
-                        placeholder="Contoh: MAKNA_Production_Final"
+                        placeholder="Contoh: /MAKNA_Assets"
                         value={nextcloudParentFolder}
                         onChange={e => setNextcloudParentFolder(e.target.value)}
                         required
@@ -1375,7 +1365,21 @@ export default function RECampaignsPage() {
                             <select
                               className="form-input"
                               value={targetProductId}
-                              onChange={e => setTargetProductId(e.target.value)}
+                              onChange={e => {
+                                const val = e.target.value;
+                                setTargetProductId(val);
+                                if (val) {
+                                  const selProduct = products.find(p => String(p.id) === String(val));
+                                  if (selProduct) {
+                                    const photoPath = selProduct.photo_url || selProduct.clean_photo_url || selProduct.generated_photo_url || selProduct.raw_photo_url || '';
+                                    if (photoPath) {
+                                      setProductRefImage(photoPath);
+                                      const derivedFilename = selProduct.filename_declare || (selProduct.product_name ? `${selProduct.product_name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_ref.jpg` : 'product_ref.jpg');
+                                      setProductFilenameDeclare(derivedFilename);
+                                    }
+                                  }
+                                }
+                              }}
                               required={isBridgingActive && bridgingMode === 'select_existing'}
                             >
                               <option value="">-- Pilih Produk --</option>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb, getSetting, setSetting } from '@/lib/db';
+import { generateCampaignId } from '@/lib/id-generator';
 import { resolveProductData } from '@/lib/scheduler-processors';
 import { buildProductBridgingInjectorPrompt } from '@/lib/prompts';
 import { getGeminiModel } from '@/lib/gemini';
@@ -72,7 +73,7 @@ export async function POST(request) {
         return NextResponse.json({ success: false, error: 'Nama kampanye dan daftar baris (items) wajib disertakan untuk tipe bulk.' }, { status: 400 });
       }
 
-      const campaignId = `bric_${Date.now()}`;
+      const campaignId = generateCampaignId('bridge');
       logToBridgeInjector(`[NEW BULK CAMPAIGN] Memulai inisiasi kampanye bulk baru "${campaign_name}" (ID: ${campaignId}) dengan ${items.length} baris...`);
 
       const db = getDb();
@@ -118,7 +119,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Nama kampanye, naskah lama, dan mode bridging wajib diisi.' }, { status: 400 });
     }
 
-    const campaignId = `bric_${Date.now()}`;
+    const campaignId = generateCampaignId('bridge');
     logToBridgeInjector(`[NEW CAMPAIGN] Memulai inisiasi kampanye baru "${campaign_name}" (ID: ${campaignId})...`);
 
     const db = getDb();

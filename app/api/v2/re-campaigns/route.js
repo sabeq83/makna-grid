@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
 import { createReCampaign, addReCampaignItems, listReCampaigns, getReCampaignStats, getSetting } from '../../../../lib/db';
+import { generateCampaignId } from '../../../../lib/id-generator';
 
 function extractSpreadsheetId(input) {
   if (!input) return null;
@@ -29,7 +30,7 @@ export async function POST(request) {
     let productRefImagePath = null;
     let productFilenameDeclare = null;
 
-    const id = uuidv4();
+    const id = generateCampaignId('re');
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData();

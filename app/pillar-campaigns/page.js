@@ -152,7 +152,7 @@ export default function OrganicPillarPage() {
   const [ffmpegSyncOption, setFfmpegSyncOption] = useState('smart_sync');
   const [ffmpegVideoScale, setFfmpegVideoScale] = useState(1.0);
   const [ffmpegSfxVolume, setFfmpegSfxVolume] = useState(0.0);
-  const [ffmpegBgmVolume, setFfmpegBgmVolume] = useState(0.15);
+  const [ffmpegBgmVolume, setFfmpegBgmVolume] = useState(0.0);
 
   const router = useRouter();
 
@@ -1551,7 +1551,21 @@ export default function OrganicPillarPage() {
                               {bridgingMode === 'select_existing' && (
                                 <div className="form-group">
                                   <label className="form-label">Pilih Produk</label>
-                                  <select className="form-input" value={targetProductId} onChange={e => setTargetProductId(e.target.value)}>
+                                  <select className="form-input" value={targetProductId} onChange={e => {
+                                    const val = e.target.value;
+                                    setTargetProductId(val);
+                                    if (val) {
+                                      const selProduct = products.find(p => String(p.id) === String(val));
+                                      if (selProduct) {
+                                        const photoPath = selProduct.photo_url || selProduct.clean_photo_url || selProduct.generated_photo_url || selProduct.raw_photo_url || '';
+                                        if (photoPath) {
+                                          setProductRefImage(photoPath);
+                                          const derivedFilename = selProduct.filename_declare || (selProduct.product_name ? `${selProduct.product_name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_ref.jpg` : 'product_ref.jpg');
+                                          setProductFilenameDeclare(derivedFilename);
+                                        }
+                                      }
+                                    }
+                                  }}>
                                     <option value="">-- Pilih Produk Terdaftar --</option>
                                     {products.map(p => (
                                       <option key={p.id} value={p.id}>{p.brand_name || 'Generik'} - {p.product_name}</option>
