@@ -90,7 +90,7 @@ export default function LoginPage() {
           <div style={{
             fontSize: '2rem',
             fontWeight: 800,
-            background: 'linear-gradient(135deg, #00F2FE 0%, #10B981 100%)',
+            background: 'linear-gradient(135deg, #38bdf8 0%, #10b981 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             letterSpacing: '-0.5px'

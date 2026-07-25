@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.34 — Refined Dimmed Cyan & Emerald UI Theme (25/07/2026)
+- Pembaruan sistem warna UI ke Refined Dimmed Cyan & Mint Emerald
+- Pembaruan styling tombol, sidebar active state, dan form inputs
+
 ## V1.1.33 — Styling Brand Sidebar MAKNA GRID (25/07/2026)
 - Tulisan MAKNA GRID berwarna putih font besar sejajar logo
 - Subtitle Decoupled Multi-Node Cluster berwarna putih font kecil di bawah logo
