@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.0.15 — Sentralisasi Prompt SC, Preset Tone Demografi & Universal Caption (25/07/2026)
+- Sentralisasi prompt SC & TONE_DEMOGRAPHIC_INSTRUCTIONS di lib/prompts.js
+- Injeksi aturan MANDATORY TRUTH & OBJECTIVE NARRATIVE MANDATE (bebas cerita fiktif 'aku')
+- Target Demografi & Tone Bahasa pada seluruh menu pembuatan video
+- Single Universal Social Caption pada Tab 2 Detail
+
 ## V2.0.14 — Penyempurnaan OPC, RE & Standarisasi Campaign ID Terpusat (25/07/2026)
 - Standarisasi baku Campaign ID terpusat (opc_YYMMDD_6HEX, re_YYMMDD_6HEX, sc_YYMMDD_6HEX) pada lib/id-generator.js
 - Penyederhanaan Social Media Package menjadi 1 Single Universal Caption pada lib/prompts.js

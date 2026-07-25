@@ -31,6 +31,8 @@ export default function StrategicCampaignDashboard() {
   const [productDesc, setProductDesc] = useState('');
   const [productUsp, setProductUsp] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [voiceProvider, setVoiceProvider] = useState('minimax');
   const [voicePersona, setVoicePersona] = useState('Indonesian_casual_reporter_vv2');
@@ -242,8 +244,11 @@ export default function StrategicCampaignDashboard() {
           lighting_style: finalLighting,
           visual_style_preset: visualStylePreset
         },
-        workflow_config: {
+        workflow_config_json: JSON.stringify({
           target_language: targetLanguage,
+          target_demographic: targetDemographic,
+          target_demographic_custom: targetDemographicCustom,
+          enable_audio_segment: enableAudioSegment ? 1 : 0,
           target_clips_count: parseInt(targetClipsCount, 10),
           is_bridging_active: isBridgingActive ? 1 : 0,
           bridge_at_clip: parseInt(bridgeAtClip, 10),
@@ -760,6 +765,31 @@ export default function StrategicCampaignDashboard() {
                             placeholder="cth: Mengandung 1000mg Vitamin C murni non-acidic"
                             style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
                           />
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', color: '#818cf8', fontWeight: 700, display: 'block', marginBottom: '6px' }}>🎯 Target Demografi & Tone Bahasa:</label>
+                          <select
+                            value={targetDemographic}
+                            onChange={e => setTargetDemographic(e.target.value)}
+                            style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                          >
+                            <option value="genz_casual">Gen-Z & Milenial Muda (Santai, Gaul, Akrab "Kamu/Lo")</option>
+                            <option value="ibu_rumah_tangga">Ibu Rumah Tangga & Keluarga (Ramah, Mengayomi "Bunda/Moms")</option>
+                            <option value="professional_executive">Profesional & Worker (Lugas, Refined, Efisien "Anda/Kamu")</option>
+                            <option value="hijab_syari_family">Keluarga Hijrah & Syari (Santun, Islami Alami "Bunda/Ukhti")</option>
+                            <option value="fitness_health_enthusiast">Penggiat Olahraga & Kesehatan (Motivatif, Energik, Informatif)</option>
+                            <option value="custom">Custom Input Bebas...</option>
+                          </select>
+                          {targetDemographic === 'custom' && (
+                            <input
+                              type="text"
+                              placeholder="Contoh: Mahasiswa Rantau yang Hemat"
+                              value={targetDemographicCustom}
+                              onChange={e => setTargetDemographicCustom(e.target.value)}
+                              style={{ width: '100%', marginTop: '6px', padding: '8px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px', fontSize: '12px' }}
+                            />
+                          )}
                         </div>
 
                         <div>

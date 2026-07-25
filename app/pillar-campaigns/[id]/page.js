@@ -1361,50 +1361,26 @@ export default function PillarCampaignDetailPage() {
       return <p style={{ color: 'var(--danger)' }}>Gagal menguraikan hasil generator JSON.</p>;
     }
 
-    const ytKey = `yt-${item.id}`;
-    const tkKey = `tk-${item.id}`;
-    const igKey = `ig-${item.id}`;
+    const capKey = `cap-${item.id}`;
+    const universalCap = parsed.caption || parsed.universal_caption || (typeof parsed.social_media_package === 'object' ? parsed.social_media_package?.caption : '') || parsed.tiktok_caption || parsed.ig_caption || '';
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {parsed.yt_title && (
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: 8, padding: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>🎥 YouTube Shorts Draft Metadata</span>
-              <button className="btn btn-secondary" style={{ padding: '3px 8px', fontSize: '0.7rem' }} onClick={() => handleCopy(`${parsed.yt_title}\n\n${parsed.yt_desc}`, ytKey)}>
-                {copySuccess[ytKey] ? 'Tersalin ✓' : 'Salin Semua'}
-              </button>
-            </div>
-            <div style={{ fontSize: '0.85rem' }}>
-              <div style={{ fontWeight: 600, color: 'var(--accent-color)' }}>Judul: {parsed.yt_title}</div>
-              <div style={{ marginTop: 6, color: 'var(--text-muted)', whiteSpace: 'pre-wrap', fontSize: '0.8rem' }}>Deskripsi:<br/>{parsed.yt_desc}</div>
-            </div>
+        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: 8, padding: 16 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>📱 Universal Social Media Caption</span>
+            <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem' }} onClick={() => handleCopy(universalCap, capKey)}>
+              {copySuccess[capKey] ? 'Tersalin ✓' : 'Salin Caption'}
+            </button>
           </div>
-        )}
-
-        {parsed.tiktok_caption && (
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: 8, padding: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>🎵 TikTok Caption</span>
-              <button className="btn btn-secondary" style={{ padding: '3px 8px', fontSize: '0.7rem' }} onClick={() => handleCopy(parsed.tiktok_caption, tkKey)}>
-                {copySuccess[tkKey] ? 'Tersalin ✓' : 'Salin'}
-              </button>
-            </div>
-            <p style={{ fontSize: '0.85rem', margin: 0, whiteSpace: 'pre-wrap' }}>{parsed.tiktok_caption}</p>
-          </div>
-        )}
-
-        {parsed.ig_caption && (
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: 8, padding: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>📸 Instagram Reels Caption</span>
-              <button className="btn btn-secondary" style={{ padding: '3px 8px', fontSize: '0.7rem' }} onClick={() => handleCopy(parsed.ig_caption, igKey)}>
-                {copySuccess[igKey] ? 'Tersalin ✓' : 'Salin'}
-              </button>
-            </div>
-            <p style={{ fontSize: '0.85rem', margin: 0, whiteSpace: 'pre-wrap' }}>{parsed.ig_caption}</p>
-          </div>
-        )}
+          <textarea
+            className="form-textarea"
+            style={{ width: '100%', minHeight: 120, fontSize: '0.85rem', background: '#09090b', color: '#fff', borderRadius: 6, padding: 10 }}
+            value={universalCap}
+            onChange={(e) => updateSocialField('caption', e.target.value)}
+            placeholder="Naskah caption universal media sosial (TikTok, Instagram, Facebook, Shorts)..."
+          />
+        </div>
 
         {item.social_post_status === 'completed' && item.social_links_json && (
           <div style={{ marginTop: 12, background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: 16, borderRadius: 8 }}>

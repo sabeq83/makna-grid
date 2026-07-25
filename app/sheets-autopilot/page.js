@@ -72,6 +72,8 @@ export default function SheetsAutopilotDashboard() {
   const [spreadsheetId, setSpreadsheetId] = useState('');
   const [gdriveFolderId, setGdriveFolderId] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [voiceCast, setVoiceCast] = useState([]);
 
@@ -728,6 +730,27 @@ export default function SheetsAutopilotDashboard() {
                               <option value="id-ID">Indonesian (Bahasa Indonesia)</option>
                               <option value="en-US">English (US)</option>
                             </select>
+                          </div>
+                          <div>
+                            <label className="form-label">🎯 Target Demografi & Tone Bahasa</label>
+                            <select className="form-input" value={targetDemographic} onChange={e => setTargetDemographic(e.target.value)}>
+                              <option value="genz_casual">Gen-Z & Milenial Muda (Santai, Gaul, Akrab "Kamu/Lo")</option>
+                              <option value="ibu_rumah_tangga">Ibu Rumah Tangga & Keluarga (Ramah, Mengayomi "Bunda/Moms")</option>
+                              <option value="professional_executive">Profesional & Worker (Lugas, Refined, Efisien "Anda/Kamu")</option>
+                              <option value="hijab_syari_family">Keluarga Hijrah & Syari (Santun, Islami Alami "Bunda/Ukhti")</option>
+                              <option value="fitness_health_enthusiast">Penggiat Olahraga & Kesehatan (Motivatif, Energik, Informatif)</option>
+                              <option value="custom">Custom Input Bebas...</option>
+                            </select>
+                            {targetDemographic === 'custom' && (
+                              <input
+                                type="text"
+                                className="form-input"
+                                style={{ marginTop: 8 }}
+                                placeholder="Contoh: Mahasiswa Rantau yang Hemat"
+                                value={targetDemographicCustom}
+                                onChange={e => setTargetDemographicCustom(e.target.value)}
+                              />
+                            )}
                           </div>
                           <div>
                             <label className="form-label">🎙 Audio Segment (per Klip)</label>

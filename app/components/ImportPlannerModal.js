@@ -46,6 +46,8 @@ export default function ImportPlannerModal({
   const [videoModel, setVideoModel] = useState('veo_31_lite');
   const [clipDuration, setClipDuration] = useState(8); // 4, 6, 8, 10
   const [aspectRatio, setAspectRatio] = useState('9:16');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [faceVisibility, setFaceVisibility] = useState('Faceless'); // 'Faceless' | 'POV' | 'Silhouette' | 'cartoon_face'
   const [targetClipsCount, setTargetClipsCount] = useState(4); // Isian bebas number
   const [wordsPerClip, setWordsPerClip] = useState('20-22 kata');
@@ -202,6 +204,8 @@ export default function ImportPlannerModal({
           sfx_setting: sfxSetting,
           voice_provider: voiceProvider,
           target_language: targetLanguage,
+          target_demographic: targetDemographic,
+          target_demographic_custom: targetDemographicCustom,
           nextcloud_parent_folder: nextcloudParentFolder.trim(),
           ffmpeg_sfx_volume: 0.0,
           ffmpeg_bgm_volume: 0.0,
@@ -413,6 +417,31 @@ export default function ImportPlannerModal({
                         <option value="id-ID">Bahasa Indonesia (id-ID)</option>
                         <option value="en-US">English (en-US)</option>
                       </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', color: '#818cf8', fontWeight: 700, display: 'block', marginBottom: '6px' }}>🎯 Target Demografi & Tone Bahasa:</label>
+                      <select
+                        value={targetDemographic}
+                        onChange={e => setTargetDemographic(e.target.value)}
+                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
+                      >
+                        <option value="genz_casual">Gen-Z & Milenial Muda (Santai, Gaul, Akrab "Kamu/Lo")</option>
+                        <option value="ibu_rumah_tangga">Ibu Rumah Tangga & Keluarga (Ramah, Mengayomi "Bunda/Moms")</option>
+                        <option value="professional_executive">Profesional & Worker (Lugas, Refined, Efisien "Anda/Kamu")</option>
+                        <option value="hijab_syari_family">Keluarga Hijrah & Syari (Santun, Islami Alami "Bunda/Ukhti")</option>
+                        <option value="fitness_health_enthusiast">Penggiat Olahraga & Kesehatan (Motivatif, Energik, Informatif)</option>
+                        <option value="custom">Custom Input Bebas...</option>
+                      </select>
+                      {targetDemographic === 'custom' && (
+                        <input
+                          type="text"
+                          placeholder="Contoh: Mahasiswa Rantau yang Hemat"
+                          value={targetDemographicCustom}
+                          onChange={e => setTargetDemographicCustom(e.target.value)}
+                          style={{ width: '100%', marginTop: '6px', padding: '8px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px', fontSize: '12px' }}
+                        />
+                      )}
                     </div>
 
                     <div>

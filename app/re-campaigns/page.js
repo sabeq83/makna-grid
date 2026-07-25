@@ -61,6 +61,8 @@ export default function RECampaignsPage() {
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [showImportModal, setShowImportModal] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
@@ -507,6 +509,9 @@ export default function RECampaignsPage() {
       formData.append('angle_multiplier', String(angleMultiplier));
       formData.append('tts_model_quality', ttsModelQuality);
       formData.append('nextcloud_parent_folder', nextcloudParentFolder);
+      formData.append('target_language', targetLanguage);
+      formData.append('target_demographic', targetDemographic);
+      formData.append('target_demographic_custom', targetDemographicCustom);
       formData.append('target_spreadsheet_id', '');
       formData.append('sfx_setting', sfxSetting);
       formData.append('enable_audio_segment', enableAudioSegment);
@@ -892,6 +897,31 @@ export default function RECampaignsPage() {
                         <option value="id-ID">🇮🇩 Bahasa Indonesia (Lokal)</option>
                         <option value="en-US">🇺🇸 English (Global / US Market)</option>
                       </select>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label">🎯 Target Demografi & Tone Bahasa</label>
+                      <select
+                        className="form-input"
+                        value={targetDemographic}
+                        onChange={e => setTargetDemographic(e.target.value)}
+                      >
+                        <option value="genz_casual">Gen-Z & Milenial Muda (Santai, Gaul, Akrab "Kamu/Lo")</option>
+                        <option value="ibu_rumah_tangga">Ibu Rumah Tangga & Keluarga (Ramah, Mengayomi "Bunda/Moms")</option>
+                        <option value="professional_executive">Profesional & Worker (Lugas, Refined, Efisien "Anda/Kamu")</option>
+                        <option value="hijab_syari_family">Keluarga Hijrah & Syari (Santun, Islami Alami "Bunda/Ukhti")</option>
+                        <option value="fitness_health_enthusiast">Penggiat Olahraga & Kesehatan (Motivatif, Energik, Informatif)</option>
+                        <option value="custom">Custom Input Bebas...</option>
+                      </select>
+                      {targetDemographic === 'custom' && (
+                        <input
+                          type="text"
+                          className="form-input"
+                          style={{ marginTop: 8 }}
+                          placeholder="Contoh: Mahasiswa Rantau yang Hemat"
+                          value={targetDemographicCustom}
+                          onChange={e => setTargetDemographicCustom(e.target.value)}
+                        />
+                      )}
                     </div>
                      <div className="form-group" style={{ marginBottom: 0 }}>
                        <label className="form-label">🎙 Audio Segment (per Klip)</label>

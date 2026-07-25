@@ -30,6 +30,8 @@ export default function ProductBridgeInjectPage() {
   const [manualDescription, setManualDescription] = useState('');
   const [manualUsp, setManualUsp] = useState('');
   const [productUrl, setProductUrl] = useState('');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [customInstruction, setCustomInstruction] = useState('');
 
   // Expandable campaign ID to show its Workbench

@@ -146,6 +146,8 @@ export default function OrganicPillarPage() {
   const [uploadMarkdown, setUploadMarkdown] = useState(true);
   const [uploadSpreadsheet, setUploadSpreadsheet] = useState(true);
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [targetDemographic, setTargetDemographic] = useState('genz_casual');
+  const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
 
   const [syncMode, setSyncMode] = useState('auto');
@@ -633,6 +635,8 @@ export default function OrganicPillarPage() {
       formData.append('voice_speed', String(voiceSpeed));
       formData.append('voice_volume', String(voiceVolume));
       formData.append('target_language', targetLanguage);
+      formData.append('target_demographic', targetDemographic);
+      formData.append('target_demographic_custom', targetDemographicCustom);
       formData.append('ffmpeg_sync_option', ffmpegSyncOption);
       formData.append('ffmpeg_video_scale', String(ffmpegVideoScale));
       formData.append('ffmpeg_sfx_volume', String(ffmpegSfxVolume));
@@ -1435,6 +1439,27 @@ export default function OrganicPillarPage() {
                           onChange={e => setTargetClipsCount(Number(e.target.value))}
                           required
                         />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">🎯 Target Demografi & Tone Bahasa</label>
+                        <select className="form-input" value={targetDemographic} onChange={e => setTargetDemographic(e.target.value)}>
+                          <option value="genz_casual">Gen-Z & Milenial Muda (Santai, Gaul, Akrab "Kamu/Lo")</option>
+                          <option value="ibu_rumah_tangga">Ibu Rumah Tangga & Keluarga (Ramah, Mengayomi "Bunda/Moms")</option>
+                          <option value="professional_executive">Profesional & Worker (Lugas, Refined, Efisien "Anda/Kamu")</option>
+                          <option value="hijab_syari_family">Keluarga Hijrah & Syari (Santun, Islami Alami "Bunda/Ukhti")</option>
+                          <option value="fitness_health_enthusiast">Penggiat Olahraga & Kesehatan (Motivatif, Energik, Informatif)</option>
+                          <option value="custom">Custom Input Bebas...</option>
+                        </select>
+                        {targetDemographic === 'custom' && (
+                          <input
+                            type="text"
+                            className="form-input"
+                            style={{ marginTop: 8 }}
+                            placeholder="Contoh: Mahasiswa Rantau yang Hemat"
+                            value={targetDemographicCustom}
+                            onChange={e => setTargetDemographicCustom(e.target.value)}
+                          />
+                        )}
                       </div>
                       <div className="form-group">
                         <label className="form-label">Jumlah Kata Per Klip</label>

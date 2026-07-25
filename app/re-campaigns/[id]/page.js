@@ -2545,83 +2545,35 @@ export default function RECampaignDetailPage() {
 
             {currentTab === 'captions' && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                {/* Social Caption Column */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.8rem' }}>🎵 TikTok Caption</span>
-                      <button
-                        type="button"
-                        disabled={!tiktokCaption}
-                        onClick={() => handleCopy(tiktokCaption, `tiktok_${item.id}`)}
-                        className="btn btn-secondary btn-sm"
-                        style={{ fontSize: '0.65rem', padding: '2px 6px', background: copySuccess[`tiktok_${item.id}`] ? '#2ed573' : 'rgba(255,255,255,0.08)', color: '#fff', border: 'none' }}
-                      >
-                        {copySuccess[`tiktok_${item.id}`] ? '✅ Terkopi!' : '📋 Salin'}
-                      </button>
+                {/* Universal Social Caption */}
+                {(() => {
+                  const capKey = `cap_${item.id}`;
+                  const universalCap = parsed.caption || parsed.universal_caption || (typeof parsed.social_media_package === 'object' ? parsed.social_media_package?.caption : '') || parsed.tiktok_caption || parsed.ig_caption || '';
+                  const isCopied = copySuccess[capKey];
+                  return (
+                    <div style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.85rem' }}>📱 Universal Social Media Caption</span>
+                        <button
+                          type="button"
+                          disabled={!universalCap}
+                          onClick={() => handleCopy(universalCap, capKey)}
+                          className="btn btn-secondary btn-sm"
+                          style={{ fontSize: '0.7rem', padding: '4px 10px', background: isCopied ? '#2ed573' : 'rgba(255,255,255,0.08)', color: '#fff', border: 'none' }}
+                        >
+                          {isCopied ? '✅ Terkopi!' : '📋 Salin Caption'}
+                        </button>
+                      </div>
+                      <textarea
+                        className="form-textarea"
+                        style={{ width: '100%', minHeight: '120px', fontSize: '0.82rem', background: '#09090b', color: '#fff', borderRadius: '6px', padding: '10px', lineHeight: 1.4 }}
+                        value={universalCap}
+                        onChange={(e) => updateSocialField(item.id, 'caption', e.target.value)}
+                        placeholder="Naskah caption universal media sosial (TikTok, Instagram, Facebook, Shorts)..."
+                      />
                     </div>
-                    <div style={{ background: 'rgba(0,0,0,0.1)', padding: '8px', borderRadius: '4px', fontSize: '0.78rem', minHeight: '50px', border: '1px solid rgba(255,255,255,0.02)', lineHeight: 1.4 }}>
-                      {tiktokCaption || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Tidak ada caption TikTok.</span>}
-                    </div>
-                  </div>
-
-                  <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.8rem' }}>📸 Instagram Caption</span>
-                      <button
-                        type="button"
-                        disabled={!igCaption}
-                        onClick={() => handleCopy(igCaption, `ig_${item.id}`)}
-                        className="btn btn-secondary btn-sm"
-                        style={{ fontSize: '0.65rem', padding: '2px 6px', background: copySuccess[`ig_${item.id}`] ? '#2ed573' : 'rgba(255,255,255,0.08)', color: '#fff', border: 'none' }}
-                      >
-                        {copySuccess[`ig_${item.id}`] ? '✅ Terkopi!' : '📋 Salin'}
-                      </button>
-                    </div>
-                    <div style={{ background: 'rgba(0,0,0,0.1)', padding: '8px', borderRadius: '4px', fontSize: '0.78rem', minHeight: '90px', border: '1px solid rgba(255,255,255,0.02)', whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>
-                      {igCaption || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Tidak ada caption Instagram.</span>}
-                    </div>
-                  </div>
-                </div>
-
-                {/* YouTube Metadata Column */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.8rem' }}>🎥 YouTube Title</span>
-                      <button
-                        type="button"
-                        disabled={!ytTitle}
-                        onClick={() => handleCopy(ytTitle, `yttitle_${item.id}`)}
-                        className="btn btn-secondary btn-sm"
-                        style={{ fontSize: '0.65rem', padding: '2px 6px', background: copySuccess[`yttitle_${item.id}`] ? '#2ed573' : 'rgba(255,255,255,0.08)', color: '#fff', border: 'none' }}
-                      >
-                        {copySuccess[`yttitle_${item.id}`] ? '✅ Terkopi!' : '📋 Salin'}
-                      </button>
-                    </div>
-                    <div style={{ background: 'rgba(0,0,0,0.1)', padding: '8px', borderRadius: '4px', fontSize: '0.78rem', minHeight: '34px', border: '1px solid rgba(255,255,255,0.02)', fontWeight: '600', lineHeight: 1.4 }}>
-                      {ytTitle || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Tidak ada judul YouTube.</span>}
-                    </div>
-                  </div>
-
-                  <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.8rem' }}>📝 YouTube Description</span>
-                      <button
-                        type="button"
-                        disabled={!ytDesc}
-                        onClick={() => handleCopy(ytDesc, `ytdesc_${item.id}`)}
-                        className="btn btn-secondary btn-sm"
-                        style={{ fontSize: '0.65rem', padding: '2px 6px', background: copySuccess[`ytdesc_${item.id}`] ? '#2ed573' : 'rgba(255,255,255,0.08)', color: '#fff', border: 'none' }}
-                      >
-                        {copySuccess[`ytdesc_${item.id}`] ? '✅ Terkopi!' : '📋 Salin'}
-                      </button>
-                    </div>
-                    <div style={{ background: 'rgba(0,0,0,0.1)', padding: '8px', borderRadius: '4px', fontSize: '0.78rem', minHeight: '100px', border: '1px solid rgba(255,255,255,0.02)', whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>
-                      {ytDesc || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Tidak ada deskripsi YouTube.</span>}
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             )}
           </div>
