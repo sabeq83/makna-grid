@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.46 — PemberSIhan Hint Admin & Penambahan Eye Toggle Password Halaman Login (25/07/2026)
+- Pembersihan Hint Teks Default Admin pada Halaman Login Portal
+- Penambahan Icon Eye/EyeOff Toggle untuk Melihat atau Menyembunyikan Karakter Password
+
 ## V1.1.45 — Header Akun Brand Kartu ContentFlow Hub dengan Warna Dinamis Per Brand (25/07/2026)
 - Penataan Ulang Header Kartu Feed: Badge Akun Brand Ditaruh di Paling Atas Paling Pertama Sebelum Judul Hook
 - Sistem Pewarnaan Dinamis Brand Badge:  (Biru),  (Merah), dan Fallback Brand Lain (Hijau Zamrud Sleek)
