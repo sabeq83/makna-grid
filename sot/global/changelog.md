@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.1.1 — Update SOP AGENTS.md dengan Execution Task List Real-time Progress (26/07/2026)
+- Penambahan aturan seksi wajib Execution Task List pada implementation_plan.md
+- Penambahan aturan pembaruan real-time checkbox progress [x] saat eksekusi
+
 ## V2.1.0 — TikTok Safe Compliance Audit Default YES di Semua Campaign Video (26/07/2026)
 - Set default enableVoAudit ke 1 (YES) pada form OPC, RE, SC, Multiplier Lab, Product Bridge Inject, dan Instant Factory
 - Implementasi TikTok Safe compliance auditor dan report card switcher pada Multiplier Lab, Bridge Injector, dan Instant Factory

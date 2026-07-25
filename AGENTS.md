@@ -42,3 +42,12 @@ Gunakan prosedur ini untuk menguji kesehatan atau menginspeksi server 3-node MAK
 
 - Strategic Campaign di MAKNA sepenuhnya menggunakan **Single-Pass Engine (1-Call Architecture)**. Dalam 1x call API ke Gemini AI, sistem sekaligus menghasilkan Storyboard, Naskah Voice-Over, 10 Parameter Video DNA, dan Social Media Package (Caption, Hashtags, CTA).
 - Pemanggilan **Call 2 secara terpisah SUDAH TIDAK DIGUNAKAN (DEPRECATED)** dalam pipeline eksekusi otomatis (`processStrategicGenerator`).
+
+# SOP Kontrol Eksekusi Rencana (Real-Time Implementation Task List)
+
+Setiap kali Anda menyusun **Implementation Plan** (`implementation_plan.md`), Anda **WAJIB** menerapkan aturan kontrol berikut:
+
+1. **Seksi Wajib `## Execution Task List`**:
+   - Sertakan seksi `## Execution Task List` di dalam `implementation_plan.md` yang memuat tahapan pengerjaan secara kronologis dalam bentuk Markdown Checkbox (`- [ ]`).
+2. **Pembaruan Progress Real-Time**:
+   - Selama tahap eksekusi berlangsung, setelah menyelesaikan setiap tahapan task, Anda **WAJIB memperbarui** file `implementation_plan.md` dengan mengubah `- [ ]` menjadi **`- [x]`** agar pengguna dapat memantau progres pengerjaan secara transparan dan real-time.
