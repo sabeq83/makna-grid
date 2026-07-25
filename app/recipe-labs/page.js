@@ -1342,7 +1342,13 @@ export default function RecipeLabsPage() {
                               <select
                                 className="form-select"
                                 value={accountName}
-                                onChange={e => setAccountName(e.target.value)}
+                                onChange={e => {
+                                  const newAcc = e.target.value;
+                                  setAccountName(newAcc);
+                                  const now = new Date();
+                                  const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                                  setCampaignName(`[ RECIPE ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                                }}
                               >
                                 <option value="">-- Pilih Nama Akun Brand --</option>
                                 {brandProfiles.map(bp => (

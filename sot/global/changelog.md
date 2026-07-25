@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.18 — Fix Spreadsheet ReferenceError, Auto-Fill Standardized Campaign Name, & Product Bridging Auto-Fetch v2.0.18 (25/07/2026)
+- Fix ReferenceError targetSpreadsheetId is not defined pada seluruh form
+- Auto-fill nama kampanye format baku [ MODUL YYYYMMDD ] - namaakun -
+- Auto-fetch foto produk & deklarasi Mandate 88 dari database saat Product Bridging
+
 ## V2.0.17 — Align Brand Account Dropdown Above Campaign Name v2.0.17 (25/07/2026)
 - Penambahan dropdown Nama Akun di atas Nama Kampanye pada seluruh form pembuat video
 - Integrasi Multiplier Lab, SC, RE, OPC, Import Planner, Instant, Bridge, Recipe, & Sheets

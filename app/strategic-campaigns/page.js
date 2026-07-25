@@ -40,7 +40,6 @@ export default function StrategicCampaignDashboard() {
   const [enableVoAudit, setEnableVoAudit] = useState(1);
   const [customInstruction, setCustomInstruction] = useState('');
   const [selectedBrandId, setSelectedBrandId] = useState('');
-  const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
   const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Strategic_Campaigns');
 
   // ACCORDION 2: Aesthetics & Visual Settings
@@ -276,11 +275,9 @@ export default function StrategicCampaignDashboard() {
           enable_vo_audit: enableVoAudit,
           custom_instruction: customInstruction,
           account_name: accountName.trim(),
-          target_spreadsheet_id: targetSpreadsheetId.trim(),
           nextcloud_parent_folder: nextcloudParentFolder.trim()
         }),
         account_name: accountName.trim(),
-        target_spreadsheet_id: targetSpreadsheetId.trim(),
         nextcloud_parent_folder: nextcloudParentFolder.trim()
       };
 
@@ -626,7 +623,13 @@ export default function StrategicCampaignDashboard() {
                             className="form-input"
                             value={accountName}
                             disabled={inputMode === 'planner_import'}
-                            onChange={e => setAccountName(e.target.value)}
+                            onChange={e => {
+                              const newAcc = e.target.value;
+                              setAccountName(newAcc);
+                              const now = new Date();
+                              const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                              setCampaignName(`[ SC ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                            }}
                             style={{
                               width: '100%', padding: '10px',
                               background: inputMode === 'planner_import' ? '#18181b' : '#09090b',

@@ -148,7 +148,6 @@ export default function OrganicPillarPage() {
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
   const [targetDemographic, setTargetDemographic] = useState('genz_casual');
   const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
-  const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
 
   const [syncMode, setSyncMode] = useState('auto');
   const [ffmpegSyncOption, setFfmpegSyncOption] = useState('smart_sync');
@@ -1056,7 +1055,13 @@ export default function OrganicPillarPage() {
                         <select
                           className="form-input"
                           value={accountName}
-                          onChange={e => setAccountName(e.target.value)}
+                          onChange={e => {
+                            const newAcc = e.target.value;
+                            setAccountName(newAcc);
+                            const now = new Date();
+                            const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                            setCampaignName(`[ OPC ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                          }}
                         >
                           <option value="">-- Pilih Nama Akun Brand --</option>
                           {brandProfiles.map(bp => (
@@ -1627,27 +1632,45 @@ export default function OrganicPillarPage() {
 
                           {/* Pixel Lock Image Upload */}
                           {visualMode === 'hybrid_lock' && productionMode === 'single' && (
-                            <div style={{ background: 'var(--bg-secondary)', padding: 16, borderRadius: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                              <div className="form-group">
-                                <label className="form-label">Foto Referensi Produk</label>
-                                <input 
-                                  type="file" 
-                                  className="form-input" 
-                                  accept="image/*" 
-                                  onChange={e => setProductRefImage(e.target.files[0])}
-                                />
-                              </div>
-                              <div className="form-group">
-                                <label className="form-label">Deklarasikan Nama Berkas (Declare Filename)</label>
-                                <input 
-                                  type="text" 
-                                  className="form-input" 
-                                  placeholder="Contoh: botol_serum_biru.png" 
-                                  value={productFilenameDeclare} 
-                                  onChange={e => setProductFilenameDeclare(e.target.value)}
-                                />
-                                <small style={{ color: 'var(--text-muted)' }}>Gunakan nama unik ini sebagai pengenal objek dalam prompt visual</small>
-                              </div>
+                            <div style={{ background: 'var(--bg-secondary)', padding: 16, borderRadius: 8, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                              {bridgingMode === 'select_existing' && targetProductId ? (
+                                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: 12, borderRadius: 8 }}>
+                                  <div style={{ color: '#10b981', fontWeight: 600, fontSize: '0.85rem' }}>
+                                    ✨ Foto Produk & Deklarasi Mandate 88 Otomatis Terhubung dari Database Produk
+                                  </div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+                                    {typeof productRefImage === 'string' && productRefImage && (
+                                      <img src={productRefImage} alt="Product Ref" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border-color)' }} />
+                                    )}
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                                      <div><b>Nama Berkas Deklarasi:</b> <code>{productFilenameDeclare || 'Auto Generated'}</code></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                                  <div className="form-group" style={{ marginBottom: 0 }}>
+                                    <label className="form-label">Foto Referensi Produk</label>
+                                    <input 
+                                      type="file" 
+                                      className="form-input" 
+                                      accept="image/*" 
+                                      onChange={e => setProductRefImage(e.target.files[0])}
+                                    />
+                                  </div>
+                                  <div className="form-group" style={{ marginBottom: 0 }}>
+                                    <label className="form-label">Deklarasikan Nama Berkas (Declare Filename)</label>
+                                    <input 
+                                      type="text" 
+                                      className="form-input" 
+                                      placeholder="Contoh: botol_serum_biru.png" 
+                                      value={productFilenameDeclare} 
+                                      onChange={e => setProductFilenameDeclare(e.target.value)}
+                                    />
+                                    <small style={{ color: 'var(--text-muted)' }}>Gunakan nama unik ini sebagai pengenal objek dalam prompt visual</small>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </>

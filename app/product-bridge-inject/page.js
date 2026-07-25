@@ -716,7 +716,13 @@ export default function ProductBridgeInjectPage() {
                         <select
                           className="form-input"
                           value={accountName}
-                          onChange={e => setAccountName(e.target.value)}
+                          onChange={e => {
+                            const newAcc = e.target.value;
+                            setAccountName(newAcc);
+                            const now = new Date();
+                            const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                            setCampaignName(`[ BRIDGE ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                          }}
                           style={{ background: 'var(--bg-primary)' }}
                         >
                           <option value="">-- Pilih Nama Akun Brand --</option>
@@ -788,6 +794,25 @@ export default function ProductBridgeInjectPage() {
                                 </option>
                               ))}
                           </select>
+                          {targetProductId && (() => {
+                            const sel = products.find(p => String(p.id) === String(targetProductId));
+                            if (!sel) return null;
+                            const img = sel.photo_url || sel.clean_photo_url || sel.generated_photo_url || sel.raw_photo_url;
+                            const fname = sel.filename_declare || (sel.product_name ? `${sel.product_name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_ref.jpg` : 'product_ref.jpg');
+                            return (
+                              <div style={{ marginTop: 8, background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: 10, borderRadius: 8 }}>
+                                <div style={{ color: '#10b981', fontWeight: 600, fontSize: '0.8rem' }}>
+                                  ✨ Foto Produk & Deklarasi Mandate 88 Otomatis Terhubung dari Database
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+                                  {img && <img src={img} alt="Product Ref" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }} />}
+                                  <div style={{ fontSize: '0.75rem', color: 'var(--text-primary)' }}>
+                                    <div><b>Deklarasi Filename:</b> <code>{fname}</code></div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       )}
 

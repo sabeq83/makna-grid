@@ -258,7 +258,6 @@ export default function RECampaignsPage() {
         visual_style: visualStyle,
         nextcloud_parent_folder: nextcloudParentFolder,
         fb_draft_mode: fbDraftMode,
-        target_spreadsheet_id: targetSpreadsheetId,
         sfx_setting: sfxSetting,
         enable_audio_segment: enableAudioSegment,
         voice_cast_json: voiceCast.length > 0 ? JSON.stringify({ characters: voiceCast }) : null,
@@ -874,7 +873,13 @@ export default function RECampaignsPage() {
                       <select
                         className="form-input"
                         value={accountName}
-                        onChange={e => setAccountName(e.target.value)}
+                        onChange={e => {
+                          const newAcc = e.target.value;
+                          setAccountName(newAcc);
+                          const now = new Date();
+                          const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                          setCampaignName(`[ RE ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                        }}
                       >
                         <option value="">-- Pilih Nama Akun Brand --</option>
                         {brandProfiles.map(bp => (
@@ -1440,6 +1445,21 @@ export default function RECampaignsPage() {
                                 </option>
                               ))}
                             </select>
+                            {targetProductId && productRefImage && (
+                              <div style={{ marginTop: 10, background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: 12, borderRadius: 8 }}>
+                                <div style={{ color: '#10b981', fontWeight: 600, fontSize: '0.85rem' }}>
+                                  ✨ Foto Produk & Deklarasi Mandate 88 Otomatis Terhubung dari Database Produk
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+                                  {typeof productRefImage === 'string' && (
+                                    <img src={productRefImage} alt="Product Ref" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border-color)' }} />
+                                  )}
+                                  <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                                    <div><b>Nama Berkas Deklarasi:</b> <code>{productFilenameDeclare || 'Auto Generated'}</code></div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
 

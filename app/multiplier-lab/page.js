@@ -618,7 +618,13 @@ function MultiplierLabPageContent() {
                     <select
                       className="form-input"
                       value={accountName}
-                      onChange={e => setAccountName(e.target.value)}
+                      onChange={e => {
+                        const newAcc = e.target.value;
+                        setAccountName(newAcc);
+                        const now = new Date();
+                        const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                        setCampaignName(`[ MULTIPLIER ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                      }}
                     >
                       <option value="">-- Pilih Nama Akun Brand --</option>
                       {brandProfiles.map(bp => (
@@ -910,7 +916,21 @@ function MultiplierLabPageContent() {
                                   onChange={e => setProductSearchQuery(e.target.value)}
                                 />
 
-                                <select className="form-input" value={targetProductId} onChange={e => setTargetProductId(e.target.value)}>
+                                <select className="form-input" value={targetProductId} onChange={e => {
+                                  const val = e.target.value;
+                                  setTargetProductId(val);
+                                  if (val) {
+                                    const selProduct = products.find(p => String(p.id) === String(val));
+                                    if (selProduct) {
+                                      const photoPath = selProduct.photo_url || selProduct.clean_photo_url || selProduct.generated_photo_url || selProduct.raw_photo_url || '';
+                                      if (photoPath) {
+                                        setProductRefImage(photoPath);
+                                        const derivedFilename = selProduct.filename_declare || (selProduct.product_name ? `${selProduct.product_name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_ref.jpg` : 'product_ref.jpg');
+                                        setProductFilenameDeclare(derivedFilename);
+                                      }
+                                    }
+                                  }
+                                }}>
                                   <option value="">-- Pilih Produk Terdaftar --</option>
                                   {products
                                     .filter(p => 
@@ -922,6 +942,21 @@ function MultiplierLabPageContent() {
                                     ))
                                   }
                                 </select>
+                                {targetProductId && productRefImage && (
+                                  <div style={{ marginTop: 10, background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: 12, borderRadius: 8 }}>
+                                    <div style={{ color: '#10b981', fontWeight: 600, fontSize: '0.85rem' }}>
+                                      ✨ Foto Produk & Deklarasi Mandate 88 Otomatis Terhubung dari Database Produk
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+                                      {typeof productRefImage === 'string' && (
+                                        <img src={productRefImage} alt="Product Ref" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border-color)' }} />
+                                      )}
+                                      <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                                        <div><b>Nama Berkas Deklarasi:</b> <code>{productFilenameDeclare || 'Auto Generated'}</code></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           )}

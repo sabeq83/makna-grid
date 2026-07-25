@@ -114,8 +114,11 @@ export default function ImportPlannerModal({
         const rList = p.rows || [];
         setRows(rList);
         setSelectedRowIds(rList.map(r => r.id));
-        setCampaignName(`[OPC Planner] ${p.title || p.product_name}`);
-        setAccountName(p.account_name || 'Umum');
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+        const acc = p.account_name || 'Umum';
+        setCampaignName(`[ OPC ${dateStr} ] - ${acc} - ${p.title || p.product_name || ''}`);
+        setAccountName(acc);
         setProductName(p.product_name || '');
         setProductDesc(p.product_description || '');
         setProductUsp(p.product_usp || '');
@@ -123,7 +126,6 @@ export default function ImportPlannerModal({
         setCustomInstruction(p.product_description || '');
 
         if (p.brand_id) setSelectedBrandId(p.brand_id);
-        if (p.google_sheet_id) setTargetSpreadsheetId(p.google_sheet_id);
       }
     } catch (e) {
       console.error('[ImportPlannerModal] Load planner detail error:', e);
@@ -347,7 +349,13 @@ export default function ImportPlannerModal({
                     </label>
                     <select
                       value={accountName}
-                      onChange={e => setAccountName(e.target.value)}
+                      onChange={e => {
+                        const newAcc = e.target.value;
+                        setAccountName(newAcc);
+                        const now = new Date();
+                        const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+                        setCampaignName(`[ OPC ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
+                      }}
                       style={{
                         width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a',
                         color: '#fff', borderRadius: '8px'
