@@ -829,7 +829,7 @@ export default function ContentFlowHubPage() {
                         type="date"
                         value={editStatusForm.tiktok_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
                       />
                     </div>
 
@@ -880,7 +880,7 @@ export default function ContentFlowHubPage() {
                         type="date"
                         value={editStatusForm.facebook_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
                       />
                     </div>
 
@@ -931,7 +931,7 @@ export default function ContentFlowHubPage() {
                         type="date"
                         value={editStatusForm.instagram_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
                       />
                     </div>
 

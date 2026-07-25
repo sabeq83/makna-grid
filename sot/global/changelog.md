@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.42 — Perbaikan Warna Icon Kalender Input Tanggal Modal ContentFlow Hub (25/07/2026)
+- Penyetelan  Pada Seluruh Element Input Tanggal (Publish Date) Modal Detail & Status Konten
+- Icon Picker Kalender Native Tampil Putih Terang Jelas (Pure White) di Mode Gelap UI MAKNA Grid
+
 ## V1.1.41 — Penyederhanaan Filter Panel & Pembersihan Pipeline Status ContentFlow Hub (25/07/2026)
 - Hapus Filter Pipeline Status (Karena Seluruh Konten Terindeks Berstatus Completed/Siap Publish)
 - Reorganisasi Filter Panel Menjadi 2 Baris 4-Kolom Simetris dengan Tombol Reset Filter Instan
