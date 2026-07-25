@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getContentFlowItems } from '@/lib/db';
 import { scanAndSyncExistingCampaigns } from '@/lib/contentflow-ingest';
+import { getCurrentUser } from '@/lib/auth';
 
 export async function GET(request) {
   try {
@@ -16,6 +17,13 @@ export async function GET(request) {
     const page = searchParams.get('page') || '1';
     const limit = searchParams.get('limit') || '20';
 
+    // RBAC Check for Brand Access
+    const currentUser = getCurrentUser(request);
+    let allowedAccounts = undefined;
+    if (currentUser && currentUser.role !== 'admin') {
+      allowedAccounts = currentUser.assignedBrandNames || [];
+    }
+
     let result = getContentFlowItems({
       sourceType,
       accountName,
@@ -26,11 +34,12 @@ export async function GET(request) {
       instagramStatus,
       q,
       page,
-      limit
+      limit,
+      allowedAccounts
     });
 
     // Auto sync if empty on first load
-    if (result.items.length === 0 && page === '1' && !q && sourceType === 'all' && accountName === 'all') {
+    if (result.items.length === 0 && page === '1' && !q && sourceType === 'all' && accountName === 'all' && (!allowedAccounts || allowedAccounts.length > 0)) {
       scanAndSyncExistingCampaigns();
       result = getContentFlowItems({
         sourceType,
@@ -42,7 +51,8 @@ export async function GET(request) {
         instagramStatus,
         q,
         page,
-        limit
+        limit,
+        allowedAccounts
       });
     }
 

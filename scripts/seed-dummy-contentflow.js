@@ -1,44 +1,9 @@
-import { getDb, upsertContentFlowItem } from '../lib/db.js';
+/**
+ * Script untuk membuat 50 dummy data ContentFlow Hub untuk dummybrand01 & dummybrand02
+ * Usage: node scripts/seed-dummy-contentflow.js
+ */
 
-const sourceTypes = ['opc', 'strategic', 're', 'instant', 'recipe', 'bridge'];
-const products = [
-  'Serum Cokelat Glow',
-  'Ceramide Moisturizer Cream',
-  'Cocoa Powder Premium 500g',
-  'Sunscreen SPF50 Invisible',
-  'Choco Crunch Snack Pack',
-  'Gentle Facial Cleanser'
-];
-const campaignTitles = [
-  'Q3 Organic Skincare Growth',
-  'Launch Serum Cokelat Anti-Aging',
-  'Viral TikTok Challenge 2026',
-  'Flash Sale Bundle Promo',
-  'Recipe Review & Unboxing',
-  'Affiliate Multiplier Campaign'
-];
-
-const hooks = [
-  'Ternyata ini rahasia kulit glowing bebas kusam cuma dalam 7 hari!',
-  'Stop beli serum mahal sebelum coba trik ampuh yang satu ini!',
-  '3 Kesalahan pakai moisturizer yang bikin muka makin berminyak.',
-  'Resep simpel 5 menit camilan manis cokelat lelehan disukai anak.',
-  'Review jujur pemakaian 30 hari paket skincare viral TikTok!',
-  'Rahasia makeup tahan seharian walaupun keringatan saat outdoor.',
-  'Pernah ngalamin kulit breakout mendadak? Ini solusi cepatnya!',
-  'Jangan skip sunscreen kalau gak mau muka cepat berflek hitam!'
-];
-
-const captions = [
-  'Siapa yang masih suka bingung milih serum buat kulit sensitif? 🧐 Cobain rahasia kulit sehat pakai Serum Cokelat Glow ini guys! ✨ #skincareroutine #glowing #dummybrand #fyp #racuntiktok',
-  'Jangan skip step ini kalau kamu mau hasil maksimal! Save dulu biar gak lupa ya 💖 #moisturizer #skincaretips #dummybrand #beautyhacks',
-  'Bikin camilan sehat cuma pakai 3 bahan aja! Rasanya nyoklat banget 🍫 #resepsimpel #chococrunch #dummybrand #kuliner',
-  'Spill promo spesial khusus minggu ini diskon up to 50%! Cek keranjang kuning sekarang 🛒 #promotiktok #dummybrand #diskonmurah',
-  'Perbandingan sebelum dan sesudah 2 minggu rutin pemakaian. Hasilnya beneran sesuai ekspektasi! 😍 #transformation #dummybrand #honestreview'
-];
-
-const statuses = ['Not Published', 'Scheduled', 'Published'];
-const pipelineStatuses = ['Completed', 'Completed', 'Completed', 'In Production'];
+import { getDb, upsertContentFlowItem, createBrandProfile } from '../lib/db.js';
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -50,67 +15,163 @@ function getRandomDate(daysBack = 30) {
   return date.toISOString().split('T')[0];
 }
 
-console.log('🌱 Starting dummy data generator for brand "dummybrand"...');
+const sources = ['opc', 'strategic', 're', 'instant', 'recipe', 'bridge'];
+const statuses = ['Not Published', 'Scheduled', 'Published'];
+const pipelineStatuses = ['Completed'];
 
-let count = 0;
-for (let i = 1; i <= 52; i++) {
-  const sourceType = getRandomElement(sourceTypes);
-  const prod = getRandomElement(products);
-  const title = getRandomElement(campaignTitles);
-  const hook = getRandomElement(hooks);
-  const caption = getRandomElement(captions);
-  const pipelineStatus = getRandomElement(pipelineStatuses);
+// Brand 1: dummybrand01 (Beauty & Skincare Niche)
+const brand1Products = [
+  'Serum Cokelat Glow',
+  'Moisturizer Skin Barrier',
+  'Sunscreen SPF 50+',
+  'Cleansing Oil Rose Extract',
+  'Lip Balm Tinted Cherry'
+];
 
-  const tiktokStatus = getRandomElement(statuses);
-  const fbStatus = getRandomElement(statuses);
-  const igStatus = getRandomElement(statuses);
+const brand1Titles = [
+  'Kampanye Skincare Glowing Alami',
+  'Banjir Promo Tanggal Kembar Skincare',
+  'Edukasi Pertahanan Skin Barrier',
+  'Rangkaian Rutinitas Pagi Ceria',
+  'Review Pemakaian 14 Hari Rutin'
+];
 
-  const pDate = getRandomDate(20);
-  const videoId = `${sourceType.toUpperCase()}-DUMMY-${String(i).padStart(3, '0')}`;
+const brand1Hooks = [
+  'Jangan skip serum ini kalau mau kulit glowing seketika! ✨',
+  'Kulit kusam hilang dalam 7 hari tanpa ke klinik mahal 💖',
+  'Solusi ampuh perbaiki skin barrier yang rusak & kemerahan! 🌿',
+  'Sunscreen lokal terbaik anti lengket dan no whitecast! ☀️',
+  'Rahasia bibir sehat lembab seharian pakai lip balm alami 💄'
+];
 
-  const randAsset = Math.random();
-  let driveLink = '';
-  let nextcloudUrl = '';
-  let urlAsset = '';
+const brand1Captions = [
+  'Siapa yang masih suka bingung milih serum buat kulit sensitif? 🧐 Cobain rahasia kulit sehat pakai Serum Cokelat Glow ini guys! ✨ #skincareroutine #glowing #dummybrand01 #fyp #racuntiktok',
+  'Jangan skip step ini kalau kamu mau hasil maksimal! Save dulu biar gak lupa ya 💖 #moisturizer #skincaretips #dummybrand01 #beautyhacks',
+  'Spill promo spesial khusus minggu ini diskon up to 50%! Cek keranjang kuning sekarang 🛒 #promotiktok #dummybrand01 #diskonmurah',
+  'Perbandingan sebelum dan sesudah 2 minggu rutin pemakaian. Hasilnya beneran sesuai ekspektasi! 😍 #transformation #dummybrand01 #honestreview'
+];
 
-  if (randAsset < 0.45) {
-    driveLink = `https://drive.google.com/drive/folders/dummybrand_asset_${i}`;
-    urlAsset = driveLink;
-  } else if (randAsset < 0.90) {
-    nextcloudUrl = `http://100.78.186.123:8080/remote.php/webdav/dummybrand/${videoId}.mp4`;
-    urlAsset = nextcloudUrl;
+// Brand 2: dummybrand02 (Healthy Food & Kitchen Niche)
+const brand2Products = [
+  'Minyak Zaitun Extra Virgin',
+  'Madu Hutan Murni Premium',
+  'Granola Superfood Crunchy',
+  'Kopi Susu Gula Aren Organik',
+  'Teh Hijau Detox Jasmine'
+];
+
+const brand2Titles = [
+  'Kampanye Hidup Sehat & Fit',
+  'Resep Simpel Sarapan Praktis 5 Menit',
+  'Promo Paket Bundling Dapur Sehat',
+  'Tips Diet Kenyangan Tanpa Menyiksa',
+  'Edukasi Bahan Alami Bebas Pengawet'
+];
+
+const brand2Hooks = [
+  'Bikin sarapan sehat cuma 5 menit, rasanya nagih banget! 🥗',
+  'Madu hutan murni tanpa campuran gula, aman buat diet! 🍯',
+  'Cemilan crunchy tinggi serat bikin kenyang lebih lama 🌾',
+  'Cara bikin kopi gula aren rumahan serasa cafe mahal ☕',
+  'Teh hijau detox alami hempas lemak perut membal! 🍵'
+];
+
+const brand2Captions = [
+  'Solusi makan enak tanpa rasa bersalah! Pakai Minyak Zaitun Extra Virgin ini goreng-goreng jadi lebih sehat 🍳 #healthyfood #dummybrand02 #kulinersehat #dietsehat',
+  'Madu hutan murni 100% dari lebah liar. Booster imun keluarga di musim hujan ☔ #maduasli #dummybrand02 #herbalis',
+  'Granola crunchy kaya nutrisi cocok buat topping smoothie bowl kamu! 🥣 #breakfastideas #dummybrand02 #superfood',
+  'Dapatkan harga khusus hari ini beli 2 gratis 1 pouch teh detox! Klik keranjang kuning sekarang 🛍️ #promodapur #dummybrand02'
+];
+
+function seedBrandData(brandName, products, titles, hooks, captions, count = 50) {
+  console.log(`🌱 Generating ${count} dummy records for "${brandName}"...`);
+  
+  // Ensure Brand Profile exists in brand_profiles table
+  try {
+    const db = getDb();
+    const existing = db.prepare('SELECT id FROM brand_profiles WHERE LOWER(brand_name) = ?').get(brandName.toLowerCase());
+    if (!existing) {
+      createBrandProfile({
+        id: `bp_${brandName.toLowerCase()}`,
+        brand_name: brandName,
+        tone_of_voice: 'Kasual/Edukatif',
+        visual_signature: 'Clean Aesthetic',
+        color_palette: '#3b82f6, #10b981',
+        brand_slogan_or_cta: 'Solusi Terbaik Untuk Gaya Hidup Anda'
+      });
+      console.log(`  └─ Created Brand Profile: ${brandName}`);
+    }
+  } catch (e) {
+    console.warn(`  └─ Note: ${e.message}`);
   }
 
-  upsertContentFlowItem({
-    id: `cf_dummy_${String(i).padStart(3, '0')}`,
-    source_type: sourceType,
-    source_campaign_id: `camp_dummy_${i}`,
-    source_item_id: `item_dummy_${i}`,
-    account_name: 'dummybrand',
-    video_id: videoId,
-    campaign_title: title,
-    hook: hook,
-    nama_produk: prod,
-    link_affiliate: `https://vt.tiktok.com/dummybrand_${i}`,
-    link_produk: `https://dummybrand.id/products/${prod.toLowerCase().replace(/\s+/g, '-')}`,
-    caption: caption,
-    production_date: pDate,
-    url_asset: urlAsset,
-    drive_link: driveLink,
-    nextcloud_url: nextcloudUrl,
-    pipeline_status: pipelineStatus,
-    tiktok_status: tiktokStatus,
-    tiktok_publish_date: tiktokStatus !== 'Not Published' ? pDate : null,
-    permalink_tiktok: tiktokStatus === 'Published' ? `https://vt.tiktok.com/ZS_dummy_${i}/` : null,
-    facebook_status: fbStatus,
-    facebook_publish_date: fbStatus !== 'Not Published' ? pDate : null,
-    permalink_facebook: fbStatus === 'Published' ? `https://facebook.com/reel/dummy_${i}` : null,
-    instagram_status: igStatus,
-    instagram_publish_date: igStatus !== 'Not Published' ? pDate : null,
-    permalink_instagram: igStatus === 'Published' ? `https://instagram.com/reel/dummy_${i}` : null,
-  });
+  for (let i = 1; i <= count; i++) {
+    const sourceType = getRandomElement(sources);
+    const title = getRandomElement(titles);
+    const prod = getRandomElement(products);
+    const hook = getRandomElement(hooks);
+    const caption = getRandomElement(captions);
+    const pipelineStatus = getRandomElement(pipelineStatuses);
 
-  count++;
+    const tiktokStatus = getRandomElement(statuses);
+    const fbStatus = getRandomElement(statuses);
+    const igStatus = getRandomElement(statuses);
+
+    const pDate = getRandomDate(20);
+    const videoId = `${sourceType.toUpperCase()}-${brandName.toUpperCase()}-${String(i).padStart(3, '0')}`;
+
+    const randAsset = Math.random();
+    let driveLink = '';
+    let nextcloudUrl = '';
+    let urlAsset = '';
+
+    if (randAsset < 0.45) {
+      driveLink = `https://drive.google.com/drive/folders/${brandName}_asset_${i}`;
+      urlAsset = driveLink;
+    } else if (randAsset < 0.90) {
+      nextcloudUrl = `http://100.78.186.123:8080/remote.php/webdav/${brandName}/${videoId}.mp4`;
+      urlAsset = nextcloudUrl;
+    }
+
+    upsertContentFlowItem({
+      id: `cf_${brandName}_${String(i).padStart(3, '0')}`,
+      source_type: sourceType,
+      source_campaign_id: `camp_${brandName}_${i}`,
+      source_item_id: `item_${brandName}_${i}`,
+      account_name: brandName,
+      video_id: videoId,
+      campaign_title: title,
+      hook: hook,
+      nama_produk: prod,
+      link_affiliate: `https://vt.tiktok.com/${brandName}_${i}`,
+      link_produk: `https://${brandName}.id/products/${prod.toLowerCase().replace(/\s+/g, '-')}`,
+      caption: caption,
+      production_date: pDate,
+      url_asset: urlAsset,
+      drive_link: driveLink,
+      nextcloud_url: nextcloudUrl,
+      pipeline_status: pipelineStatus,
+      tiktok_status: tiktokStatus,
+      tiktok_publish_date: tiktokStatus !== 'Not Published' ? pDate : null,
+      facebook_status: fbStatus,
+      facebook_publish_date: fbStatus !== 'Not Published' ? pDate : null,
+      instagram_status: igStatus,
+      instagram_publish_date: igStatus !== 'Not Published' ? pDate : null
+    });
+  }
+  console.log(`✅ Berhasil membuat ${count} data dummy untuk "${brandName}"!`);
 }
 
-console.log(`✅ Berhasil membuat ${count} data dummy untuk akun "dummybrand"!`);
+// Clean up old 'dummybrand' data first
+try {
+  const db = getDb();
+  db.prepare("DELETE FROM content_flow_items WHERE account_name = 'dummybrand' OR account_name LIKE 'dummybrand%'").run();
+  console.log('🧹 Cleaned up old dummybrand records from database.');
+} catch (err) {
+  console.error('Failed to cleanup old records:', err);
+}
+
+seedBrandData('dummybrand01', brand1Products, brand1Titles, brand1Hooks, brand1Captions, 50);
+seedBrandData('dummybrand02', brand2Products, brand2Titles, brand2Hooks, brand2Captions, 50);
+
+console.log('🚀 SEEDING COMPLETED SUCCESSFULLY!');

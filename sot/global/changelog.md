@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.44 — Implementasi RBAC Brand Scope & Seeding 50 Data Dummy dummybrand01 dan dummybrand02 (25/07/2026)
+- Penyedia 50 Data Dummy untuk  (Niche Beauty & Skincare) dan 50 Data Dummy untuk  (Niche Healthy Food & Kitchen)
+- Integrasi Penyaringan RBAC Hak Akses Brand () pada API  dan
+- Pembatasan Otomatis Tampilan Feed dan Dropdown Akun Brand Sesuai Hak Akses User
+
 ## V1.1.43 — Optimasi Tombol Cloud Asset & Regenerasi Sebaran Dummy Data ContentFlow (25/07/2026)
 - Penyederhanaan Tombol Akses Asset di Bawah Video Thumbnail Menjadi 1 Tombol Prioritas (Tampil Google Drive atau Nextcloud sesuai ketersediaan)
 - Regenerasi 52 Data Dummy dummybrand dengan Distribusi Tersebar di Google Drive (45%), Nextcloud (45%), dan Kosong (10%)
