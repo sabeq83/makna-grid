@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.13 — Fix OPC & RE Campaign Scheduler Default Active Check (25/07/2026)
+- Fix opc_campaigns_scheduler_active dan re_campaigns_scheduler_active check dari === true menjadi !== false di lib/campaign-scheduler.js
+- Mengaktifkan pemrosesan otomatis kampanye OPC & RE berstatus running secara default
+
 ## V2.0.12 — Penambahan Field Custom Host IP Webhook G Labs pada Menu Setting (25/07/2026)
 - Penambahan input Host/IP Address Webhook G Labs (default 100.117.59.92) pada menu Setting
 - Penyelarasan indikator live status URL Webhook secara dinamis
