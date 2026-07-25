@@ -57,33 +57,32 @@ app.get('/api/v2/content-flow', async (req, res) => {
   try {
     const { sourceType, accountName, productName, pipelineStatus, page = 1, limit = 20, q } = req.query;
 
-    let sql = 'SELECT * FROM content_flow_items WHERE 1=1';
+    let baseSql = 'FROM content_flow_items WHERE 1=1';
     const params = [];
 
     if (sourceType && sourceType !== 'all') {
       params.push(sourceType);
-      sql += ` AND source_type = $${params.length}`;
+      baseSql += ` AND source_type = $${params.length}`;
     }
     if (accountName && accountName !== 'all') {
       params.push(accountName);
-      sql += ` AND account_name = $${params.length}`;
+      baseSql += ` AND account_name = $${params.length}`;
     }
     if (productName && productName !== 'all') {
       params.push(productName);
-      sql += ` AND nama_produk = $${params.length}`;
+      baseSql += ` AND nama_produk = $${params.length}`;
     }
     if (q && q.trim()) {
       params.push(`%${q.trim()}%`);
-      sql += ` AND (video_id ILIKE $${params.length} OR hook ILIKE $${params.length} OR nama_produk ILIKE $${params.length} OR caption ILIKE $${params.length})`;
+      baseSql += ` AND (video_id ILIKE $${params.length} OR hook ILIKE $${params.length} OR nama_produk ILIKE $${params.length} OR caption ILIKE $${params.length})`;
     }
 
-    sql += ' ORDER BY created_at DESC';
-
-    const countSql = sql.replace('SELECT *', 'SELECT count(*)');
+    const countSql = `SELECT count(*) ${baseSql}`;
     const totalRes = await pgQuery(countSql, params);
     const totalItems = parseInt(totalRes.rows[0].count, 10);
     const totalPages = Math.ceil(totalItems / limit) || 1;
 
+    let sql = `SELECT * ${baseSql} ORDER BY created_at DESC`;
     const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
     params.push(parseInt(limit, 10), offset);
     sql += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;

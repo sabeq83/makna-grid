@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.5 — Fix PostgreSQL SQL count query & Ingest Kampanye RE nutribake (25/07/2026)
+- Fix PostgreSQL query countSql pada API /api/content-flow dan /api/v2/content-flow
+- Verifikasi 25 item video nutribake ter-ingest sempurna
+
 ## V2.0.4 — Skrip Impor Kampanye RE 66b4d649 ke Akun Nutribake & ContentFlow (25/07/2026)
 - Penambahan skrip scripts/import-re-campaign-to-nutribake.js untuk migrasi 25 item RE campaign
 - Ingest otomatis 25 item video ke ContentFlow dengan account_name=nutribake dan unique video_id (nutribake_re_66b4d649_xxx)
