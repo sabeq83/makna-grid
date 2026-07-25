@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.16 — Fix Syntax Error & Deployment v2.0.16 (25/07/2026)
+- Fix syntax error pada app/strategic-campaigns/page.js
+- Penyempurnaan Target Demografi & Universal Caption 100%
+
 ## V2.0.15 — Sentralisasi Prompt SC, Preset Tone Demografi & Universal Caption (25/07/2026)
 - Sentralisasi prompt SC & TONE_DEMOGRAPHIC_INSTRUCTIONS di lib/prompts.js
 - Injeksi aturan MANDATORY TRUTH & OBJECTIVE NARRATIVE MANDATE (bebas cerita fiktif 'aku')

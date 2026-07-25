@@ -278,7 +278,7 @@ export default function StrategicCampaignDashboard() {
           account_name: accountName.trim(),
           target_spreadsheet_id: targetSpreadsheetId.trim(),
           nextcloud_parent_folder: nextcloudParentFolder.trim()
-        },
+        }),
         account_name: accountName.trim(),
         target_spreadsheet_id: targetSpreadsheetId.trim(),
         nextcloud_parent_folder: nextcloudParentFolder.trim()
