@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.49 — Migrasi & Impor 100% Kampanye RE Legacy Node 1 eef644d9-d74c-4a5a-834f-38c230fd9b21 (25/07/2026)
+- Penyalinan & Impor Otomatis Kampanye RE Legacy eef644d9-d74c-4a5a-834f-38c230fd9b21 dari Node 1 (100.65.62.63:3003)
+- Pengunduhan 54 File Start Frame PNG & 54 File Voice-Over MP3 ke Repositori Lokal
+- Ingest Database SQLite MAKNA Grid: 24/24 Item Kampanye RE & Entri ContentFlow Hub Ready
+
 ## V1.1.48 — Urutan Tombol Quick Action Launchpad Dashboard (25/07/2026)
 - Penataan Ulang Urutan Tombol Quick Action Launchpad: 1. Content Flow, 2. Buat Content Plan, 3. Buat Kampanye RE, 4. Buat Kampanye OPC
 
