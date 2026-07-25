@@ -251,8 +251,10 @@ export default function ContentFlowHubPage() {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Status publishing berhasil diperbarui! ✨');
-        setActiveItem(null);
+        showToast('Data & status publishing berhasil diperbarui! ✨');
+        if (data.item) {
+          setActiveItem(data.item);
+        }
         loadContent();
       } else {
         showToast('Gagal update: ' + data.error);
@@ -667,9 +669,30 @@ export default function ContentFlowHubPage() {
                       )}
                       {getSourceBadge(item.source_type)}
                       {item.nama_produk && (
-                        <span style={{ fontSize: '11px', color: '#e2e8f0', background: '#1e293b', padding: '2px 8px', borderRadius: '6px', border: '1px solid #334155' }}>
+                        <span style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.25)', fontWeight: 600 }}>
                           📦 {item.nama_produk}
                         </span>
+                      )}
+                      {item.link_produk && (
+                        <a
+                          href={item.link_produk}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(2, 132, 199, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #0284c7', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          title="Buka Link Produk"
+                        >
+                          🔗 Link Produk
+                        </a>
+                      )}
+                      {item.link_affiliate && (
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); copyToClipboard(item.link_affiliate, 'Link Affiliate', `card_affiliate_${item.id}`); }}
+                          style={{ fontSize: '11px', color: '#c084fc', background: 'rgba(168, 85, 247, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #a855f7', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          title="Salin Link Affiliate"
+                        >
+                          {copiedKeys[`card_affiliate_${item.id}`] ? '✓ Copied!' : '🛒 Affiliate Link'}
+                        </button>
                       )}
                       {item.production_date && (
                         <span style={{ fontSize: '10px', color: '#9ca3af', marginLeft: 'auto', fontFamily: 'monospace' }}>

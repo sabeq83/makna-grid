@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.57 — Perbaikan Sinkronisasi & Visualisasi Data Produk ContentFlow (25/07/2026)
+- Pencegahan overwrite data produk pengguna oleh COALESCE pada upsertContentFlowItem di lib/db.js
+- Penambahan tombol visual 🔗 Link Produk dan 🛒 Affiliate Link langsung di permukaan Card ContentFlow Hub
+- Pembaruan real-time activeItem pada detail modal tanpa perlu menutup modal
+
 ## V1.1.56 — Fix TypeError item.id.slice pada ContentFlow Sync (25/07/2026)
 - Penanganan konversi String(item.id) sebelum pemanggilan .slice() pada lib/contentflow-ingest.js
 
