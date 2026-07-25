@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.6 — Fix Next.js start bin path di deploy-cluster.js & Node 1 server restart (25/07/2026)
+- Fix jalur eksekusi binary next start pada node_modules/.bin/next
+- Verifikasi konektivitas HTTP 200 OK pada 100.65.62.63:3000
+
 ## V2.0.5 — Fix PostgreSQL SQL count query & Ingest Kampanye RE nutribake (25/07/2026)
 - Fix PostgreSQL query countSql pada API /api/content-flow dan /api/v2/content-flow
 - Verifikasi 25 item video nutribake ter-ingest sempurna
