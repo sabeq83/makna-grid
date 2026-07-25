@@ -145,7 +145,7 @@ export async function POST(request) {
       parsedBody.ffmpeg_bgm_volume = parsedBody.ffmpeg_bgm_volume !== undefined ? Number(parsedBody.ffmpeg_bgm_volume) : 0.15;
       productFilenameDeclare = parsedBody.product_filename_declare || null;
       productRefImagePath = parsedBody.product_ref_image_path || null;
-      parsedBody.nextcloud_parent_folder = parsedBody.nextcloud_parent_folder || 'MAKNA_Production_Final';
+      parsedBody.nextcloud_parent_folder = parsedBody.nextcloud_parent_folder || '/MAKNA_Assets';
       parsedBody.fb_draft_mode = parsedBody.fb_draft_mode || 'auto';
       parsedBody.target_spreadsheet_id = parsedBody.target_spreadsheet_id || null;
       parsedBody.sfx_setting = parsedBody.sfx_setting || 'without_sfx';

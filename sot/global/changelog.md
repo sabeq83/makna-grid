@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.10 — Fix ReferenceError targetSpreadsheetId pada Modal Impor Planner & New Campaign OPC (25/07/2026)
+- Fix ReferenceError targetSpreadsheetId is not defined pada ImportPlannerModal.js dan page.js
+- Pengesahan fallback backend nextcloud_parent_folder ke /MAKNA_Assets
+
 ## V2.0.9 — Penyempurnaan & Harmonisasi UI OPC & Modal Impor V2.0 (25/07/2026)
 - Penambahan dropdown Nama Akun dan auto-fill [OPC YYYYMMDD] - namaakun - pada Form New Campaign OPC
 - Penghapusan field Target Spreadsheet ID dan penyesuaian default Nextcloud /MAKNA_Assets

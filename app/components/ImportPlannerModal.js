@@ -203,7 +203,7 @@ export default function ImportPlannerModal({
           voice_provider: voiceProvider,
           target_language: targetLanguage,
           nextcloud_parent_folder: nextcloudParentFolder.trim(),
-          target_spreadsheet_id: targetSpreadsheetId.trim(),
+          target_spreadsheet_id: '',
           visual_overrides_json: isVsoActive ? JSON.stringify({
             is_vso_active: true,
             character_concept: characterConcept,

@@ -124,7 +124,7 @@ export async function POST(request) {
       ffmpeg_video_scale: global_settings.ffmpeg_video_scale !== undefined ? Number(global_settings.ffmpeg_video_scale) : 1.0,
       ffmpeg_sfx_volume: global_settings.ffmpeg_sfx_volume !== undefined ? Number(global_settings.ffmpeg_sfx_volume) : 0.0,
       ffmpeg_bgm_volume: global_settings.ffmpeg_bgm_volume !== undefined ? Number(global_settings.ffmpeg_bgm_volume) : 0.15,
-      nextcloud_parent_folder: global_settings.nextcloud_parent_folder || 'MAKNA_Production_Final',
+      nextcloud_parent_folder: global_settings.nextcloud_parent_folder || '/MAKNA_Assets',
       fb_draft_mode: global_settings.fb_draft_mode || 'auto',
       sfx_setting: global_settings.sfx_setting || 'without_sfx',
       enable_vo_audit: global_settings.enable_vo_audit !== undefined ? Number(global_settings.enable_vo_audit) : 0,

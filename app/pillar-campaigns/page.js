@@ -506,7 +506,7 @@ export default function OrganicPillarPage() {
           ffmpeg_video_scale: ffmpegVideoScale,
           ffmpeg_sfx_volume: ffmpegSfxVolume,
           ffmpeg_bgm_volume: ffmpegBgmVolume,
-          target_spreadsheet_id: targetSpreadsheetId.trim(),
+          target_spreadsheet_id: '',
           nextcloud_parent_folder: nextcloudParentFolder.trim(),
           bridge_duration_clips: Number(bridgeDurationClips),
           enable_vo_audit: enableVoAudit ? 1 : 0
@@ -638,7 +638,7 @@ export default function OrganicPillarPage() {
       formData.append('ffmpeg_sfx_volume', String(ffmpegSfxVolume));
       formData.append('ffmpeg_bgm_volume', String(ffmpegBgmVolume));
       formData.append('nextcloud_parent_folder', nextcloudParentFolder);
-      formData.append('target_spreadsheet_id', targetSpreadsheetId.trim());
+      formData.append('target_spreadsheet_id', '');
       formData.append('sfx_setting', sfxSetting);
       formData.append('enable_audio_segment', enableAudioSegment);
       if (voiceCast.length > 0) formData.append('voice_cast_json', JSON.stringify({ characters: voiceCast }));
