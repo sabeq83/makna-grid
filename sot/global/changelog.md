@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.35 — Perbaikan Menu OPC: Save as Draft & Penyelarasan Tombol Modal (25/07/2026)
+- Tambah tombol Save as Draft pada modal import Content Planner ke OPC
+- Penyelarasan warna & hirarki 3 tombol modal (Batal, Save as Draft, Ingest & Launch)
+- Perbaikan warna tombol Batal pada form pembuatan kampanye OPC manual non-impor
+
 ## V1.1.34 — Refined Dimmed Cyan & Emerald UI Theme (25/07/2026)
 - Pembaruan sistem warna UI ke Refined Dimmed Cyan & Mint Emerald
 - Pembaruan styling tombol, sidebar active state, dan form inputs

@@ -473,7 +473,11 @@ export default function ContentPlannerWorkbench() {
           onClose={() => setShowOpcModal(false)}
           initialPlannerId={plannerId}
           onSuccess={(res) => {
-            showToast(`Berhasil di-ingest ke OPC Kampanye: ${res.campaign_name} (${res.ingested_count} item)`);
+            if (res.status === 'draft') {
+              showToast(`Draf kampanye OPC "${res.campaign_name}" (${res.ingested_count} item) berhasil disimpan.`);
+            } else {
+              showToast(`Berhasil di-ingest ke OPC Kampanye: ${res.campaign_name} (${res.ingested_count} item)`);
+            }
             router.push('/pillar-campaigns');
           }}
         />

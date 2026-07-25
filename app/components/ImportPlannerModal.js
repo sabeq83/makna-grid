@@ -15,6 +15,7 @@ export default function ImportPlannerModal({
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitStatusTarget, setSubmitStatusTarget] = useState('running');
   const [activeAccordion, setActiveAccordion] = useState(0);
 
   // Form State Aligning with Mass OPC & SC
@@ -160,8 +161,8 @@ export default function ImportPlannerModal({
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(e, targetStatus = 'running') {
+    if (e && e.preventDefault) e.preventDefault();
     if (!selectedPlannerId) {
       alert('Pilih Content Planner terlebih dahulu');
       return;
@@ -173,11 +174,13 @@ export default function ImportPlannerModal({
 
     try {
       setSubmitting(true);
+      setSubmitStatusTarget(targetStatus);
       const payload = {
         planner_id: selectedPlannerId,
         selected_row_ids: selectedRowIds,
         campaign_name: campaignName,
         global_settings: {
+          status: targetStatus,
           brand_profile_id: selectedBrandId || null,
           custom_instruction: customInstruction,
           narrative_mode: narrativeMode,
@@ -221,7 +224,7 @@ export default function ImportPlannerModal({
 
       const data = await res.json();
       if (data.success) {
-        if (onSuccess) onSuccess(data);
+        if (onSuccess) onSuccess({ ...data, status: targetStatus });
         onClose();
       } else {
         alert('Gagal mengimpor planner: ' + (data.error || 'Terjadi kesalahan'));
@@ -902,25 +905,57 @@ export default function ImportPlannerModal({
 
           </div>
 
-          {/* Bottom Action Footer Bar (Controls at the bottom, matching SC) */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          {/* Bottom Action Footer Bar (Controls at the bottom, matching SC & OPC) */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', alignItems: 'center' }}>
             <button
               type="button"
               onClick={onClose}
-              style={{ padding: '10px 18px', background: '#27272a', color: '#9ca3af', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+              style={{
+                padding: '10px 18px',
+                background: '#27272a',
+                color: '#9ca3af',
+                border: '1px solid #3f3f46',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
             >
               Batal
             </button>
+
             <button
-              type="submit"
+              type="button"
               disabled={submitting}
+              onClick={(e) => handleSubmit(e, 'draft')}
               style={{
-                padding: '12px 24px', backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-                color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer',
+                padding: '10px 20px',
+                background: 'rgba(99, 102, 241, 0.15)',
+                color: '#818cf8',
+                border: '1px solid rgba(99, 102, 241, 0.35)',
+                borderRadius: '10px',
+                fontWeight: 700,
+                cursor: submitting ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {submitting && submitStatusTarget === 'draft' ? 'Menyimpan Draf...' : '💾 Save as Draft'}
+            </button>
+
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={(e) => handleSubmit(e, 'running')}
+              style={{
+                padding: '12px 24px',
+                backgroundImage: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '10px',
+                fontWeight: 700,
+                cursor: submitting ? 'not-allowed' : 'pointer',
                 boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)'
               }}
             >
-              {submitting ? 'Memproses Ingest...' : '✨ Ingest & Launch OPC Campaign'}
+              {submitting && submitStatusTarget === 'running' ? 'Memproses Ingest...' : '✨ Ingest & Launch OPC Campaign'}
             </button>
           </div>
         </form>

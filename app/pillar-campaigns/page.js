@@ -1792,8 +1792,8 @@ export default function OrganicPillarPage() {
                 </div>
 
                 {/* Form Footer */}
-                <div style={{ padding: '16px 24px', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                  <button type="button" className="btn" onClick={() => setShowForm(false)} style={{ background: 'transparent', border: '1px solid var(--border-color)' }}>Batal</button>
+                <div style={{ padding: '16px 24px', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                  <button type="button" className="btn" onClick={() => setShowForm(false)} style={{ background: '#27272a', color: '#9ca3af', border: '1px solid #3f3f46', borderRadius: '8px', padding: '10px 18px', fontWeight: 600 }}>Batal</button>
                   <button type="submit" className="btn btn-primary" disabled={creating} onClick={() => setSubmitStatus('running')}>
                     {creating ? 'Membuat...' : '🚀 Buat & Jalankan'}
                   </button>
@@ -2044,7 +2044,7 @@ export default function OrganicPillarPage() {
                       type="button" 
                       className="btn" 
                       onClick={() => setShowImportModal(false)}
-                      style={{ background: 'transparent', border: '1px solid var(--border)' }}
+                      style={{ background: '#27272a', color: '#9ca3af', border: '1px solid #3f3f46', borderRadius: '8px', padding: '10px 18px', fontWeight: 600 }}
                     >
                       Batal
                     </button>
@@ -2062,7 +2062,11 @@ export default function OrganicPillarPage() {
           isOpen={showPlannerModal}
           onClose={() => setShowPlannerModal(false)}
           onSuccess={(res) => {
-            showToast(`Kampanye OPC "${res.campaign_name}" (${res.ingested_count} video) berhasil dibuat dari Content Planner.`);
+            if (res.status === 'draft') {
+              showToast(`Draf kampanye OPC "${res.campaign_name}" (${res.ingested_count} video) berhasil disimpan dari Content Planner.`);
+            } else {
+              showToast(`Kampanye OPC "${res.campaign_name}" (${res.ingested_count} video) berhasil dibuat & dijalankan dari Content Planner.`);
+            }
             fetchCampaigns();
             pollLogs();
           }}

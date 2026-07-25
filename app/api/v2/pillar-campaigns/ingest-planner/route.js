@@ -74,12 +74,13 @@ export async function POST(request) {
     const finalCampaignName = campaign_name?.trim() || `[OPC Planner] ${planner.title || planner.product_name}`;
 
     const refImage = global_settings.product_ref_image_path || planner.product_ref_image || planner.product_photo_url || null;
+    const campaignStatus = global_settings.status || 'running';
 
     // 3. Create global pillar campaign row
     createPillarCampaign({
       id: campaignId,
       campaign_name: finalCampaignName,
-      status: global_settings.status || 'running',
+      status: campaignStatus,
       content_pillar: rows[0]?.pillar || 'Planner Content Pillar',
       custom_hook: rows[0]?.hook || 'Planner Hook',
       visual_action_guideline: rows[0]?.visual_action || 'Planner Visual Action',
@@ -185,18 +186,21 @@ export async function POST(request) {
       }
     })();
 
-    // 5. Trigger campaign scheduler
-    try {
-      startCampaignScheduler();
-    } catch (schedErr) {
-      console.warn('[Ingest Planner to OPC] Failed to auto-start scheduler:', schedErr.message);
+    // 5. Trigger campaign scheduler if status is not draft
+    if (campaignStatus !== 'draft') {
+      try {
+        startCampaignScheduler();
+      } catch (schedErr) {
+        console.warn('[Ingest Planner to OPC] Failed to auto-start scheduler:', schedErr.message);
+      }
     }
 
     return NextResponse.json({
       success: true,
       campaign_id: campaignId,
       campaign_name: finalCampaignName,
-      ingested_count: rows.length
+      ingested_count: rows.length,
+      status: campaignStatus
     });
 
   } catch (error) {
