@@ -29,7 +29,7 @@ export default function ImportPlannerModal({
   // Accordion 1: Strategy & Compliance
   const [narrativeMode, setNarrativeMode] = useState('auto'); // 'auto' | 'Storytelling' | 'Promo Hard Sell' | 'Educational Review'
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
-  const [enableVoAudit, setEnableVoAudit] = useState(0);
+  const [enableVoAudit, setEnableVoAudit] = useState(1);
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
   const [voiceProvider, setVoiceProvider] = useState('minimax');

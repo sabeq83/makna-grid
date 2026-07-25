@@ -96,6 +96,7 @@ function MultiplierLabPageContent() {
   const [ffmpegVideoScale, setFfmpegVideoScale] = useState(1.0);
   const [ffmpegSfxVolume, setFfmpegSfxVolume] = useState(0.0);
   const [ffmpegBgmVolume, setFfmpegBgmVolume] = useState(0.15);
+  const [enableVoAudit, setEnableVoAudit] = useState(1); // Default 1 (Yes)
 
   const MINIMAX_VOICES = [
     { id: 'Indonesian_casual_reporter_vv2', name: 'Anchor Casual (Male)', desc: 'Natural & energetic' },
@@ -347,6 +348,7 @@ function MultiplierLabPageContent() {
         ffmpegBgmVolume
       };
       formData.append('audio_config_json', JSON.stringify(audioData));
+      formData.append('enable_vo_audit', enableVoAudit ? '1' : '0');
 
       // Single Mode vs Multi Mode specifics
       if (productionMode === 'single') {
@@ -1235,6 +1237,19 @@ function MultiplierLabPageContent() {
                             </div>
                           </>
                         )}
+                      </div>
+
+                      {/* TikTok Safe Compliance Audit */}
+                      <div className="form-group" style={{ background: 'var(--bg-secondary)', padding: 16, borderRadius: 8, marginBottom: 0 }}>
+                        <label className="form-label">Audit Kepatuhan TikTok Safe</label>
+                        <select
+                          className="form-input"
+                          value={enableVoAudit}
+                          onChange={e => setEnableVoAudit(Number(e.target.value))}
+                        >
+                          <option value={1}>✅ Yes (Audit Compliance & Render 2 Versi VO)</option>
+                          <option value={0}>❌ No (Tanpa Audit Compliance)</option>
+                        </select>
                       </div>
 
                       {/* G-Labs Video Generator */}

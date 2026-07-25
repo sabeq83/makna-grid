@@ -406,6 +406,54 @@ export default function BridgeBulkCampaignDetailPage() {
 
         {activeTab === 'storyboard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+            {/* TikTok Safe Compliance Report Card */}
+            {(campaign?.enable_vo_audit === 1 || item.compliance_status) && item.compliance_status !== 'skipped' && (
+              <div style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                padding: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.1rem' }}>🛡️</span>
+                  <span style={{ fontWeight: '700', fontSize: '0.85rem', color: '#fff' }}>TikTok Shop Compliance Audit Status</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    background: (item.compliance_status === 'PASS' || item.compliance_status === 'pass')
+                      ? 'rgba(46, 204, 113, 0.15)' 
+                      : 'rgba(241, 196, 15, 0.15)',
+                    color: (item.compliance_status === 'PASS' || item.compliance_status === 'pass') 
+                      ? '#2ecc71' 
+                      : '#f1c40f',
+                    border: `1px solid ${(item.compliance_status === 'PASS' || item.compliance_status === 'pass') ? '#2ecc71' : '#f1c40f'}`
+                  }}>
+                    {item.compliance_status || 'PASS'}
+                  </span>
+                  {item.compliance_score !== undefined && (
+                    <span style={{
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      color: 'var(--text-muted)'
+                    }}>
+                      Skor Risiko: {item.compliance_score}/100
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               
               {/* Left Panel: VO Text Editor */}

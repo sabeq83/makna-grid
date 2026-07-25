@@ -145,7 +145,7 @@ export default function RECampaignsPage() {
   const [visualStylePreset, setVisualStylePreset] = useState('3d_claymation_cozy');
 
   // Mass Campaign states
-  const [enableVoAudit, setEnableVoAudit] = useState(0); // 0 = No, 1 = Yes
+  const [enableVoAudit, setEnableVoAudit] = useState(1); // 0 = No, 1 = Yes
   const [productionMode, setProductionMode] = useState('single'); // 'single' or 'mass'
   const [parsedRows, setParsedRows] = useState([]);
   const [massUploading, setMassUploading] = useState(false);

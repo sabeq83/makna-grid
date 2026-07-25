@@ -54,7 +54,8 @@ export async function POST(request) {
         csv_data_json: formData.get('csv_data_json') || null, // mass mode json array
         vso_config_json: formData.get('vso_config_json') || '{}',
         bridging_config_json: formData.get('bridging_config_json') || '{}',
-        audio_config_json: formData.get('audio_config_json') || '{}'
+        audio_config_json: formData.get('audio_config_json') || '{}',
+        enable_vo_audit: Number(formData.get('enable_vo_audit') || 1)
       };
 
       // Handle product media file upload
@@ -88,7 +89,8 @@ export async function POST(request) {
       csv_data_json,
       vso_config_json,
       bridging_config_json,
-      audio_config_json
+      audio_config_json,
+      enable_vo_audit = 1
     } = parsedBody;
 
     if (!deconstruct_asset_id) {
@@ -126,7 +128,8 @@ export async function POST(request) {
           vso_config_json: JSON.stringify(vsoConfig),
           bridging_config_json: JSON.stringify(rowBridging),
           audio_config_json: JSON.stringify(audioConfig),
-          status: 'pending_resolution'
+          status: 'pending_resolution',
+          enable_vo_audit: Number(enable_vo_audit !== undefined ? enable_vo_audit : 1)
         });
         tasksCreated.push(rowTaskId);
       }
@@ -140,7 +143,8 @@ export async function POST(request) {
         vso_config_json: JSON.stringify(vsoConfig),
         bridging_config_json: JSON.stringify(bridgingConfig),
         audio_config_json: JSON.stringify(audioConfig),
-        status: 'pending_resolution'
+        status: 'pending_resolution',
+        enable_vo_audit: Number(enable_vo_audit !== undefined ? enable_vo_audit : 1)
       });
       tasksCreated.push(batchTaskId);
     }

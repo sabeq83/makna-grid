@@ -35,6 +35,7 @@ export default function ProductBridgeInjectPage() {
   const [targetDemographic, setTargetDemographic] = useState('genz_casual');
   const [targetDemographicCustom, setTargetDemographicCustom] = useState('');
   const [customInstruction, setCustomInstruction] = useState('');
+  const [enableVoAudit, setEnableVoAudit] = useState(1); // Default 1 (Yes)
 
   // Expandable campaign ID to show its Workbench
   const [expandedCampaignId, setExpandedCampaignId] = useState(null);
@@ -161,7 +162,8 @@ export default function ProductBridgeInjectPage() {
           campaign_name: campaignName,
           campaign_type: 'bulk',
           items: parsedRows,
-          custom_instruction: customInstruction
+          custom_instruction: customInstruction,
+          enable_vo_audit: enableVoAudit
         })
       });
 
@@ -356,7 +358,8 @@ export default function ProductBridgeInjectPage() {
           bridging_mode: finalBridgingMode,
           target_product_id: finalTargetProductId,
           ephemeral_product_data: ephemeralData,
-          custom_instruction: customInstruction
+          custom_instruction: customInstruction,
+          enable_vo_audit: enableVoAudit
         })
       });
 
@@ -904,6 +907,19 @@ export default function ProductBridgeInjectPage() {
                       )}
                     </div>
 
+                  </div>
+
+                  <div className="form-group" style={{ marginTop: '4px' }}>
+                    <label className="form-label">Audit Kepatuhan TikTok Safe</label>
+                    <select
+                      className="form-input"
+                      value={enableVoAudit}
+                      onChange={e => setEnableVoAudit(Number(e.target.value))}
+                      style={{ background: 'var(--bg-primary)' }}
+                    >
+                      <option value={1}>✅ Yes (Audit Compliance & Render 2 Versi VO)</option>
+                      <option value={0}>❌ No (Tanpa Audit Compliance)</option>
+                    </select>
                   </div>
 
                   <div className="form-group" style={{ marginTop: '4px' }}>

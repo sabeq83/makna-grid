@@ -36,6 +36,7 @@ export default function InstantFactoryPage() {
   const [speedControl, setSpeedControl] = useState(2.5);
   const [customInstruction, setCustomInstruction] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('id-ID');
+  const [enableVoAudit, setEnableVoAudit] = useState(1); // Default 1 (Yes)
   
   // Bridging & Visual mode settings
   const [isBridgingActive, setIsBridgingActive] = useState(false);
@@ -344,6 +345,7 @@ export default function InstantFactoryPage() {
         formPayload.append('brand_profile_id', selectedBrandId);
       }
       formPayload.append('status', submitStatus);
+      formPayload.append('enable_vo_audit', enableVoAudit ? '1' : '0');
 
       const res = await fetch('/api/v2/instant-factory', {
         method: 'POST',
@@ -565,7 +567,8 @@ export default function InstantFactoryPage() {
         enable_social_post: enableSocialPost,
         post_youtube_draft: postYoutube,
         post_tiktok_draft: postTiktok,
-        post_facebook_draft: postFacebook
+        post_facebook_draft: postFacebook,
+        enable_vo_audit: enableVoAudit
       };
 
       const res = await fetch('/api/v2/instant-factory/bulk', {
@@ -1069,6 +1072,18 @@ export default function InstantFactoryPage() {
                       <div className="form-group">
                         <label className="form-label">Speed Control (Words/sec)</label>
                         <input type="number" step="0.1" name="speed_control" value={formData.speed_control} onChange={handleChange} min="1.0" max="4.0" className="form-input" />
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label">Audit Kepatuhan TikTok Safe</label>
+                        <select
+                          className="form-select"
+                          value={enableVoAudit}
+                          onChange={e => setEnableVoAudit(Number(e.target.value))}
+                        >
+                          <option value={1}>✅ Yes (Audit Compliance & Render 2 Versi VO)</option>
+                          <option value={0}>❌ No (Tanpa Audit Compliance)</option>
+                        </select>
                       </div>
 
                       <div className="form-group">

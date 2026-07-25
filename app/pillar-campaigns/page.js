@@ -136,7 +136,7 @@ export default function OrganicPillarPage() {
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [voiceCast, setVoiceCast] = useState([]);
-  const [enableVoAudit, setEnableVoAudit] = useState(0); // 0 = No, 1 = Yes
+  const [enableVoAudit, setEnableVoAudit] = useState(1); // 0 = No, 1 = Yes
   const [postTiktok, setPostTiktok] = useState(false);
   const [postFacebook, setPostFacebook] = useState(false);
   const [facebookPages, setFacebookPages] = useState([]);

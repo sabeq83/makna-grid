@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.1.0 — TikTok Safe Compliance Audit Default YES di Semua Campaign Video (26/07/2026)
+- Set default enableVoAudit ke 1 (YES) pada form OPC, RE, SC, Multiplier Lab, Product Bridge Inject, dan Instant Factory
+- Implementasi TikTok Safe compliance auditor dan report card switcher pada Multiplier Lab, Bridge Injector, dan Instant Factory
+- Eksekusi migrasi database SQLite untuk mendukung kolom compliance audit di semua jenis kampanye video
+
 ## V2.0.20 — Konsolidasi & Standarisasi Knowledge Base (KB) (26/07/2026)
 - Merger folder kb-seeds dan kb_2call menjadi 1 folder terpusat kb
 - Merge TikTok Shop Medical Misinformation Policy ke COMPLIANCE_GUIDE.md Section 21
