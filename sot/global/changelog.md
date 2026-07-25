@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.43 — Optimasi Tombol Cloud Asset & Regenerasi Sebaran Dummy Data ContentFlow (25/07/2026)
+- Penyederhanaan Tombol Akses Asset di Bawah Video Thumbnail Menjadi 1 Tombol Prioritas (Tampil Google Drive atau Nextcloud sesuai ketersediaan)
+- Regenerasi 52 Data Dummy dummybrand dengan Distribusi Tersebar di Google Drive (45%), Nextcloud (45%), dan Kosong (10%)
+
 ## V1.1.42 — Perbaikan Warna Icon Kalender Input Tanggal Modal ContentFlow Hub (25/07/2026)
 - Penyetelan  Pada Seluruh Element Input Tanggal (Publish Date) Modal Detail & Status Konten
 - Icon Picker Kalender Native Tampil Putih Terang Jelas (Pure White) di Mode Gelap UI MAKNA Grid

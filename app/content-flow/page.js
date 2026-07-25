@@ -530,29 +530,61 @@ export default function ContentFlowHubPage() {
                       </div>
                     </div>
 
-                    {/* Drive & Nextcloud Links */}
-                    <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
-                      {item.drive_link && (
+                    {/* Single Priority Cloud Asset Link Button */}
+                    <div style={{ width: '100%' }}>
+                      {item.drive_link ? (
                         <a
                           href={item.drive_link}
                           target="_blank"
                           rel="noreferrer"
-                          style={{ flex: 1, textAlign: 'center', padding: '5px 8px', borderRadius: '6px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
+                          style={{
+                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                            borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
+                            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)', transition: 'all 0.2s ease'
+                          }}
                           title="Buka Folder Google Drive"
                         >
-                          📁 Drive
+                          📁 Google Drive
                         </a>
-                      )}
-                      {item.nextcloud_url && (
+                      ) : item.nextcloud_url ? (
                         <a
                           href={item.nextcloud_url}
                           target="_blank"
                           rel="noreferrer"
-                          style={{ flex: 1, textAlign: 'center', padding: '5px 8px', borderRadius: '6px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
+                          style={{
+                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                            borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
+                            boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)', transition: 'all 0.2s ease'
+                          }}
                           title="Buka Folder Nextcloud"
                         >
-                          ☁️ Cloud
+                          ☁️ Nextcloud
                         </a>
+                      ) : item.url_asset ? (
+                        <a
+                          href={item.url_asset}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                            borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none'
+                          }}
+                        >
+                          📥 Download Asset
+                        </a>
+                      ) : (
+                        <span
+                          style={{
+                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                            borderRadius: '8px', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid #334155',
+                            color: '#64748b', fontSize: '11px', fontWeight: 600
+                          }}
+                        >
+                          🔒 Asset Kosong
+                        </span>
                       )}
                     </div>
                   </div>

@@ -68,10 +68,18 @@ for (let i = 1; i <= 52; i++) {
   const pDate = getRandomDate(20);
   const videoId = `${sourceType.toUpperCase()}-DUMMY-${String(i).padStart(3, '0')}`;
 
-  const hasAsset = Math.random() > 0.15; // 85% ready asset
-  const driveLink = hasAsset ? `https://drive.google.com/drive/folders/dummybrand_asset_${i}` : '';
-  const nextcloudUrl = hasAsset ? `http://100.78.186.123:8080/remote.php/webdav/dummybrand/${videoId}.mp4` : '';
-  const urlAsset = hasAsset ? driveLink : '';
+  const randAsset = Math.random();
+  let driveLink = '';
+  let nextcloudUrl = '';
+  let urlAsset = '';
+
+  if (randAsset < 0.45) {
+    driveLink = `https://drive.google.com/drive/folders/dummybrand_asset_${i}`;
+    urlAsset = driveLink;
+  } else if (randAsset < 0.90) {
+    nextcloudUrl = `http://100.78.186.123:8080/remote.php/webdav/dummybrand/${videoId}.mp4`;
+    urlAsset = nextcloudUrl;
+  }
 
   upsertContentFlowItem({
     id: `cf_dummy_${String(i).padStart(3, '0')}`,
