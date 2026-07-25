@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.59 — Integrasi Headless Backend API Engine V2.0 & Dual-Process Deployment (25/07/2026)
+- Pembuatan standalone Headless Backend API Engine di apps/api/server.js (Port 4000)
+- Integrasi REST API Endpoints V2.0 dengan PostgreSQL Node 3
+- Pembaruan scripts/deploy-cluster.js untuk dual-process deployment di Node 1 (Frontend Port 3000 & API Engine Port 4000)
+
 ## V1.1.58 — Pemasangan PostgreSQL 18.4 Server di Node 3 & Script Migrasi Data Otomatis (25/07/2026)
 - Pemasangan & konfigurasi PostgreSQL Server di Node 3 (100.78.186.123:5432)
 - Penambahan script automasi migrasi scripts/migrate-sqlite-to-postgres.js (52 tabel, 100% data terintegrasi)

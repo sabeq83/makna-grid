@@ -53,12 +53,13 @@ async function deploy() {
     cd /home/sabeqmursyid/makna-grid
     git fetch origin main
     git reset --hard origin/main
-    (fuser -k -9 3000/tcp 2>/dev/null || killall node 2>/dev/null || true)
+    (fuser -k -9 3000/tcp 2>/dev/null || fuser -k -9 4000/tcp 2>/dev/null || killall node 2>/dev/null || true)
     rm -rf .next
     npm install
     npm run build
+    HOSTNAME=0.0.0.0 PORT=4000 nohup node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
     HOSTNAME=0.0.0.0 PORT=3000 nohup node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
-    echo "Node 1 production build & service active on http://100.65.62.63:3000!"
+    echo "Node 1 Decoupled V2.0 (Frontend Port 3000 & API Engine Port 4000) active on 100.65.62.63!"
   `;
   runSsh('makna-ui', node1Cmd);
 
