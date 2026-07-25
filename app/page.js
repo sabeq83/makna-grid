@@ -127,14 +127,34 @@ export default function Dashboard() {
             </span>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
               <Link
-                href="/pillar-campaigns"
+                href="/content-flow"
                 style={{
                   padding: '10px 14px', borderRadius: '10px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
                   color: '#ffffff', fontSize: '12px', fontWeight: 700, textDecoration: 'none', textAlign: 'center',
                   boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)', transition: 'all 0.2s ease', display: 'block'
                 }}
               >
-                🌱 + Buat Kampanye OPC
+                📱 Content Flow
+              </Link>
+              <Link
+                href="/content-planner"
+                style={{
+                  padding: '10px 14px', borderRadius: '10px', background: '#1e293b', border: '1px solid #334155',
+                  color: '#f1f5f9', fontSize: '12px', fontWeight: 600, textDecoration: 'none', textAlign: 'center',
+                  transition: 'all 0.2s ease', display: 'block'
+                }}
+              >
+                📅 + Buat Content Plan
+              </Link>
+              <Link
+                href="/re-campaigns"
+                style={{
+                  padding: '10px 14px', borderRadius: '10px', background: '#1e293b', border: '1px solid #334155',
+                  color: '#f1f5f9', fontSize: '12px', fontWeight: 600, textDecoration: 'none', textAlign: 'center',
+                  transition: 'all 0.2s ease', display: 'block'
+                }}
+              >
+                ⚡ + Buat Kampanye RE
               </Link>
               <Link
                 href="/pillar-campaigns"
@@ -144,27 +164,7 @@ export default function Dashboard() {
                   transition: 'all 0.2s ease', display: 'block'
                 }}
               >
-                📄 Import Planner Sheet
-              </Link>
-              <Link
-                href="/content-flow"
-                style={{
-                  padding: '10px 14px', borderRadius: '10px', background: '#1e293b', border: '1px solid #334155',
-                  color: '#f1f5f9', fontSize: '12px', fontWeight: 600, textDecoration: 'none', textAlign: 'center',
-                  transition: 'all 0.2s ease', display: 'block'
-                }}
-              >
-                📱 ContentFlow Hub
-              </Link>
-              <Link
-                href="/recipe-labs"
-                style={{
-                  padding: '10px 14px', borderRadius: '10px', background: '#1e293b', border: '1px solid #334155',
-                  color: '#f1f5f9', fontSize: '12px', fontWeight: 600, textDecoration: 'none', textAlign: 'center',
-                  transition: 'all 0.2s ease', display: 'block'
-                }}
-              >
-                🧪 Recipe Engine Labs
+                🌱 + Buat Kampanye OPC
               </Link>
             </div>
           </div>

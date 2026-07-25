@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.48 — Urutan Tombol Quick Action Launchpad Dashboard (25/07/2026)
+- Penataan Ulang Urutan Tombol Quick Action Launchpad: 1. Content Flow, 2. Buat Content Plan, 3. Buat Kampanye RE, 4. Buat Kampanye OPC
+
 ## V1.1.47 — Redesain Dashboard Utama Menjadi Command Center Simpel & Realtime Stats (25/07/2026)
 - Penyederhanaan Dashboard Utama ke Judul  dengan 4 Kartu Metric Real-time
 - Quick Action Launchpad Akses 1-Klik ke Kampanye OPC, Import Sheet, ContentFlow Hub & Recipe Labs
