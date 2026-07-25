@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.1 — Redesign Dashboard UI Proporsional & Responsive Glassmorphism (25/07/2026)
+- Penyempurnaan layout Dashboard menjadi responsif 100% tanpa terpotong di kolom kanan
+- Pembaruan visual Glassmorphism untuk Executive Metric Cards & Quick Action Launchpad
+- Integrasi realtime statistik PostgreSQL Node 3 pada widget Konten Terbaru & Platform Progress
+
 ## V2.0.0 — Decoupled Architecture V2.0 & PostgreSQL Enterprise Database (25/07/2026)
 - Pemasangan & migrasi data ke PostgreSQL 18.4 Enterprise Database Tier di Node 3 (100.78.186.123:5432)
 - Pemisahan arsitektur ke Headless Backend API Engine V2.0 (apps/api/server.js) pada Port 4000
