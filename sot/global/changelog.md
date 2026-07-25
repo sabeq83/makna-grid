@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.0.11 — Fix DB Ingestion Schema Error pada Content Planner Ingest Route (25/07/2026)
+- Fix pillar_campaign_items column custom_hook error dengan mengganti query raw ke createPillarCampaignItem terpusat
+
 ## V2.0.10 — Fix ReferenceError targetSpreadsheetId pada Modal Impor Planner & New Campaign OPC (25/07/2026)
 - Fix ReferenceError targetSpreadsheetId is not defined pada ImportPlannerModal.js dan page.js
 - Pengesahan fallback backend nextcloud_parent_folder ke /MAKNA_Assets

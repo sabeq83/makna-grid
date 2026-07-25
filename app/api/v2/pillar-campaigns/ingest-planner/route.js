@@ -162,27 +162,11 @@ export async function POST(request) {
           narrative_mode: rowNarrative
         };
 
-        const stmt = db.prepare(`
-          INSERT INTO pillar_campaign_items (
-            campaign_id, generation_status, tts_status, visual_status, ffmpeg_status, upload_status, social_post_status,
-            custom_hook, content_pillar, visual_action_guideline, product_name, product_desc, product_usp,
-            product_ref_image_path, visual_mode, source_product_url
-          ) VALUES (?, ?, 'pending', 'pending', 'pending', 'pending', 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `);
-
-        stmt.run(
-          campaignId,
-          payload.generation_status,
-          payload.custom_hook,
-          payload.content_pillar,
-          payload.visual_action_guideline,
-          payload.product_name,
-          payload.product_desc,
-          payload.product_usp,
-          payload.product_ref_image_path,
-          payload.visual_mode,
-          payload.source_product_url
-        );
+        createPillarCampaignItem({
+          campaign_id: campaignId,
+          row_creative_payload: JSON.stringify(payload),
+          generation_status: generationStatus
+        });
       }
     })();
 
