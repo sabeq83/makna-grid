@@ -23,8 +23,7 @@ export default function ImportPlannerModal({
   const [accountName, setAccountName] = useState('');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
-  const [targetSpreadsheetId, setTargetSpreadsheetId] = useState('');
-  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Production_Final');
+  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('/MAKNA_Assets');
   const [customInstruction, setCustomInstruction] = useState('');
 
   // Accordion 1: Strategy & Compliance
@@ -460,18 +459,7 @@ export default function ImportPlannerModal({
                         type="text"
                         value={nextcloudParentFolder}
                         onChange={e => setNextcloudParentFolder(e.target.value)}
-                        placeholder="cth: MAKNA_Production_Final"
-                        style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>📊 Target Spreadsheet ID (Opsional):</label>
-                      <input
-                        type="text"
-                        value={targetSpreadsheetId}
-                        onChange={e => setTargetSpreadsheetId(e.target.value)}
-                        placeholder="Spreadsheet ID..."
+                        placeholder="cth: /MAKNA_Assets"
                         style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
                       />
                     </div>
@@ -516,14 +504,9 @@ export default function ImportPlannerModal({
                     <div>
                       <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Visual Style (Gaya Visual):</label>
                       <select value={visualStyle} onChange={e => setVisualStyle(e.target.value)} style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}>
-                        <option value="Cinematic">Cinematic (Sinematik Raw Photography)</option>
-                        <option value="Photorealistic Studio">Photorealistic Studio (Foto Studio Terang Minimalis)</option>
-                        <option value="Warm Cozy Home">Warm Cozy Home (Rumahan Hangat Natural)</option>
-                        <option value="3D Claymation">3D Claymation (Gaya tanah liat 3D cozy)</option>
-                        <option value="Vintage 90s Film">Vintage 90s Film (Gaya Retro 90an Analog)</option>
-                        <option value="Cyberpunk Neon">Cyberpunk Neon (Gaya Cyberpunk Neon Glow)</option>
-                        <option value="Commercial High-End">Commercial High-End (Iklan TV Komersial Mewah)</option>
-                        <option value="Minimalist Modern">Minimalist Modern (Minimalis Modern Bersih)</option>
+                        <option value="Cinematic">Cinematic</option>
+                        <option value="UGC">UGC</option>
+                        <option value="Macrophotography">Macrophotography</option>
                       </select>
                     </div>
 

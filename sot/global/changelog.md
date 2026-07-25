@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.9 — Penyempurnaan & Harmonisasi UI OPC & Modal Impor V2.0 (25/07/2026)
+- Penambahan dropdown Nama Akun dan auto-fill [OPC YYYYMMDD] - namaakun - pada Form New Campaign OPC
+- Penghapusan field Target Spreadsheet ID dan penyesuaian default Nextcloud /MAKNA_Assets
+- Penyelarasan opsi Visual Style modal impor 100% mengacu pada page.js (Cinematic, UGC, Macrophotography)
+
 ## V2.0.8 — Standarisasi Baku Penamaan Folder & File Cloud Nextcloud & Google Drive V2.0 (25/07/2026)
 - Penambahan utilitas terpusat lib/cloud-naming-helper.js untuk pembentukan path folder dan nama file cloud baku (_final.mp4, _vo_final.mp3, _thumb.jpg, _c01)
 - Pengujian modul scripts/test-cloud-naming.js

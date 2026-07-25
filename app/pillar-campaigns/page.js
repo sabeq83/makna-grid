@@ -75,6 +75,7 @@ export default function OrganicPillarPage() {
   const [activeAccordion, setActiveAccordion] = useState(0);
 
   // Section 1: Basic Creative Strategy
+  const [accountName, setAccountName] = useState('');
   const [campaignName, setCampaignName] = useState('');
   const [contentPillar, setContentPillar] = useState('');
   const [customHook, setCustomHook] = useState('');
@@ -131,7 +132,7 @@ export default function OrganicPillarPage() {
   const [enableSocialPost, setEnableSocialPost] = useState(false);
   const [postYoutube, setPostYoutube] = useState(false);
   const [ttsModelQuality, setTtsModelQuality] = useState('speech-2.8-turbo');
-  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Production_Final');
+  const [nextcloudParentFolder, setNextcloudParentFolder] = useState('/MAKNA_Assets');
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
   const [enableAudioSegment, setEnableAudioSegment] = useState(false);
   const [voiceCast, setVoiceCast] = useState([]);
@@ -160,6 +161,16 @@ export default function OrganicPillarPage() {
       setEnableFfmpeg(false);
     }
   }, [enableTts, enableGlabs]);
+
+  useEffect(() => {
+    const today = new Date();
+    const yy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const dateStr = `${yy}${mm}${dd}`;
+    const accStr = accountName ? `${accountName} - ` : '';
+    setCampaignName(`[OPC ${dateStr}] - ${accStr}`);
+  }, [accountName]);
 
   useEffect(() => {
     if (voiceProvider === 'gemini') {
@@ -580,6 +591,7 @@ export default function OrganicPillarPage() {
 
       const formData = new FormData();
       formData.append('campaign_name', campaignName.trim());
+      formData.append('account_name', accountName.trim());
       formData.append('content_pillar', contentPillar.trim());
       formData.append('custom_hook', customHook.trim());
       formData.append('visual_action_guideline', visualActionGuideline.trim());
@@ -1036,29 +1048,39 @@ export default function OrganicPillarPage() {
                   {activeAccordion === 0 && (
                     <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
                       <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                        <select
+                          className="form-input"
+                          value={accountName}
+                          onChange={e => setAccountName(e.target.value)}
+                        >
+                          <option value="">-- Pilih Nama Akun Brand --</option>
+                          {brandProfiles.map(bp => (
+                            <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                              {bp.brand_name} ({bp.account_name || bp.brand_name})
+                            </option>
+                          ))}
+                          <option value="nutribake">nutribake</option>
+                          <option value="siasatsehat">siasatsehat</option>
+                          <option value="dummybrand01">dummybrand01</option>
+                          <option value="dummybrand02">dummybrand02</option>
+                        </select>
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Nama Kampanye</label>
                         <input
                           className="form-input"
-                          placeholder="Contoh: OPC Skincare Anti-Aging Juni"
+                          placeholder="Contoh: [OPC 20260725] - nutribake - "
                           value={campaignName}
                           onChange={e => setCampaignName(e.target.value)}
                           required
                         />
                       </div>
                       <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label className="form-label">Google Spreadsheet ID (Opsional)</label>
-                        <input
-                          className="form-input"
-                          placeholder="Spreadsheet ID untuk penulisan otomatis"
-                          value={targetSpreadsheetId}
-                          onChange={e => setTargetSpreadsheetId(e.target.value)}
-                        />
-                      </div>
-                      <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Parent Folder Nextcloud</label>
                         <input
                           className="form-input"
-                          placeholder="Contoh: MAKNA_Production_Final"
+                          placeholder="Contoh: /MAKNA_Assets"
                           value={nextcloudParentFolder}
                           onChange={e => setNextcloudParentFolder(e.target.value)}
                           required
