@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.58 — Pemasangan PostgreSQL 18.4 Server di Node 3 & Script Migrasi Data Otomatis (25/07/2026)
+- Pemasangan & konfigurasi PostgreSQL Server di Node 3 (100.78.186.123:5432)
+- Penambahan script automasi migrasi scripts/migrate-sqlite-to-postgres.js (52 tabel, 100% data terintegrasi)
+- Penambahan module connection pool lib/db-pg.js untuk query PostgreSQL dari Node 1
+
 ## V1.1.57 — Perbaikan Sinkronisasi & Visualisasi Data Produk ContentFlow (25/07/2026)
 - Pencegahan overwrite data produk pengguna oleh COALESCE pada upsertContentFlowItem di lib/db.js
 - Penambahan tombol visual 🔗 Link Produk dan 🛒 Affiliate Link langsung di permukaan Card ContentFlow Hub
