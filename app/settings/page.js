@@ -19,6 +19,7 @@ export default function SettingsPage() {
   const [googleClientSecret, setGoogleClientSecret] = useState('');
   const [savingGoogle, setSavingGoogle] = useState(false);
   const [webhookApiKey, setWebhookApiKey] = useState('');
+  const [webhookHost, setWebhookHost] = useState('100.117.59.92');
   const [webhookPort, setWebhookPort] = useState('8765');
   const [webhookImageModel, setWebhookImageModel] = useState('nano_banana_pro');
   const [webhookVideoModel, setWebhookVideoModel] = useState('veo_31_lite_relaxed');
@@ -129,6 +130,7 @@ export default function SettingsPage() {
       setMaskedMinimaxKey(data.data.minimax_api_key || '');
       setHasMinimaxKey(data.data.has_minimax_key);
       setWebhookApiKey(data.data.webhook_api_key || '');
+      setWebhookHost(data.data.webhook_host || '100.117.59.92');
       setWebhookPort(data.data.webhook_port || '8765');
       setWebhookImageModel(data.data.webhook_image_model || 'nano_banana_pro');
       setWebhookVideoModel(data.data.webhook_video_model || 'veo_31_lite_relaxed');
@@ -1014,7 +1016,7 @@ export default function SettingsPage() {
                     {webhookStatus?.success ? 'Online' : webhookStatus ? 'Offline' : 'Belum ditest'}
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                    http://127.0.0.1:{webhookPort}
+                    http://{webhookHost}:{webhookPort}
                   </div>
                 </div>
               </div>
@@ -1030,6 +1032,19 @@ export default function SettingsPage() {
               }} disabled={testingWebhook}>
                 {testingWebhook ? '⏳ Testing...' : '🔌 Test Connection'}
               </button>
+            </div>
+
+            <div className="form-group" style={{ marginBottom: '12px' }}>
+              <label className="form-label">🌐 Host / IP Address Webhook G Labs</label>
+              <input
+                className="form-input"
+                placeholder="100.117.59.92 atau 127.0.0.1"
+                value={webhookHost}
+                onChange={e => setWebhookHost(e.target.value)}
+              />
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                IP server G-Labs Automation. Gunakan <code>100.117.59.92</code> (Node 2 Worker) atau IP LAN/Tailscale tempat G-Labs berjalan.
+              </div>
             </div>
 
             <div className="form-group" style={{ marginBottom: '12px' }}>
@@ -1136,6 +1151,7 @@ export default function SettingsPage() {
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ 
                         webhook_api_key: webhookApiKey, 
+                        webhook_host: webhookHost.trim(),
                         webhook_port: webhookPort, 
                         webhook_image_model: webhookImageModel, 
                         webhook_video_model: webhookVideoModel,

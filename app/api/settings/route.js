@@ -17,6 +17,7 @@ export async function GET() {
         has_minimax_key: !!minimaxKey,
         minimax_group_id: getSetting('minimax_group_id') || '',
         webhook_api_key: getSetting('webhook_api_key') || '',
+        webhook_host: getSetting('webhook_host') || '100.117.59.92',
         webhook_port: getSetting('webhook_port') || '8765',
         webhook_image_model: getSetting('webhook_image_model') || 'nano_banana_pro',
         webhook_video_model: getSetting('webhook_video_model') || 'veo_31_lite_relaxed',
@@ -62,7 +63,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { gemini_api_key, gemini_api_tier, gemini_context_caching, google_client_id, google_client_secret,
-      webhook_api_key, webhook_port, webhook_image_model, webhook_video_model,
+      webhook_api_key, webhook_host, webhook_port, webhook_image_model, webhook_video_model,
       webhook_delay_enabled, webhook_delay_min, webhook_delay_max, webhook_t2i_pattern,
       drive_glabs_folder_id, drive_re_markdown_folder_id, master_re_sheet_id, drive_product_photo_folder,
       storage_provider, nextcloud_url, nextcloud_username, nextcloud_app_password, nextcloud_target_folder,
@@ -92,6 +93,7 @@ export async function POST(request) {
       setSetting('google_client_secret', google_client_secret);
     }
     if (webhook_api_key !== undefined) setSetting('webhook_api_key', webhook_api_key);
+    if (webhook_host !== undefined) setSetting('webhook_host', webhook_host);
     if (webhook_port !== undefined) setSetting('webhook_port', webhook_port);
     if (webhook_image_model !== undefined) setSetting('webhook_image_model', webhook_image_model);
     if (webhook_video_model !== undefined) setSetting('webhook_video_model', webhook_video_model);

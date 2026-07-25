@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.12 — Penambahan Field Custom Host IP Webhook G Labs pada Menu Setting (25/07/2026)
+- Penambahan input Host/IP Address Webhook G Labs (default 100.117.59.92) pada menu Setting
+- Penyelarasan indikator live status URL Webhook secara dinamis
+- Dukungan konfigurasi IP kustom G-Labs v5.0.8+ pada lib/webhook-client.js
+
 ## V2.0.11 — Fix DB Ingestion Schema Error pada Content Planner Ingest Route (25/07/2026)
 - Fix pillar_campaign_items column custom_hook error dengan mengganti query raw ke createPillarCampaignItem terpusat
 
