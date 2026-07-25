@@ -151,6 +151,15 @@ async function main() {
     console.log('Melakukan Git Push ke remote server...');
     execSync('git push origin main');
     
+    console.log(`Membuat dan mengunggah Git Tag v${newVersion}...`);
+    try {
+      execSync(`git tag -a v${newVersion} -m "${commitMsg}"`);
+      execSync('git push origin --tags');
+      console.log(`✓ Git Tag v${newVersion} terunggah.`);
+    } catch (tagErr) {
+      console.warn('⚠️ Gagal mengunggah tag (mungkin tag sudah ada):', tagErr.message);
+    }
+    
     console.log('\n🎉 RILIS BERHASIL! Versi baru Anda v' + newVersion + ' sekarang sudah aktif dan terunggah ke GitHub! 🎉');
   } catch (err) {
     console.error('\n❌ Terjadi kesalahan saat rilis:', err.message);

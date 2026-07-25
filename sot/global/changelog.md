@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.52 — Otomasi Git Tag & Sinkronisasi Release Script SOP (25/07/2026)
+- Penambahan pemrosesan otomatis git tag dan git push --tags pada scripts/release.js
+- Sinkronisasi status repositori ke remote GitHub https://github.com/sabeq83/makna-grid.git
+
 ## V1.1.51 — Ekstraksi Hook dari VO Klip 1 dan Caption dari IG Caption untuk Konten RE (25/07/2026)
 - Penetapan Hook Konten RE dari Teks Voice-Over Klip 1 (VO Klip 1)
 - Penetapan Box Caption Konten RE dari Teks  Hasil Analisis RE
