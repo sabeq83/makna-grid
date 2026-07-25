@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.51 — Ekstraksi Hook dari VO Klip 1 dan Caption dari IG Caption untuk Konten RE (25/07/2026)
+- Penetapan Hook Konten RE dari Teks Voice-Over Klip 1 (VO Klip 1)
+- Penetapan Box Caption Konten RE dari Teks  Hasil Analisis RE
+- Pembaruan Data 24 Item Konten RE @siasatsehat di ContentFlow Hub
+
 ## V1.1.50 — Populasi Atribut Brand siasatsehat & Format Video ID RE-SS-001 s/d RE-SS-024 (25/07/2026)
 - Penetapan Atribut Profil Brand  pada Kampanye RE eef644d9-d74c-4a5a-834f-38c230fd9b21
 - Populasi Otomatis Format : RE-SS-001 s/d RE-SS-024 untuk 24 Item Konten RE di ContentFlow Hub
