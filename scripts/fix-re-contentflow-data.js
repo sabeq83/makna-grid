@@ -75,14 +75,36 @@ async function fixReContentFlowData() {
     ];
     const finalNamaProduk = productSamples[idx % productSamples.length];
 
+    // Check if item has failed status
+    const isFailed = [item.scrape_status, item.analyze_status, item.tts_status, item.visual_status, item.ffmpeg_status, item.upload_status]
+      .some(s => s && (s.toLowerCase().includes('fail') || s.toLowerCase().includes('error')));
+
+    if (isFailed) {
+      db.prepare('DELETE FROM content_flow_items WHERE id = ? OR source_item_id = ?').run(cfId, String(item.id));
+      console.log(`\nItem [${seqNum}] ID: ${item.id} | Status: ⚠️ FAILED (Removed from ContentFlow Hub)`);
+      continue;
+    }
+
+    let rawDrive = item.drive_link || '';
+    let nextcloudUrl = payload.nextcloud_url || '';
+
+    if (rawDrive && (rawDrive.includes('100.78.186.123') || rawDrive.includes('index.php/s/'))) {
+      nextcloudUrl = rawDrive;
+      rawDrive = '';
+    }
+    if (!nextcloudUrl) {
+      nextcloudUrl = 'http://100.78.186.123/';
+    }
+
     // Update content_flow_items
     const existingCF = db.prepare('SELECT id FROM content_flow_items WHERE id = ?').get(cfId);
     if (existingCF) {
       db.prepare(`
         UPDATE content_flow_items SET
-          video_id = ?, account_name = ?, campaign_title = ?, hook = ?, nama_produk = ?, caption = ?, source_type = ?
+          video_id = ?, account_name = ?, campaign_title = ?, hook = ?, nama_produk = ?, caption = ?, source_type = ?,
+          drive_link = ?, nextcloud_url = ?
         WHERE id = ?
-      `).run(videoId, 'siasatsehat', 'SIASATSEHAT_RE_20260725', hookFromVo1, finalNamaProduk, igCaption, 're', cfId);
+      `).run(videoId, 'siasatsehat', 'SIASATSEHAT_RE_20260725', hookFromVo1, finalNamaProduk, igCaption, 're', rawDrive, nextcloudUrl, cfId);
     } else {
       db.prepare(`
         INSERT INTO content_flow_items (
@@ -92,7 +114,7 @@ async function fixReContentFlowData() {
       `).run(
         cfId, 're', CAMPAIGN_ID, String(item.id), videoId, 'siasatsehat',
         'SIASATSEHAT_RE_20260725', hookFromVo1, finalNamaProduk, igCaption,
-        item.drive_link || '', payload.nextcloud_url || '', 'Completed',
+        rawDrive, nextcloudUrl, 'Completed',
         new Date().toISOString()
       );
     }

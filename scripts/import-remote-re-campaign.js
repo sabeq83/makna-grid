@@ -155,10 +155,32 @@ async function runImport() {
       `).run(itemData);
     }
 
+    // Filter out failed/error items from content_flow_items
+    const isFailed = [item.scrape_status, item.analyze_status, item.tts_status, item.visual_status, item.ffmpeg_status, item.upload_status]
+      .some(s => s && (s.toLowerCase().includes('fail') || s.toLowerCase().includes('error')));
+
+    const contentFlowId = `cf_re_${item.id}`;
+
+    if (isFailed) {
+      db.prepare('DELETE FROM content_flow_items WHERE id = ? OR source_item_id = ?').run(contentFlowId, String(item.id));
+      console.log(`  ⚠️ Skipped ingest to content_flow_items (status: Failed/Error)`);
+      continue;
+    }
+
     // Ingest into content_flow_items as completed content ready for publishing
     const hookTitle = item.title || item.hook_title || `RE Content #${item.id}`;
     const accountName = (idx % 2 === 0) ? 'dummybrand01' : 'dummybrand02';
-    const contentFlowId = `cf_re_${item.id}`;
+    
+    let driveLink = item.drive_link || '';
+    let nextcloudUrl = payload.nextcloud_url || '';
+
+    if (driveLink && (driveLink.includes('100.78.186.123') || driveLink.includes('index.php/s/'))) {
+      nextcloudUrl = driveLink;
+      driveLink = '';
+    }
+    if (!nextcloudUrl && campaign.id === 'eef644d9-d74c-4a5a-834f-38c230fd9b21') {
+      nextcloudUrl = 'http://100.78.186.123/';
+    }
 
     const existingCF = db.prepare('SELECT id FROM content_flow_items WHERE id = ?').get(contentFlowId);
     if (!existingCF) {
@@ -171,7 +193,7 @@ async function runImport() {
         contentFlowId, 're', campaign.id, String(item.id), `RE-${item.id}`, accountName,
         campaign.campaign_name || 'RE Campaign', hookTitle,
         item.original_voiceover || item.tiktok_safe_voiceover || '',
-        item.drive_link || '', payload.nextcloud_url || '', 'Completed',
+        driveLink, nextcloudUrl, 'Completed',
         new Date().toISOString()
       );
     }

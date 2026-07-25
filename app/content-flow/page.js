@@ -567,60 +567,62 @@ export default function ContentFlowHubPage() {
 
                     {/* Single Priority Cloud Asset Link Button */}
                     <div style={{ width: '100%' }}>
-                      {item.drive_link ? (
-                        <a
-                          href={item.drive_link}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                            borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
-                            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)', transition: 'all 0.2s ease'
-                          }}
-                          title="Buka Folder Google Drive"
-                        >
-                          📁 Google Drive
-                        </a>
-                      ) : item.nextcloud_url ? (
-                        <a
-                          href={item.nextcloud_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                            borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
-                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
-                            boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)', transition: 'all 0.2s ease'
-                          }}
-                          title="Buka Folder Nextcloud"
-                        >
-                          ☁️ Nextcloud
-                        </a>
-                      ) : item.url_asset ? (
-                        <a
-                          href={item.url_asset}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                            borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                            color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none'
-                          }}
-                        >
-                          📥 Download Asset
-                        </a>
-                      ) : (
-                        <span
-                          style={{
-                            display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                            borderRadius: '8px', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid #334155',
-                            color: '#64748b', fontSize: '11px', fontWeight: 600
-                          }}
-                        >
-                          🔒 Asset Kosong
-                        </span>
-                      )}
+                      {(() => {
+                        const allUrls = [item.nextcloud_url, item.drive_link, item.url_asset].filter(Boolean);
+                        const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
+                        const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
+
+                        const targetUrl = ncUrl || item.nextcloud_url || gdUrl || item.drive_link || item.url_asset;
+                        const isNextcloud = Boolean(ncUrl || (item.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
+
+                        if (!targetUrl) {
+                          return (
+                            <span
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                                borderRadius: '8px', background: 'rgba(30, 41, 59, 0.5)',
+                                color: '#64748b', fontSize: '11px', fontWeight: 600
+                              }}
+                            >
+                              ⏳ Asset Belum Tersedia
+                            </span>
+                          );
+                        }
+
+                        if (isNextcloud) {
+                          return (
+                            <a
+                              href={targetUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                                borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+                                color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
+                                boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)', transition: 'all 0.2s ease'
+                              }}
+                              title="Buka Link Nextcloud"
+                            >
+                              ☁️ Nextcloud
+                            </a>
+                          );
+                        }
+
+                        return (
+                          <a
+                            href={targetUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
+                              borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                              color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
+                              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)', transition: 'all 0.2s ease'
+                            }}
+                            title="Buka Link Google Drive"
+                          >
+                            📁 Google Drive
+                      })()}
                     </div>
                   </div>
 
@@ -805,33 +807,46 @@ export default function ContentFlowHubPage() {
                   </button>
                 )}
 
-                {activeItem.url_asset || activeItem.drive_link || activeItem.nextcloud_url ? (
-                  <a
-                    href={activeItem.url_asset || activeItem.drive_link || activeItem.nextcloud_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      padding: '10px 14px', borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                      border: '1px solid #10b981', color: '#ffffff', fontWeight: 700, fontSize: '13px',
-                      textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                      boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
-                    }}
-                  >
-                    📥 Asset Ready
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    style={{
-                      padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
-                      border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
-                      cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-                    }}
-                  >
-                    📥 Asset Kosong
-                  </button>
-                )}
+                {(() => {
+                  const allUrls = [activeItem.nextcloud_url, activeItem.drive_link, activeItem.url_asset].filter(Boolean);
+                  const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
+                  const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
+
+                  const targetUrl = ncUrl || activeItem.nextcloud_url || gdUrl || activeItem.drive_link || activeItem.url_asset;
+                  const isNextcloud = Boolean(ncUrl || (activeItem.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
+
+                  if (!targetUrl) {
+                    return (
+                      <button
+                        disabled
+                        style={{
+                          padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
+                          border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
+                          cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                        }}
+                      >
+                        📥 Asset Kosong
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <a
+                      href={targetUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        padding: '10px 14px', borderRadius: '10px',
+                        background: isNextcloud ? 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        border: isNextcloud ? '1px solid #38bdf8' : '1px solid #10b981', color: '#ffffff', fontWeight: 700, fontSize: '13px',
+                        textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                        boxShadow: isNextcloud ? '0 4px 14px rgba(56, 189, 248, 0.3)' : '0 4px 14px rgba(16, 185, 129, 0.3)'
+                      }}
+                    >
+                      {isNextcloud ? '☁️ Nextcloud Asset' : '📁 Drive Asset'}
+                    </a>
+                  );
+                })()}
               </div>
 
               {/* Metadata Panel */}

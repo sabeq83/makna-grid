@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.53 — Penyesuaian Tombol Nextcloud & Filter Status Error Kampanye RE eef644d9 (25/07/2026)
+- Penyaringan item berstatus Failed/Error pada kampanye RE eef644d9 di ContentFlow Hub
+- Penataan ulang URL Nextcloud dan tombol visual sky blue pada card ContentFlow
+
 ## V1.1.52 — Otomasi Git Tag & Sinkronisasi Release Script SOP (25/07/2026)
 - Penambahan pemrosesan otomatis git tag dan git push --tags pada scripts/release.js
 - Sinkronisasi status repositori ke remote GitHub https://github.com/sabeq83/makna-grid.git
