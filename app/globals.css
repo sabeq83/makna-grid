@@ -59,27 +59,28 @@ body {
 }
 
 .sidebar-brand {
-  padding: 24px 20px;
+  padding: 20px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .sidebar-brand h1 {
   font-family: var(--font-mono);
-  font-size: 1.2rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--accent-light), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  letterSpacing: 0.02em;
+  margin: 0;
 }
 
 .sidebar-brand p {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 4px;
+  font-size: 0.68rem;
+  color: #ffffff;
+  opacity: 0.85;
+  margin-top: 8px;
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
 }
 
 .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }

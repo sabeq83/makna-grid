@@ -104,6 +104,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
+        {/* Row 1: Logo Icon + MAKNA GRID */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '38px',
@@ -111,7 +112,7 @@ export default function Sidebar() {
             borderRadius: '10px',
             background: 'linear-gradient(135deg, rgba(0,242,254,0.15), rgba(16,185,129,0.15))',
             border: '1px solid rgba(0,242,254,0.3)',
-            boxShadow: '0 0 12px rgba(0,242,254,0.2)',
+            boxShadow: '0 0 14px rgba(0,242,254,0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -136,11 +137,32 @@ export default function Sidebar() {
               <circle cx="48" cy="48" r="3.5" fill="#00F2FE"/>
             </svg>
           </div>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.15rem', lineHeight: '1.2' }}>MAKNA GRID</h1>
-            <p style={{ margin: '2px 0 0 0', fontSize: '0.65rem' }}>Decoupled Multi-Node Cluster</p>
-          </div>
+          <h1 style={{
+            margin: 0,
+            fontSize: '1.35rem',
+            fontWeight: 800,
+            color: '#ffffff',
+            WebkitTextFillColor: '#ffffff',
+            letterSpacing: '0.03em',
+            lineHeight: '1'
+          }}>
+            MAKNA GRID
+          </h1>
         </div>
+
+        {/* Row 2: Subtitle under logo & MAKNA GRID */}
+        <p style={{
+          margin: '8px 0 0 0',
+          fontSize: '0.66rem',
+          color: '#ffffff',
+          opacity: 0.85,
+          fontFamily: 'var(--font-mono)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          lineHeight: '1.2'
+        }}>
+          Decoupled Multi-Node Cluster
+        </p>
       </div>
 
       <nav className="sidebar-nav">

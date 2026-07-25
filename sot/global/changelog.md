@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.33 — Styling Brand Sidebar MAKNA GRID (25/07/2026)
+- Tulisan MAKNA GRID berwarna putih font besar sejajar logo
+- Subtitle Decoupled Multi-Node Cluster berwarna putih font kecil di bawah logo
+
 ## V1.1.32 — Logo Konsep 2 & Favicon MAKNA Grid (25/07/2026)
 - Integrasi favicon SVG Neural Monogram Grid M
 - Update logo MAKNA Grid pada Halaman Login dan Sidebar Menu
