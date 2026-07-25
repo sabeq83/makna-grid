@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.8 — Standarisasi Baku Penamaan Folder & File Cloud Nextcloud & Google Drive V2.0 (25/07/2026)
+- Penambahan utilitas terpusat lib/cloud-naming-helper.js untuk pembentukan path folder dan nama file cloud baku (_final.mp4, _vo_final.mp3, _thumb.jpg, _c01)
+- Pengujian modul scripts/test-cloud-naming.js
+- Integrasi ke sync helpers Nextcloud dan Google Drive
+
 ## V2.0.7 — Standarisasi Baku Campaign ID & Video ID MAKNA Grid V2.0 (25/07/2026)
 - Penambahan utilitas terpusat lib/id-generator.js untuk pembentukan Campaign ID dan Video ID baku
 - Skrip sanitasi scripts/sanitize-and-standardize-ids.js untuk merapikan 142 baris data video_id lama di PostgreSQL Node 3 & SQLite
