@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.54 — Fix Syntax Error JSX Card ContentFlow Hub (25/07/2026)
+- Perbaikan penutupan tag <a> pada IIFE tombol asset Card ContentFlow Hub
+
 ## V1.1.53 — Penyesuaian Tombol Nextcloud & Filter Status Error Kampanye RE eef644d9 (25/07/2026)
 - Penyaringan item berstatus Failed/Error pada kampanye RE eef644d9 di ContentFlow Hub
 - Penataan ulang URL Nextcloud dan tombol visual sky blue pada card ContentFlow
