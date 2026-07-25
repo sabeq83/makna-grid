@@ -264,364 +264,371 @@ export default function ContentFlowHubPage() {
       <Sidebar />
 
       <main className="main-content" style={{ padding: '28px 32px', background: '#0a0a0c', minHeight: '100vh', color: '#f3f4f6' }}>
-        {/* Toast Notification */}
-        {toastMsg && (
-          <div style={{
-            position: 'fixed', top: '24px', right: '24px', zIndex: 9999,
-            padding: '12px 24px', borderRadius: '12px', background: '#2563eb',
-            color: '#fff', fontWeight: 600, fontSize: '14px', boxShadow: '0 10px 25px rgba(0,0,0,0.4)',
-            display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(96, 165, 250, 0.4)'
-          }}>
-            <CheckCircleIcon style={{ width: 16, height: 16 }} />
-            <span>{toastMsg}</span>
-          </div>
-        )}
+        {/* Centered Main Container (1050px) setara OPC / RE */}
+        <div style={{ maxWidth: '1050px', margin: '0 auto' }}>
+          {/* Toast Notification */}
+          {toastMsg && (
+            <div style={{
+              position: 'fixed', top: '24px', right: '24px', zIndex: 9999,
+              padding: '12px 24px', borderRadius: '12px', background: '#2563eb',
+              color: '#fff', fontWeight: 600, fontSize: '14px', boxShadow: '0 10px 25px rgba(0,0,0,0.4)',
+              display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(96, 165, 250, 0.4)'
+            }}>
+              <CheckCircleIcon style={{ width: 16, height: 16 }} />
+              <span>{toastMsg}</span>
+            </div>
+          )}
 
-        {/* Top Control Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: '14px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', color: '#fff' }}>
-                <LayersIcon style={{ width: 24, height: 24 }} />
+          {/* Top Control Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ padding: '10px', borderRadius: '14px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', color: '#fff' }}>
+                  <LayersIcon style={{ width: 24, height: 24 }} />
+                </div>
+                <div>
+                  <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    ContentFlow Publishing Tracker Hub
+                  </h1>
+                  <p style={{ color: '#9ca3af', fontSize: '13px', margin: '2px 0 0' }}>
+                    Pusat pemantauan & manajemen status tayang konten media sosial dari seluruh mesin kampanye MAKNA Grid.
+                  </p>
+                </div>
               </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleTriggerRetroSync}
+                disabled={syncing}
+                style={{
+                  padding: '10px 18px', background: syncing ? '#1e293b' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                  color: '#fff', border: '1px solid #10b981', borderRadius: '10px', fontWeight: 700, cursor: syncing ? 'not-allowed' : 'pointer',
+                  fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                <RefreshCwIcon style={{ width: 14, height: 14, animation: syncing ? 'spin 1s linear infinite' : 'none' }} />
+                <span>{syncing ? '⏳ Menyinkronkan...' : '🔄 Sync Seluruh Aset Kampanye'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(18, 19, 24, 0.8)', border: '1px solid #27272a' }}>
+              <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block' }}>Total Konten Terindeks</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '26px', fontWeight: 800, color: '#ffffff' }}>{totalItems}</span>
+                <span style={{ fontSize: '11px', color: '#6b7280' }}>Video Items</span>
+              </div>
+            </div>
+
+            <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+              <span style={{ fontSize: '12px', color: '#34d399', fontWeight: 600, display: 'block' }}>Telah Publish</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '26px', fontWeight: 800, color: '#34d399' }}>{publishedCount}</span>
+                <span style={{ fontSize: '11px', color: '#059669', fontFamily: 'monospace' }}>Completed</span>
+              </div>
+            </div>
+
+            <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+              <span style={{ fontSize: '12px', color: '#fbbf24', fontWeight: 600, display: 'block' }}>Terjadwal (Scheduled)</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '26px', fontWeight: 800, color: '#fbbf24' }}>{scheduledCount}</span>
+                <span style={{ fontSize: '11px', color: '#d97706', fontFamily: 'monospace' }}>Queue</span>
+              </div>
+            </div>
+
+            <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(18, 19, 24, 0.8)', border: '1px solid #27272a' }}>
+              <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block' }}>Produk Aktif</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '26px', fontWeight: 800, color: '#60a5fa' }}>{availableProducts.length}</span>
+                <span style={{ fontSize: '11px', color: '#6b7280' }}>Skus</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Multi-level Search & Filter Panel */}
+          <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+              {/* Universal Search */}
+              <div style={{ position: 'relative' }}>
+                <SearchIcon style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Cari ID Video, Hook, Produk, Caption..."
+                  style={{
+                    width: '100%', padding: '9px 12px 9px 36px', borderRadius: '10px', background: '#09090b',
+                    border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none'
+                  }}
+                />
+              </div>
+
+              {/* Campaign Source Type Filter */}
               <div>
-                <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                  ContentFlow Publishing Tracker Hub
-                </h1>
-                <p style={{ color: '#9ca3af', fontSize: '13px', margin: '2px 0 0' }}>
-                  Pusat pemantauan & manajemen status tayang konten media sosial dari seluruh mesin kampanye MAKNA Grid.
-                </p>
+                <select
+                  value={sourceFilter}
+                  onChange={(e) => setSourceFilter(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                >
+                  <option value="all">Semua Sumber Kampanye (All)</option>
+                  <option value="opc">🌱 OPC (Organic Pillar)</option>
+                  <option value="strategic">🎯 Strategic Campaign</option>
+                  <option value="re">🔄 Reverse Engineering</option>
+                  <option value="instant">⚡ Instant Factory</option>
+                  <option value="recipe">🧪 Recipe Labs</option>
+                  <option value="bridge">🔗 Bridge Injector</option>
+                </select>
+              </div>
+
+              {/* Account Filter */}
+              <div>
+                <select
+                  value={accountFilter}
+                  onChange={(e) => setAccountFilter(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                >
+                  <option value="all">Semua Akun Brand ({availableAccounts.length})</option>
+                  {availableAccounts.map(acc => (
+                    <option key={acc} value={acc}>@{acc}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Product Filter */}
+              <div>
+                <select
+                  value={productFilter}
+                  onChange={(e) => setProductFilter(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                >
+                  <option value="all">Semua Produk ({availableProducts.length})</option>
+                  {availableProducts.map(prod => (
+                    <option key={prod} value={prod}>{prod}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Pipeline Status Filter */}
+              <div>
+                <select
+                  value={pipelineFilter}
+                  onChange={(e) => setPipelineFilter(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                >
+                  <option value="all">Semua Status Pipeline</option>
+                  <option value="Completed">Completed (Siap Publish)</option>
+                  <option value="In Production">In Production (Proses Render)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Platform Status Filter Row */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', paddingTop: '12px', borderTop: '1px solid #1f2937' }}>
+              <div>
+                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>TikTok Status</span>
+                <select
+                  value={tiktokFilter}
+                  onChange={(e) => setTiktokFilter(e.target.value)}
+                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                >
+                  <option value="Semua">Semua TikTok</option>
+                  <option value="Not Published">Not Published</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Published">Published</option>
+                </select>
+              </div>
+
+              <div>
+                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Facebook Status</span>
+                <select
+                  value={fbFilter}
+                  onChange={(e) => setFbFilter(e.target.value)}
+                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                >
+                  <option value="Semua">Semua Facebook</option>
+                  <option value="Not Published">Not Published</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Published">Published</option>
+                </select>
+              </div>
+
+              <div>
+                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Instagram Status</span>
+                <select
+                  value={igFilter}
+                  onChange={(e) => setIgFilter(e.target.value)}
+                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                >
+                  <option value="Semua">Semua Instagram</option>
+                  <option value="Not Published">Not Published</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Published">Published</option>
+                </select>
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button
-              onClick={handleTriggerRetroSync}
-              disabled={syncing}
-              style={{
-                padding: '10px 18px', background: syncing ? '#1e293b' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                color: '#fff', border: '1px solid #10b981', borderRadius: '10px', fontWeight: 700, cursor: syncing ? 'not-allowed' : 'pointer',
-                fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
-              }}
-            >
-              <RefreshCwIcon style={{ width: 14, height: 14, animation: syncing ? 'spin 1s linear infinite' : 'none' }} />
-              <span>{syncing ? '⏳ Menyinkronkan...' : '🔄 Sync Seluruh Aset Kampanye'}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Quick Metrics Bar */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '24px' }}>
-          <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(18, 19, 24, 0.8)', border: '1px solid #27272a' }}>
-            <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block' }}>Total Konten Terindeks</span>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
-              <span style={{ fontSize: '26px', fontWeight: 800, color: '#ffffff' }}>{totalItems}</span>
-              <span style={{ fontSize: '11px', color: '#6b7280' }}>Video Items</span>
+          {/* Content Items 1-Column Feed */}
+          {loading ? (
+            <div style={{ padding: '64px', textAlign: 'center', color: '#9ca3af' }}>
+              <div style={{ width: 32, height: 32, border: '3px solid #3b82f6', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 1s linear infinite' }}></div>
+              <p>Memuat item konten dari SQLite Database...</p>
             </div>
-          </div>
-
-          <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-            <span style={{ fontSize: '12px', color: '#34d399', fontWeight: 600, display: 'block' }}>Telah Publish</span>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
-              <span style={{ fontSize: '26px', fontWeight: 800, color: '#34d399' }}>{publishedCount}</span>
-              <span style={{ fontSize: '11px', color: '#059669', fontFamily: 'monospace' }}>Completed</span>
-            </div>
-          </div>
-
-          <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <span style={{ fontSize: '12px', color: '#fbbf24', fontWeight: 600, display: 'block' }}>Terjadwal (Scheduled)</span>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
-              <span style={{ fontSize: '26px', fontWeight: 800, color: '#fbbf24' }}>{scheduledCount}</span>
-              <span style={{ fontSize: '11px', color: '#d97706', fontFamily: 'monospace' }}>Queue</span>
-            </div>
-          </div>
-
-          <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(18, 19, 24, 0.8)', border: '1px solid #27272a' }}>
-            <span style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block' }}>Produk Aktif</span>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: '6px' }}>
-              <span style={{ fontSize: '26px', fontWeight: 800, color: '#60a5fa' }}>{availableProducts.length}</span>
-              <span style={{ fontSize: '11px', color: '#6b7280' }}>Skus</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Multi-level Search & Filter Panel */}
-        <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '16px' }}>
-            {/* Universal Search */}
-            <div style={{ position: 'relative' }}>
-              <SearchIcon style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }} />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Cari ID Video, Hook, Produk, Caption..."
-                style={{
-                  width: '100%', padding: '9px 12px 9px 36px', borderRadius: '10px', background: '#09090b',
-                  border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none'
-                }}
-              />
-            </div>
-
-            {/* Campaign Source Type Filter */}
-            <div>
-              <select
-                value={sourceFilter}
-                onChange={(e) => setSourceFilter(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+          ) : items.length === 0 ? (
+            <div style={{ padding: '64px 24px', textAlign: 'center', background: '#121318', borderRadius: '16px', border: '1px solid #27272a' }}>
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>🔍</div>
+              <h3 style={{ fontSize: '18px', color: '#fff', margin: '0 0 8px' }}>Tidak Ada Konten Ditemukan</h3>
+              <p style={{ color: '#9ca3af', fontSize: '13px', maxWidth: '420px', margin: '0 auto 20px' }}>
+                Tidak ada konten yang sesuai dengan filter atau pencarian Anda. Klik tombol Sync untuk menyinkronkan seluruh kampanye.
+              </p>
+              <button
+                onClick={handleTriggerRetroSync}
+                style={{ padding: '8px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
               >
-                <option value="all">Semua Sumber Kampanye (All)</option>
-                <option value="opc">🌱 OPC (Organic Pillar)</option>
-                <option value="strategic">🎯 Strategic Campaign</option>
-                <option value="re">🔄 Reverse Engineering</option>
-                <option value="instant">⚡ Instant Factory</option>
-                <option value="recipe">🧪 Recipe Labs</option>
-                <option value="bridge">🔗 Bridge Injector</option>
-              </select>
+                🔄 Refresh & Sync Database
+              </button>
             </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {items.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    background: '#0d1322', border: '1px solid #1e293b', borderRadius: '16px',
+                    padding: '16px 20px', display: 'grid', gridTemplateColumns: '220px 1fr 240px', gap: '20px',
+                    alignItems: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.3)', transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.45)'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#1e293b'}
+                >
+                  {/* Column 1: Thumbnail & Cloud Links */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{
+                      position: 'relative', width: '100%', height: '124px', borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid #334155',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
+                    }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
+                        <FilmIcon style={{ width: 20, height: 20 }} />
+                      </div>
 
-            {/* Account Filter */}
-            <div>
-              <select
-                value={accountFilter}
-                onChange={(e) => setAccountFilter(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
-              >
-                <option value="all">Semua Akun Brand ({availableAccounts.length})</option>
-                {availableAccounts.map(acc => (
-                  <option key={acc} value={acc}>@{acc}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Product Filter */}
-            <div>
-              <select
-                value={productFilter}
-                onChange={(e) => setProductFilter(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
-              >
-                <option value="all">Semua Produk ({availableProducts.length})</option>
-                {availableProducts.map(prod => (
-                  <option key={prod} value={prod}>{prod}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Pipeline Status Filter */}
-            <div>
-              <select
-                value={pipelineFilter}
-                onChange={(e) => setPipelineFilter(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
-              >
-                <option value="all">Semua Status Pipeline</option>
-                <option value="Completed">Completed (Siap Publish)</option>
-                <option value="In Production">In Production (Proses Render)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Platform Status Filter Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', paddingTop: '12px', borderTop: '1px solid #1f2937' }}>
-            <div>
-              <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>TikTok Status</span>
-              <select
-                value={tiktokFilter}
-                onChange={(e) => setTiktokFilter(e.target.value)}
-                style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
-              >
-                <option value="Semua">Semua TikTok</option>
-                <option value="Not Published">Not Published</option>
-                <option value="Scheduled">Scheduled</option>
-                <option value="Published">Published</option>
-              </select>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Facebook Status</span>
-              <select
-                value={fbFilter}
-                onChange={(e) => setFbFilter(e.target.value)}
-                style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
-              >
-                <option value="Semua">Semua Facebook</option>
-                <option value="Not Published">Not Published</option>
-                <option value="Scheduled">Scheduled</option>
-                <option value="Published">Published</option>
-              </select>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Instagram Status</span>
-              <select
-                value={igFilter}
-                onChange={(e) => setIgFilter(e.target.value)}
-                style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
-              >
-                <option value="Semua">Semua Instagram</option>
-                <option value="Not Published">Not Published</option>
-                <option value="Scheduled">Scheduled</option>
-                <option value="Published">Published</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Items Feed Grid */}
-        {loading ? (
-          <div style={{ padding: '64px', textAlign: 'center', color: '#9ca3af' }}>
-            <div style={{ width: 32, height: 32, border: '3px solid #3b82f6', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 1s linear infinite' }}></div>
-            <p>Memuat item konten dari SQLite Database...</p>
-          </div>
-        ) : items.length === 0 ? (
-          <div style={{ padding: '64px 24px', textAlign: 'center', background: '#121318', borderRadius: '16px', border: '1px solid #27272a' }}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🔍</div>
-            <h3 style={{ fontSize: '18px', color: '#fff', margin: '0 0 8px' }}>Tidak Ada Konten Ditemukan</h3>
-            <p style={{ color: '#9ca3af', fontSize: '13px', maxWidth: '420px', margin: '0 auto 20px' }}>
-              Tidak ada konten yang sesuai dengan filter atau pencarian Anda. Klik tombol Sync untuk menyinkronkan seluruh kampanye.
-            </p>
-            <button
-              onClick={handleTriggerRetroSync}
-              style={{ padding: '8px 16px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
-            >
-              🔄 Refresh & Sync Database
-            </button>
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))', gap: '20px' }}>
-            {items.map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  padding: '20px', borderRadius: '16px', background: 'rgba(18, 19, 24, 0.95)',
-                  border: '1px solid #27272a', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: '16px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)'}
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#27272a'}
-              >
-                {/* Header & Media Preview Container (Grid 12-kolom) */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '16px', alignItems: 'flex-start' }}>
-                  {/* Left Thumbnail Box (col-span-4) */}
-                  <div style={{
-                    gridColumn: 'span 4', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden',
-                    background: 'linear-gradient(135deg, #09090b 0%, #1e1b4b 100%)', border: '1px solid #27272a',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px', textAlign: 'center'
-                  }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa', marginBottom: '6px' }}>
-                      <FilmIcon style={{ width: 18, height: 18 }} />
-                    </div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#f3f4f6', wordBreak: 'break-all' }}>
-                      {item.video_id}
-                    </span>
-                    <span style={{ fontSize: '10px', fontFamily: 'monospace', color: '#9ca3af', marginTop: '2px' }}>
-                      {item.url_asset || item.drive_link || item.nextcloud_url ? 'Asset Ready' : 'Tanpa File Asset'}
-                    </span>
-                  </div>
-
-                  {/* Right Metadata & Title Box (col-span-8) */}
-                  <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
-                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                        {getSourceBadge(item.source_type)}
-                        <span style={{ padding: '2px 8px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.1)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.2)', fontSize: '11px', fontWeight: 600 }}>
-                          🏷️ {item.nama_produk || 'Umum'}
+                      <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 2 }}>
+                        <span style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(15, 23, 42, 0.9)', border: '1px solid #3b82f6', color: '#60a5fa', fontSize: '10px', fontWeight: 700, fontFamily: 'monospace' }}>
+                          {item.video_id}
                         </span>
                       </div>
-                      <span style={{ color: '#9ca3af', fontSize: '11px' }}>
-                        📅 {item.production_date ? new Date(item.production_date).toLocaleDateString('id-ID') : 'N/A'}
-                      </span>
                     </div>
 
-                    <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', margin: 0, lineHeight: '1.4' }}>
-                      {item.hook}
+                    {/* Drive & Nextcloud Links */}
+                    <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
+                      {item.drive_link && (
+                        <a
+                          href={item.drive_link}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ flex: 1, textAlign: 'center', padding: '5px 8px', borderRadius: '6px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
+                          title="Buka Folder Google Drive"
+                        >
+                          📁 Drive
+                        </a>
+                      )}
+                      {item.nextcloud_url && (
+                        <a
+                          href={item.nextcloud_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ flex: 1, textAlign: 'center', padding: '5px 8px', borderRadius: '6px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
+                          title="Buka Folder Nextcloud"
+                        >
+                          ☁️ Cloud
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Column 2: Content Details & Monospace Caption */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      {getSourceBadge(item.source_type)}
+                      {item.account_name && (
+                        <span style={{ fontSize: '11px', color: '#818cf8', fontWeight: 700, background: 'rgba(99, 102, 241, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                          @{item.account_name}
+                        </span>
+                      )}
+                      {item.nama_produk && (
+                        <span style={{ fontSize: '11px', color: '#e2e8f0', background: '#1e293b', padding: '2px 8px', borderRadius: '6px', border: '1px solid #334155' }}>
+                          📦 {item.nama_produk}
+                        </span>
+                      )}
+                      {item.production_date && (
+                        <span style={{ fontSize: '10px', color: '#9ca3af', marginLeft: 'auto', fontFamily: 'monospace' }}>
+                          📅 {new Date(item.production_date).toISOString().split('T')[0]}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', margin: 0, lineHeight: 1.4 }}>
+                      {item.hook || 'Tanpa Hook'}
                     </h3>
 
-                    {item.caption && (
-                      <p style={{
-                        fontSize: '11px', color: '#d4d4d8', fontFamily: 'monospace', background: '#09090b',
-                        padding: '8px 10px', borderRadius: '10px', border: '1px solid #1f2937', margin: 0,
-                        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5'
-                      }}>
-                        {item.caption}
+                    {/* Monospace Caption Block with Copy Button */}
+                    <div style={{ position: 'relative', background: '#05070d', borderRadius: '8px', border: '1px solid #1e293b', padding: '8px 12px' }}>
+                      <p style={{ fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingRight: '90px' }}>
+                        {item.caption || '(Tidak ada caption)'}
                       </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Platform Status Badges Row (3 Column Grid) */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', padding: '10px', background: '#09090b', borderRadius: '12px', border: '1px solid #1f2937' }}>
-                  <div>
-                    <span style={{ color: '#9ca3af', display: 'block', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>TikTok</span>
-                    {getStatusBadge(item.tiktok_status)}
-                  </div>
-                  <div>
-                    <span style={{ color: '#9ca3af', display: 'block', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Facebook</span>
-                    {getStatusBadge(item.facebook_status)}
-                  </div>
-                  <div>
-                    <span style={{ color: '#9ca3af', display: 'block', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Instagram</span>
-                    {getStatusBadge(item.instagram_status)}
-                  </div>
-                </div>
-
-                {/* Card Footer Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', paddingTop: '8px', borderTop: '1px solid #1f2937', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                    {item.drive_link && (
-                      <a
-                        href={item.drive_link}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
-                        title="Buka Folder Google Drive"
-                      >
-                        📁 Drive
-                      </a>
-                    )}
-                    {item.nextcloud_url && (
-                      <a
-                        href={item.nextcloud_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', color: '#fff', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}
-                        title="Buka Folder Nextcloud"
-                      >
-                        ☁️ Nextcloud
-                      </a>
-                    )}
-                    {item.caption && (
-                      <button
-                        onClick={() => copyToClipboard(item.caption, 'Caption', `card_caption_${item.id}`)}
-                        style={{
-                          padding: '5px 10px', borderRadius: '8px',
-                          background: copiedKeys[`card_caption_${item.id}`] ? '#059669' : '#1e293b',
-                          border: `1px solid ${copiedKeys[`card_caption_${item.id}`] ? '#10b981' : '#334155'}`,
-                          color: '#cbd5e1', fontSize: '11px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease'
-                        }}
-                      >
-                        {copiedKeys[`card_caption_${item.id}`] ? '✓ Copied!' : '📋 Caption'}
-                      </button>
-                    )}
+                      {item.caption && (
+                        <button
+                          onClick={() => copyToClipboard(item.caption, 'Caption', `card_caption_${item.id}`)}
+                          style={{
+                            position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+                            padding: '4px 10px', borderRadius: '6px',
+                            background: copiedKeys[`card_caption_${item.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : '#1e293b',
+                            border: `1px solid ${copiedKeys[`card_caption_${item.id}`] ? '#10b981' : '#334155'}`,
+                            color: '#ffffff', fontSize: '11px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {copiedKeys[`card_caption_${item.id}`] ? '✓ Copied!' : '📋 Copy'}
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() => openDetailModal(item)}
-                    style={{
-                      padding: '7px 14px', borderRadius: '10px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
-                      color: '#ffffff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer',
-                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
-                    }}
-                  >
-                    Detail & Status
-                  </button>
+                  {/* Column 3: Platform Status & Action Button */}
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '12px', height: '100%', borderLeft: '1px solid #1e293b', paddingLeft: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                        <span style={{ color: '#38bdf8', fontWeight: 700 }}>🎵 TikTok</span>
+                        {getStatusBadge(item.tiktok_status)}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                        <span style={{ color: '#60a5fa', fontWeight: 700 }}>📘 Facebook</span>
+                        {getStatusBadge(item.facebook_status)}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                        <span style={{ color: '#f472b6', fontWeight: 700 }}>📷 Instagram</span>
+                        {getStatusBadge(item.instagram_status)}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => openDetailModal(item)}
+                      style={{
+                        width: '100%', padding: '9px 14px', borderRadius: '10px',
+                        background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+                        color: '#ffffff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)', transition: 'all 0.2s ease'
+                      }}
+                    >
+                      Detail & Status
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
 
         {/* Modal Detail & Update Status */}
         {activeItem && (
@@ -959,6 +966,7 @@ export default function ContentFlowHubPage() {
             </div>
           </div>
         )}
+        </div>
       </main>
     </div>
   );

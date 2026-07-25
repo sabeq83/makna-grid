@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.40 — Redesain Layout 1-Kolom Vertikal Terpusat ContentFlow Hub (25/07/2026)
+- Perombakan Layout Feed Menjadi 1 Kolom Vertikal Terpusat (1050px Centered Container) Setara OPC / RE
+- Kartu Konten Horizontal Wide 3-Seksi: Thumbnail Box, Metadata & Monospace Caption, Stack Status Platform
+- Dipertahankan 100% Seluruh Menu Filter Multi-Level & Universal Search Bar
+
 ## V1.1.39 — Indikator Visual Status Copied! pada Tombol Salin ContentFlow (25/07/2026)
 - Ubah Teks & Warna Tombol Secara Sementara Menjadi ✓ Copied! Saat Pengguna Mengklik Copy Caption atau Copy Affiliate Link
 
