@@ -68,6 +68,7 @@ export default function ContentFlowHubPage() {
 
   // Detail Modal State
   const [activeItem, setActiveItem] = useState(null);
+  const [copiedKeys, setCopiedKeys] = useState({});
   const [editStatusForm, setEditStatusForm] = useState({
     tiktok_status: 'Not Published',
     tiktok_publish_date: '',
@@ -89,10 +90,17 @@ export default function ContentFlowHubPage() {
     setTimeout(() => setToastMsg(''), 3200);
   }, []);
 
-  const copyToClipboard = useCallback((text, label) => {
+  const copyToClipboard = useCallback((text, label, key = null) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     showToast(`${label || 'Teks'} berhasil disalin ke clipboard! 📋`);
+
+    if (key) {
+      setCopiedKeys(prev => ({ ...prev, [key]: true }));
+      setTimeout(() => {
+        setCopiedKeys(prev => ({ ...prev, [key]: false }));
+      }, 2000);
+    }
   }, [showToast]);
 
   const loadContent = useCallback(async () => {
@@ -586,10 +594,15 @@ export default function ContentFlowHubPage() {
                     )}
                     {item.caption && (
                       <button
-                        onClick={() => copyToClipboard(item.caption, 'Caption')}
-                        style={{ padding: '5px 8px', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
+                        onClick={() => copyToClipboard(item.caption, 'Caption', `card_caption_${item.id}`)}
+                        style={{
+                          padding: '5px 10px', borderRadius: '8px',
+                          background: copiedKeys[`card_caption_${item.id}`] ? '#059669' : '#1e293b',
+                          border: `1px solid ${copiedKeys[`card_caption_${item.id}`] ? '#10b981' : '#334155'}`,
+                          color: '#cbd5e1', fontSize: '11px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease'
+                        }}
                       >
-                        📋 Caption
+                        {copiedKeys[`card_caption_${item.id}`] ? '✓ Copied!' : '📋 Caption'}
                       </button>
                     )}
                   </div>
@@ -646,31 +659,35 @@ export default function ContentFlowHubPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '20px' }}>
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(activeItem.caption, 'Caption')}
+                  onClick={() => copyToClipboard(activeItem.caption, 'Caption', `modal_caption_${activeItem.id}`)}
                   disabled={!activeItem.caption}
                   style={{
-                    padding: '10px 14px', borderRadius: '10px', background: activeItem.caption ? '#1e293b' : 'rgba(30, 41, 59, 0.5)',
-                    border: '1px solid #334155', color: activeItem.caption ? '#f1f5f9' : '#64748b', fontWeight: 600, fontSize: '13px',
-                    cursor: activeItem.caption ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                    padding: '10px 14px', borderRadius: '10px',
+                    background: copiedKeys[`modal_caption_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.caption ? '#1e293b' : 'rgba(30, 41, 59, 0.5)',
+                    border: copiedKeys[`modal_caption_${activeItem.id}`] ? '1px solid #10b981' : '1px solid #334155',
+                    color: activeItem.caption ? '#f1f5f9' : '#64748b', fontWeight: 600, fontSize: '13px',
+                    cursor: activeItem.caption ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                    transition: 'all 0.2s ease'
                   }}
                 >
-                  📋 Copy Caption
+                  {copiedKeys[`modal_caption_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Caption'}
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate')}
+                  onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate', `modal_affiliate_${activeItem.id}`)}
                   disabled={!activeItem.link_affiliate}
                   style={{
                     padding: '10px 14px', borderRadius: '10px',
-                    background: activeItem.link_affiliate ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'rgba(30, 41, 59, 0.5)',
-                    border: activeItem.link_affiliate ? '1px solid #818cf8' : '1px solid #334155',
+                    background: copiedKeys[`modal_affiliate_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.link_affiliate ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'rgba(30, 41, 59, 0.5)',
+                    border: copiedKeys[`modal_affiliate_${activeItem.id}`] ? '1px solid #10b981' : activeItem.link_affiliate ? '1px solid #818cf8' : '1px solid #334155',
                     color: activeItem.link_affiliate ? '#ffffff' : '#64748b', fontWeight: 700, fontSize: '13px',
                     cursor: activeItem.link_affiliate ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                    boxShadow: activeItem.link_affiliate ? '0 4px 14px rgba(99, 102, 241, 0.35)' : 'none'
+                    boxShadow: activeItem.link_affiliate ? '0 4px 14px rgba(99, 102, 241, 0.35)' : 'none',
+                    transition: 'all 0.2s ease'
                   }}
                 >
-                  📋 Copy Affiliate Link
+                  {copiedKeys[`modal_affiliate_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Affiliate Link'}
                 </button>
 
                 {activeItem.link_produk ? (
