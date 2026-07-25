@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.2 — Fitur Inline Pencil Edit (✏️) untuk Data Produk di Modal Detail ContentFlow (25/07/2026)
+- Penggantian form input statis produk menjadi tampilan clean metadata + Inline Pencil Editor (✏️)
+- Simpan cepat data produk (Nama Produk, Link Produk, Link Affiliate) secara realtime ke PostgreSQL Node 3
+- Proteksi hak akses (RBAC Permissions) tetap aktif pada masing-masing field inline editor
+
 ## V2.0.1 — Redesign Dashboard UI Proporsional & Responsive Glassmorphism (25/07/2026)
 - Penyempurnaan layout Dashboard menjadi responsif 100% tanpa terpotong di kolom kanan
 - Pembaruan visual Glassmorphism untuk Executive Metric Cards & Quick Action Launchpad

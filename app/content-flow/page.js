@@ -139,6 +139,8 @@ export default function ContentFlowHubPage() {
     link_affiliate: ''
   });
   const [savingStatus, setSavingStatus] = useState(false);
+  const [editingInlineField, setEditingInlineField] = useState(null);
+  const [inlineValue, setInlineValue] = useState('');
 
   const showToast = useCallback((msg) => {
     setToastMsg(msg);
@@ -261,6 +263,35 @@ export default function ContentFlowHubPage() {
       }
     } catch (err) {
       showToast('Error update: ' + err.message);
+    } finally {
+      setSavingStatus(false);
+    }
+  }
+
+  async function handleSaveInlineField(fieldKey) {
+    if (!activeItem) return;
+    setSavingStatus(true);
+    try {
+      const payload = { [fieldKey]: inlineValue };
+      const res = await fetch(`/api/content-flow/${activeItem.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Berhasil memperbarui ${fieldKey.replace('_', ' ')}! ✏️`);
+        if (data.item) {
+          setActiveItem(data.item);
+          setEditStatusForm(prev => ({ ...prev, [fieldKey]: data.item[fieldKey] || '' }));
+        }
+        setEditingInlineField(null);
+        loadContent();
+      } else {
+        showToast('Gagal memperbarui: ' + data.error);
+      }
+    } catch (err) {
+      showToast('Error: ' + err.message);
     } finally {
       setSavingStatus(false);
     }
@@ -898,22 +929,181 @@ export default function ContentFlowHubPage() {
                 })()}
               </div>
 
-              {/* Metadata Panel */}
-              <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', marginBottom: '20px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '12px' }}>
-                  <div>
-                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Nama Produk:</span>
-                    <strong style={{ fontSize: '13px', color: '#ffffff' }}>{activeItem.nama_produk || 'Umum'}</strong>
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Production Date:</span>
-                    <strong style={{ fontSize: '13px', color: '#ffffff', fontFamily: 'monospace' }}>
-                      {activeItem.production_date ? new Date(activeItem.production_date).toISOString().split('T')[0] : 'N/A'}
-                    </strong>
-                  </div>
+              {/* Metadata & Product Data Panel with Pencil Inline Edit */}
+              <div style={{ background: '#090d16', padding: '18px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#c084fc', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📦 DATA PRODUK & LINK (ACCESS PERMISSIONS)
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>Klik ✏️ Edit untuk ubah data</span>
                 </div>
 
-                <div>
+                {/* 1. Nama Produk */}
+                <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Nama Produk:</span>
+                    {editingInlineField === 'nama_produk' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                        <input
+                          type="text"
+                          value={inlineValue}
+                          onChange={(e) => setInlineValue(e.target.value)}
+                          autoFocus
+                          placeholder="Masukkan nama produk..."
+                          style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleSaveInlineField('nama_produk')}
+                          disabled={savingStatus}
+                          style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                        >
+                          ✔️ Simpan
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingInlineField(null)}
+                          style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    ) : (
+                      <strong style={{ fontSize: '13px', color: activeItem.nama_produk ? '#ffffff' : '#64748b' }}>
+                        {activeItem.nama_produk || '(Belum diisi)'}
+                      </strong>
+                    )}
+                  </div>
+                  {editingInlineField !== 'nama_produk' && (
+                    canEditProductName ? (
+                      <button
+                        type="button"
+                        onClick={() => { setEditingInlineField('nama_produk'); setInlineValue(activeItem.nama_produk || ''); }}
+                        title="Edit Nama Produk"
+                        style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        ✏️ Edit
+                      </button>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Nama Product Permission)">🔒 Terkunci</span>
+                    )
+                  )}
+                </div>
+
+                {/* 2. Link Produk */}
+                <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Produk:</span>
+                    {editingInlineField === 'link_produk' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                        <input
+                          type="text"
+                          value={inlineValue}
+                          onChange={(e) => setInlineValue(e.target.value)}
+                          autoFocus
+                          placeholder="https://..."
+                          style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleSaveInlineField('link_produk')}
+                          disabled={savingStatus}
+                          style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                        >
+                          ✔️ Simpan
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingInlineField(null)}
+                          style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    ) : activeItem.link_produk ? (
+                      <a href={activeItem.link_produk} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', fontWeight: 600, textDecoration: 'none' }}>
+                        🔗 Buka Link Produk ↗
+                      </a>
+                    ) : (
+                      <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
+                    )}
+                  </div>
+                  {editingInlineField !== 'link_produk' && (
+                    canEditProductLink ? (
+                      <button
+                        type="button"
+                        onClick={() => { setEditingInlineField('link_produk'); setInlineValue(activeItem.link_produk || ''); }}
+                        title="Edit Link Produk"
+                        style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        ✏️ Edit
+                      </button>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Product Permission)">🔒 Terkunci</span>
+                    )
+                  )}
+                </div>
+
+                {/* 3. Link Affiliate */}
+                <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Affiliate:</span>
+                    {editingInlineField === 'link_affiliate' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                        <input
+                          type="text"
+                          value={inlineValue}
+                          onChange={(e) => setInlineValue(e.target.value)}
+                          autoFocus
+                          placeholder="https://..."
+                          style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleSaveInlineField('link_affiliate')}
+                          disabled={savingStatus}
+                          style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                        >
+                          ✔️ Simpan
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingInlineField(null)}
+                          style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    ) : activeItem.link_affiliate ? (
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate')}
+                        style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.4)', color: '#fbbf24', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                      >
+                        🛒 Copy Affiliate Link 📋
+                      </button>
+                    ) : (
+                      <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
+                    )}
+                  </div>
+                  {editingInlineField !== 'link_affiliate' && (
+                    canEditAffiliateLink ? (
+                      <button
+                        type="button"
+                        onClick={() => { setEditingInlineField('link_affiliate'); setInlineValue(activeItem.link_affiliate || ''); }}
+                        title="Edit Link Affiliate"
+                        style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        ✏️ Edit
+                      </button>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Affiliate Permission)">🔒 Terkunci</span>
+                    )
+                  )}
+                </div>
+
+                {/* Caption Panel */}
+                <div style={{ marginTop: '4px' }}>
                   <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Caption:</span>
                   <div style={{
                     fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', background: '#05070d',
@@ -931,74 +1121,6 @@ export default function ContentFlowHubPage() {
               </h3>
 
               <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* Data Produk & Link Editing (Access Permissions) */}
-                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#a855f7', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📦 DATA PRODUK & LINK (ACCESS PERMISSIONS)
-                  </span>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
-                    {/* Nama Produk */}
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
-                        <span>Nama Produk</span>
-                        {!canEditProductName && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Nama Product Permission)</span>}
-                      </label>
-                      <input
-                        type="text"
-                        disabled={!canEditProductName}
-                        value={editStatusForm.nama_produk}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, nama_produk: e.target.value })}
-                        placeholder="Masukkan nama produk..."
-                        style={{
-                          width: '100%', padding: '9px 12px', background: canEditProductName ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
-                          border: '1px solid #334155', borderRadius: '8px', color: canEditProductName ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
-                          cursor: canEditProductName ? 'text' : 'not-allowed'
-                        }}
-                      />
-                    </div>
-
-                    {/* Link Produk */}
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
-                        <span>Link Produk</span>
-                        {!canEditProductLink && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Link Product Permission)</span>}
-                      </label>
-                      <input
-                        type="text"
-                        disabled={!canEditProductLink}
-                        value={editStatusForm.link_produk}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, link_produk: e.target.value })}
-                        placeholder="https://..."
-                        style={{
-                          width: '100%', padding: '9px 12px', background: canEditProductLink ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
-                          border: '1px solid #334155', borderRadius: '8px', color: canEditProductLink ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
-                          cursor: canEditProductLink ? 'text' : 'not-allowed'
-                        }}
-                      />
-                    </div>
-
-                    {/* Link Affiliate */}
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
-                        <span>Link Affiliate</span>
-                        {!canEditAffiliateLink && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Link Affiliate Permission)</span>}
-                      </label>
-                      <input
-                        type="text"
-                        disabled={!canEditAffiliateLink}
-                        value={editStatusForm.link_affiliate}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, link_affiliate: e.target.value })}
-                        placeholder="https://..."
-                        style={{
-                          width: '100%', padding: '9px 12px', background: canEditAffiliateLink ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
-                          border: '1px solid #334155', borderRadius: '8px', color: canEditAffiliateLink ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
-                          cursor: canEditAffiliateLink ? 'text' : 'not-allowed'
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
 
                 {/* TikTok Controls */}
                 <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
