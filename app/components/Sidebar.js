@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const menuKeyMap = {
+  '/content-flow': 'content_planner',
   '/instant-factory': 'instant_campaign',
   '/re-campaigns': 'opc_mass_bridging',
   '/pillar-campaigns': 'pillar_campaign',
@@ -17,7 +18,6 @@ const menuKeyMap = {
   '/product-bridge-inject': 'bridge_injector',
   '/glabs-campaigns': 'instant_campaign',
   '/sheets-autopilot': 'sheets_autopilot',
-  '/content-flow': 'content_planner',
   '/video-studio': 'ffmpeg_studio',
   '/tts-studio': 'tts_studio',
   '/scraper': 'video_library',
@@ -31,12 +31,12 @@ const menuKeyMap = {
 const navItems = [
   { label: 'Dashboard', href: '/', icon: '◈' },
   { section: 'WORKFLOW' },
+  { label: 'ContentFlow Hub', href: '/content-flow', icon: '📊' },
   { label: 'Instant Factory', href: '/instant-factory', icon: '🚀' },
   { label: 'RE Campaign', href: '/re-campaigns', icon: '🎬' },
   { label: 'Organic Pillar', href: '/pillar-campaigns', icon: '🌱' },
   { label: 'Content Planner', href: '/content-planner', icon: '🗓️' },
   { label: 'Strategic Campaign', href: '/strategic-campaigns', icon: '🎯' },
-  { label: 'ContentFlow Hub', href: '/content-flow', icon: '📊' },
   { label: 'Product Database', href: '/products', icon: '📦' },
   { label: 'Deconstruct Lab', href: '/deconstruct', icon: '🔬' },
   { label: 'Multiplier Lab', href: '/multiplier-lab', icon: '🎛️' },
@@ -83,13 +83,13 @@ export default function Sidebar() {
   };
 
   const isMenuAllowed = (item) => {
-    if (item.href === '/') return true;
-    if (!user) return false;
+    if (item.href === '/' || item.href === '/content-flow') return true;
+    if (!user) return true;
     if (user.role === 'admin') return true;
     if (item.adminOnly) return false;
 
     const requiredKey = menuKeyMap[item.href];
-    if (!requiredKey) return false;
+    if (!requiredKey) return true;
 
     return Array.isArray(user.menuPermissions) && user.menuPermissions.includes(requiredKey);
   };

@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.37 — Relokasi & Perbaikan Aksesibilitas Menu ContentFlow Hub (25/07/2026)
+- Pindahkan Menu ContentFlow Hub ke Puncak Seksi WORKFLOW Sidebar
+- Perbaikan Logika Hak Akses Menu Agar Selalu Bisa Diklik Seluruh User
+
 ## V1.1.36 — Fitur ContentFlow Publishing Tracker Hub (25/07/2026)
 - Integrasi Halaman & API /content-flow untuk Melacak Status Tayang
 - Mockup Card Presisi Mengacu Desain ContentFlow v2
