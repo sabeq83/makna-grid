@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.0.0 — Decoupled Architecture V2.0 & PostgreSQL Enterprise Database (25/07/2026)
+- Pemasangan & migrasi data ke PostgreSQL 18.4 Enterprise Database Tier di Node 3 (100.78.186.123:5432)
+- Pemisahan arsitektur ke Headless Backend API Engine V2.0 (apps/api/server.js) pada Port 4000
+- Penyatuan Frontend UI dengan PostgreSQL Node 3 & Standalone Headless API Engine
+- Penggantian arsitektur SQLite monolithic menjadi Enterprise Decoupled Multi-Node Cluster V2.0
+
 ## V1.1.59 — Integrasi Headless Backend API Engine V2.0 & Dual-Process Deployment (25/07/2026)
 - Pembuatan standalone Headless Backend API Engine di apps/api/server.js (Port 4000)
 - Integrasi REST API Endpoints V2.0 dengan PostgreSQL Node 3

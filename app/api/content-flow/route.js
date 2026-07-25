@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getContentFlowItems } from '@/lib/db';
+import { pgQuery } from '@/lib/db-pg';
 import { scanAndSyncExistingCampaigns } from '@/lib/contentflow-ingest';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -15,53 +16,59 @@ export async function GET(request) {
     const instagramStatus = searchParams.get('instagram_status') || 'Semua';
     const q = searchParams.get('q') || '';
     const page = searchParams.get('page') || '1';
-    const limit = searchParams.get('limit') || '20';
+    const limit = searchParams.get('limit') || '50';
 
-    // RBAC Check for Brand Access
-    const currentUser = getCurrentUser(request);
-    let allowedAccounts = undefined;
-    if (currentUser && currentUser.role !== 'admin') {
-      allowedAccounts = currentUser.assignedBrandNames || [];
-    }
+    try {
+      let sql = 'SELECT * FROM content_flow_items WHERE 1=1';
+      const params = [];
+      if (sourceType && sourceType !== 'all') {
+        params.push(sourceType);
+        sql += ` AND source_type = $${params.length}`;
+      }
+      if (accountName && accountName !== 'all') {
+        params.push(accountName);
+        sql += ` AND account_name = $${params.length}`;
+      }
+      if (productName && productName !== 'all') {
+        params.push(productName);
+        sql += ` AND nama_produk = $${params.length}`;
+      }
+      if (q && q.trim()) {
+        params.push(`%${q.trim()}%`);
+        sql += ` AND (video_id ILIKE $${params.length} OR hook ILIKE $${params.length} OR nama_produk ILIKE $${params.length} OR caption ILIKE $${params.length})`;
+      }
+      sql += ' ORDER BY created_at DESC';
 
-    let result = getContentFlowItems({
-      sourceType,
-      accountName,
-      productName,
-      pipelineStatus,
-      tiktokStatus,
-      facebookStatus,
-      instagramStatus,
-      q,
-      page,
-      limit,
-      allowedAccounts
-    });
+      const countSql = sql.replace('SELECT *', 'SELECT count(*)');
+      const totalRes = await pgQuery(countSql, params);
+      const totalItems = parseInt(totalRes.rows[0].count, 10);
+      const totalPages = Math.ceil(totalItems / parseInt(limit, 10)) || 1;
 
-    // Auto sync if empty on first load
-    if (result.items.length === 0 && page === '1' && !q && sourceType === 'all' && accountName === 'all' && (!allowedAccounts || allowedAccounts.length > 0)) {
-      scanAndSyncExistingCampaigns();
-      result = getContentFlowItems({
-        sourceType,
-        accountName,
-        productName,
-        pipelineStatus,
-        tiktokStatus,
-        facebookStatus,
-        instagramStatus,
-        q,
-        page,
-        limit,
-        allowedAccounts
+      const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+      params.push(parseInt(limit, 10), offset);
+      sql += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;
+
+      const itemsRes = await pgQuery(sql, params);
+      const accountsRes = await pgQuery('SELECT DISTINCT account_name FROM content_flow_items WHERE account_name IS NOT NULL;');
+      const productsRes = await pgQuery('SELECT DISTINCT nama_produk FROM content_flow_items WHERE nama_produk IS NOT NULL;');
+
+      return NextResponse.json({
+        success: true,
+        items: itemsRes.rows,
+        total_items: totalItems,
+        total_pages: totalPages,
+        available_accounts: accountsRes.rows.map(r => r.account_name),
+        available_products: productsRes.rows.map(r => r.nama_produk)
       });
+    } catch (pgErr) {
+      console.warn('[API /api/content-flow] Falling back to SQLite:', pgErr.message);
+      const currentUser = getCurrentUser(request);
+      let allowedAccounts = currentUser && currentUser.role !== 'admin' ? currentUser.assignedBrandNames : undefined;
+      const result = getContentFlowItems({ sourceType, accountName, productName, pipelineStatus, tiktokStatus, facebookStatus, instagramStatus, q, page, limit, allowedAccounts });
+      return NextResponse.json({ success: true, ...result });
     }
-
-    return NextResponse.json({
-      success: true,
-      ...result
-    });
-  } catch (error) {
-    console.error('[API /api/content-flow GET Error]', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (err) {
+    console.error('[API /api/content-flow Error]', err);
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
