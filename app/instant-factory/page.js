@@ -23,6 +23,7 @@ export default function InstantFactoryPage() {
   const [manualImages, setManualImages] = useState({});
 
   // Global settings for Mass Campaign
+  const [accountName, setAccountName] = useState('');
   const [campaignName, setCampaignName] = useState('');
   const [narrativeMode, setNarrativeMode] = useState('Storytelling');
   const [visualStyle, setVisualStyle] = useState('UGC');
@@ -905,6 +906,26 @@ export default function InstantFactoryPage() {
                     </div>
 
                     <div className="form-group" style={{ marginBottom: '16px' }}>
+                      <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                      <select
+                        className="form-select"
+                        value={accountName}
+                        onChange={e => setAccountName(e.target.value)}
+                      >
+                        <option value="">-- Pilih Nama Akun Brand --</option>
+                        {brandProfiles.map(bp => (
+                          <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                            {bp.brand_name} ({bp.account_name || bp.brand_name})
+                          </option>
+                        ))}
+                        <option value="nutribake">nutribake</option>
+                        <option value="siasatsehat">siasatsehat</option>
+                        <option value="dummybrand01">dummybrand01</option>
+                        <option value="dummybrand02">dummybrand02</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '16px' }}>
                       <label className="form-label">Bahasa Naskah Voiceover (Script Language)</label>
                       <select name="target_language" value={formData.target_language} onChange={handleChange} className="form-select">
                         <option value="id-ID">🇮🇩 Bahasa Indonesia (Lokal)</option>
@@ -1080,6 +1101,26 @@ export default function InstantFactoryPage() {
                     </div>
                     {activeAccordion === 0 && (
                       <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                          <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                          <select
+                            className="form-select"
+                            value={accountName}
+                            onChange={e => setAccountName(e.target.value)}
+                          >
+                            <option value="">-- Pilih Nama Akun Brand --</option>
+                            {brandProfiles.map(bp => (
+                              <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                                {bp.brand_name} ({bp.account_name || bp.brand_name})
+                              </option>
+                            ))}
+                            <option value="nutribake">nutribake</option>
+                            <option value="siasatsehat">siasatsehat</option>
+                            <option value="dummybrand01">dummybrand01</option>
+                            <option value="dummybrand02">dummybrand02</option>
+                          </select>
+                        </div>
+
                         <div style={{ display: 'flex', gap: 16 }}>
                           <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                             <label className="form-label">Nama Kampanye *</label>

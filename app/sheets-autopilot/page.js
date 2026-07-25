@@ -67,6 +67,7 @@ export default function SheetsAutopilotDashboard() {
   });
 
   // New campaign form state
+  const [accountName, setAccountName] = useState('');
   const [campaignName, setCampaignName] = useState('');
   const [campaignType, setCampaignType] = useState(null); // Start with no selection
   const [spreadsheetId, setSpreadsheetId] = useState('');
@@ -685,6 +686,25 @@ export default function SheetsAutopilotDashboard() {
                       </div>
                       {openAccordions.basic && (
                         <div className="accordion-content" style={{ padding: '18px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          <div>
+                            <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                            <select
+                              className="form-input"
+                              value={accountName}
+                              onChange={e => setAccountName(e.target.value)}
+                            >
+                              <option value="">-- Pilih Nama Akun Brand --</option>
+                              {brandProfiles.map(bp => (
+                                <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                                  {bp.brand_name} ({bp.account_name || bp.brand_name})
+                                </option>
+                              ))}
+                              <option value="nutribake">nutribake</option>
+                              <option value="siasatsehat">siasatsehat</option>
+                              <option value="dummybrand01">dummybrand01</option>
+                              <option value="dummybrand02">dummybrand02</option>
+                            </select>
+                          </div>
                           <div>
                             <label className="form-label">Nama Kampanye</label>
                             <input 

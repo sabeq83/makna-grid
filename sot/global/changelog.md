@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.17 — Align Brand Account Dropdown Above Campaign Name v2.0.17 (25/07/2026)
+- Penambahan dropdown Nama Akun di atas Nama Kampanye pada seluruh form pembuat video
+- Integrasi Multiplier Lab, SC, RE, OPC, Import Planner, Instant, Bridge, Recipe, & Sheets
+
 ## V2.0.16 — Fix Syntax Error & Deployment v2.0.16 (25/07/2026)
 - Fix syntax error pada app/strategic-campaigns/page.js
 - Penyempurnaan Target Demografi & Universal Caption 100%

@@ -93,6 +93,7 @@ export default function RecipeLabsPage() {
   const [detailLoading, setDetailLoading] = useState(false);
 
   // Form State
+  const [accountName, setAccountName] = useState('');
   const [category, setCategory] = useState('Makanan');
   const [customCategory, setCustomCategory] = useState('');
   const [visualStyle, setVisualStyle] = useState('Food Porn');
@@ -1333,6 +1334,26 @@ export default function RecipeLabsPage() {
                                 {deconstructedAssets.map(asset => (
                                   <option key={asset.id} value={asset.id}>{asset.label}</option>
                                 ))}
+                              </select>
+                            </div>
+
+                            <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
+                              <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                              <select
+                                className="form-select"
+                                value={accountName}
+                                onChange={e => setAccountName(e.target.value)}
+                              >
+                                <option value="">-- Pilih Nama Akun Brand --</option>
+                                {brandProfiles.map(bp => (
+                                  <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                                    {bp.brand_name} ({bp.account_name || bp.brand_name})
+                                  </option>
+                                ))}
+                                <option value="nutribake">nutribake</option>
+                                <option value="siasatsehat">siasatsehat</option>
+                                <option value="dummybrand01">dummybrand01</option>
+                                <option value="dummybrand02">dummybrand02</option>
                               </select>
                             </div>
 

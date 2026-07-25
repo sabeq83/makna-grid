@@ -618,6 +618,37 @@ export default function StrategicCampaignDashboard() {
                         )}
 
                         <div>
+                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                            <span>🏷️ Nama Akun (Brand Account):</span>
+                            {inputMode === 'planner_import' && <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>🔒 Terkunci dari Content Planner</span>}
+                          </label>
+                          <select
+                            className="form-input"
+                            value={accountName}
+                            disabled={inputMode === 'planner_import'}
+                            onChange={e => setAccountName(e.target.value)}
+                            style={{
+                              width: '100%', padding: '10px',
+                              background: inputMode === 'planner_import' ? '#18181b' : '#09090b',
+                              border: '1px solid #27272a',
+                              color: inputMode === 'planner_import' ? '#fbbf24' : '#fff',
+                              borderRadius: '8px'
+                            }}
+                          >
+                            <option value="">-- Pilih Nama Akun Brand --</option>
+                            {brandProfiles.map(bp => (
+                              <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                                {bp.brand_name} ({bp.account_name || bp.brand_name})
+                              </option>
+                            ))}
+                            <option value="nutribake">nutribake</option>
+                            <option value="siasatsehat">siasatsehat</option>
+                            <option value="dummybrand01">dummybrand01</option>
+                            <option value="dummybrand02">dummybrand02</option>
+                          </select>
+                        </div>
+
+                        <div>
                           <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Nama Strategic Campaign:</label>
                           <input
                             type="text"
@@ -626,29 +657,6 @@ export default function StrategicCampaignDashboard() {
                             placeholder="cth: Strategic Campaign - Nutrimax C-1000"
                             style={{ width: '100%', padding: '10px', background: '#09090b', border: '1px solid #27272a', color: '#fff', borderRadius: '8px' }}
                             required
-                          />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                            <span>👤 Nama Akun Media Sosial / Brand:</span>
-                            {inputMode === 'planner_import' && <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>🔒 Terkunci dari Content Planner</span>}
-                          </label>
-                          <input
-                            type="text"
-                            value={accountName}
-                            onChange={e => setAccountName(e.target.value)}
-                            readOnly={inputMode === 'planner_import'}
-                            placeholder="cth: sabeq_store"
-                            style={{
-                              width: '100%', padding: '10px',
-                              background: inputMode === 'planner_import' ? '#18181b' : '#09090b',
-                              border: '1px solid #27272a',
-                              color: inputMode === 'planner_import' ? '#fbbf24' : '#fff',
-                              borderRadius: '8px',
-                              cursor: inputMode === 'planner_import' ? 'not-allowed' : 'text',
-                              fontWeight: inputMode === 'planner_import' ? 700 : 400
-                            }}
                           />
                         </div>
 

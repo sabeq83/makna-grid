@@ -50,6 +50,7 @@ export default function RECampaignsPage() {
   const [creating, setCreating] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('running');
   const [showForm, setShowForm] = useState(false);
+  const [accountName, setAccountName] = useState('');
   const [campaignName, setCampaignName] = useState('');
   const [urlsText, setUrlsText] = useState('');
   const [aspectRatio, setAspectRatio] = useState('9:16');
@@ -508,6 +509,7 @@ export default function RECampaignsPage() {
       formData.append('visual_style', visualStyle);
       formData.append('angle_multiplier', String(angleMultiplier));
       formData.append('tts_model_quality', ttsModelQuality);
+      formData.append('account_name', accountName);
       formData.append('nextcloud_parent_folder', nextcloudParentFolder);
       formData.append('target_language', targetLanguage);
       formData.append('target_demographic', targetDemographic);
@@ -867,6 +869,25 @@ export default function RECampaignsPage() {
                 </div>
                 {activeAccordion === 0 && (
                   <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                      <select
+                        className="form-input"
+                        value={accountName}
+                        onChange={e => setAccountName(e.target.value)}
+                      >
+                        <option value="">-- Pilih Nama Akun Brand --</option>
+                        {brandProfiles.map(bp => (
+                          <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                            {bp.brand_name} ({bp.account_name || bp.brand_name})
+                          </option>
+                        ))}
+                        <option value="nutribake">nutribake</option>
+                        <option value="siasatsehat">siasatsehat</option>
+                        <option value="dummybrand01">dummybrand01</option>
+                        <option value="dummybrand02">dummybrand02</option>
+                      </select>
+                    </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label">Nama Kampanye</label>
                       <input

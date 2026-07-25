@@ -43,6 +43,8 @@ function MultiplierLabPageContent() {
   const [massUrlsText, setMassUrlsText] = useState('');
 
   // Brand and products from library
+  const [accountName, setAccountName] = useState('');
+  const [campaignName, setCampaignName] = useState('');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [products, setProducts] = useState([]);
@@ -609,6 +611,40 @@ function MultiplierLabPageContent() {
 
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
                 
+                {/* 0. Brand Account & Campaign Identity */}
+                <div style={{ padding: 24, borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">🏷️ Nama Akun (Brand Account)</label>
+                    <select
+                      className="form-input"
+                      value={accountName}
+                      onChange={e => setAccountName(e.target.value)}
+                    >
+                      <option value="">-- Pilih Nama Akun Brand --</option>
+                      {brandProfiles.map(bp => (
+                        <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                          {bp.brand_name} ({bp.account_name || bp.brand_name})
+                        </option>
+                      ))}
+                      <option value="nutribake">nutribake</option>
+                      <option value="siasatsehat">siasatsehat</option>
+                      <option value="dummybrand01">dummybrand01</option>
+                      <option value="dummybrand02">dummybrand02</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Nama Kampanye Multiplier</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Contoh: Multiplier Remake v1"
+                      value={campaignName}
+                      onChange={e => setCampaignName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 {/* 1. Asset Picker */}
                 <div style={{ padding: 24, borderBottom: '1px solid var(--border)' }}>
                   <div className="form-group" style={{ marginBottom: 0 }}>
