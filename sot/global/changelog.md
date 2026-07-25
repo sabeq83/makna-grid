@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.4 — Skrip Impor Kampanye RE 66b4d649 ke Akun Nutribake & ContentFlow (25/07/2026)
+- Penambahan skrip scripts/import-re-campaign-to-nutribake.js untuk migrasi 25 item RE campaign
+- Ingest otomatis 25 item video ke ContentFlow dengan account_name=nutribake dan unique video_id (nutribake_re_66b4d649_xxx)
+
 ## V2.0.3 — Fix Save Pencil Edit & Reaktifitas Tombol Modal + Panel Accordion DATA PRODUK & LINK (25/07/2026)
 - Fix Next.js 16 params Promise pada API PATCH /api/content-flow/[id] agar simpan data ke PostgreSQL Node 3 & SQLite berhasil 100%
 - Reaktifitas realtime state activeItem dan items array agar tombol atas modal (Copy Affiliate, Buka Link Produk) seketika aktif begitu data disimpan
