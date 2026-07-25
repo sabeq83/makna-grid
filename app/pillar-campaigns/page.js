@@ -691,7 +691,6 @@ export default function OrganicPillarPage() {
       setVisualActionGuideline('');
       setCustomInstruction('');
       setSelectedBrandId('');
-      setTargetSpreadsheetId('');
       
       setIsBridgingActive(false);
       setProductRefImage(null);

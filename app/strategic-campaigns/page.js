@@ -182,7 +182,6 @@ export default function StrategicCampaignDashboard() {
       setPlannerRows([]);
       setSelectedRowIds([]);
       setAccountName('');
-      setTargetSpreadsheetId('');
       return;
     }
     try {
@@ -196,7 +195,6 @@ export default function StrategicCampaignDashboard() {
         setProductDesc(pln.product_description || '');
         setProductUsp(pln.product_usp || '');
         setAccountName(pln.account_name || '');
-        setTargetSpreadsheetId(pln.google_sheet_id || '');
         setCampaignName(`Strategic Campaign - ${pln.product_name || pln.title}`);
 
         // Auto-fill Product Bridging fields in Accordion 3

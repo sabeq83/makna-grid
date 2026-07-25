@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.0.19 — Fix Leftover setTargetSpreadsheetId ReferenceError v2.0.19 (25/07/2026)
+- Fix ReferenceError setTargetSpreadsheetId is not defined pada RE, OPC, dan Strategic Campaign
+- Memulihkan aksesibilitas halaman RE Campaign 100%
+
 ## V2.0.18 — Fix Spreadsheet ReferenceError, Auto-Fill Standardized Campaign Name, & Product Bridging Auto-Fetch v2.0.18 (25/07/2026)
 - Fix ReferenceError targetSpreadsheetId is not defined pada seluruh form
 - Auto-fill nama kampanye format baku [ MODUL YYYYMMDD ] - namaakun -

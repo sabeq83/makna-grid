@@ -549,7 +549,6 @@ export default function RECampaignsPage() {
       if (!res.ok) throw new Error(data.error);
       showToast(`Campaign "${campaignName}" created successfully.`);
       setCampaignName('');
-      setTargetSpreadsheetId('');
       setNextcloudParentFolder('MAKNA_Production_Final');
       setSfxSetting('without_sfx');
       setEnableAudioSegment(false);
