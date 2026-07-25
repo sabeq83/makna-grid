@@ -100,6 +100,24 @@ export default function ContentFlowHubPage() {
   const [availableAccounts, setAvailableAccounts] = useState([]);
   const [availableProducts, setAvailableProducts] = useState([]);
 
+  // User Session & RBAC Permissions State
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.authenticated && data.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const canEditProductLink = currentUser && (currentUser.role === 'admin' || (Array.isArray(currentUser.menuPermissions) && currentUser.menuPermissions.includes('edit_link_product')));
+  const canEditAffiliateLink = currentUser && (currentUser.role === 'admin' || (Array.isArray(currentUser.menuPermissions) && currentUser.menuPermissions.includes('edit_link_affiliate')));
+  const canEditProductName = currentUser && (currentUser.role === 'admin' || (Array.isArray(currentUser.menuPermissions) && currentUser.menuPermissions.includes('edit_nama_product')));
+
   // Detail Modal State
   const [activeItem, setActiveItem] = useState(null);
   const [copiedKeys, setCopiedKeys] = useState({});
@@ -115,7 +133,10 @@ export default function ContentFlowHubPage() {
     permalink_instagram: '',
     account_name: '',
     drive_link: '',
-    nextcloud_url: ''
+    nextcloud_url: '',
+    nama_produk: '',
+    link_produk: '',
+    link_affiliate: ''
   });
   const [savingStatus, setSavingStatus] = useState(false);
 
@@ -211,7 +232,10 @@ export default function ContentFlowHubPage() {
       permalink_instagram: item.permalink_instagram || '',
       account_name: item.account_name || '',
       drive_link: item.drive_link || '',
-      nextcloud_url: item.nextcloud_url || ''
+      nextcloud_url: item.nextcloud_url || '',
+      nama_produk: item.nama_produk || '',
+      link_produk: item.link_produk || '',
+      link_affiliate: item.link_affiliate || ''
     });
   }
 
@@ -884,6 +908,75 @@ export default function ContentFlowHubPage() {
               </h3>
 
               <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Data Produk & Link Editing (Access Permissions) */}
+                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#a855f7', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📦 DATA PRODUK & LINK (ACCESS PERMISSIONS)
+                  </span>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+                    {/* Nama Produk */}
+                    <div>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
+                        <span>Nama Produk</span>
+                        {!canEditProductName && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Nama Product Permission)</span>}
+                      </label>
+                      <input
+                        type="text"
+                        disabled={!canEditProductName}
+                        value={editStatusForm.nama_produk}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, nama_produk: e.target.value })}
+                        placeholder="Masukkan nama produk..."
+                        style={{
+                          width: '100%', padding: '9px 12px', background: canEditProductName ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
+                          border: '1px solid #334155', borderRadius: '8px', color: canEditProductName ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
+                          cursor: canEditProductName ? 'text' : 'not-allowed'
+                        }}
+                      />
+                    </div>
+
+                    {/* Link Produk */}
+                    <div>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
+                        <span>Link Produk</span>
+                        {!canEditProductLink && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Link Product Permission)</span>}
+                      </label>
+                      <input
+                        type="text"
+                        disabled={!canEditProductLink}
+                        value={editStatusForm.link_produk}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, link_produk: e.target.value })}
+                        placeholder="https://..."
+                        style={{
+                          width: '100%', padding: '9px 12px', background: canEditProductLink ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
+                          border: '1px solid #334155', borderRadius: '8px', color: canEditProductLink ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
+                          cursor: canEditProductLink ? 'text' : 'not-allowed'
+                        }}
+                      />
+                    </div>
+
+                    {/* Link Affiliate */}
+                    <div>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', fontWeight: 600 }}>
+                        <span>Link Affiliate</span>
+                        {!canEditAffiliateLink && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 Terkunci (Edit Link Affiliate Permission)</span>}
+                      </label>
+                      <input
+                        type="text"
+                        disabled={!canEditAffiliateLink}
+                        value={editStatusForm.link_affiliate}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, link_affiliate: e.target.value })}
+                        placeholder="https://..."
+                        style={{
+                          width: '100%', padding: '9px 12px', background: canEditAffiliateLink ? '#05070d' : 'rgba(30, 41, 59, 0.4)',
+                          border: '1px solid #334155', borderRadius: '8px', color: canEditAffiliateLink ? '#fff' : '#64748b', fontSize: '12px', outline: 'none',
+                          cursor: canEditAffiliateLink ? 'text' : 'not-allowed'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {/* TikTok Controls */}
                 <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <span style={{ fontSize: '13px', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>

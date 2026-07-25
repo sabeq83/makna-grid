@@ -407,7 +407,7 @@ export default function UserManagementPage() {
                       {/* Menu Access Matrix */}
                       <div style={{ marginBottom: '20px', background: 'rgba(30, 41, 59, 0.5)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                         <label style={{ display: 'block', fontWeight: 600, fontSize: '0.9rem', color: '#818cf8', marginBottom: '10px' }}>
-                          🔒 Matriks Izin Menu (Menu Access Permissions)
+                          🔒 Access Permission
                         </label>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                           {allMenus.map(m => (

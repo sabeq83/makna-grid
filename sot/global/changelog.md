@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.55 — Integrasi Access Permissions & Edit Data Produk ContentFlow Hub (25/07/2026)
+- Penambahan izin edit_link_product, edit_link_affiliate, dan edit_nama_product pada RBAC Access Permissions
+- Pembaruan nama seksi Matriks Izin Menu menjadi Access Permission pada halaman User Management
+- Integrasi form edit Nama Produk, Link Produk, dan Link Affiliate berbasis izin akses pada ContentFlow Hub
+
 ## V1.1.54 — Fix Syntax Error JSX Card ContentFlow Hub (25/07/2026)
 - Perbaikan penutupan tag <a> pada IIFE tombol asset Card ContentFlow Hub
 

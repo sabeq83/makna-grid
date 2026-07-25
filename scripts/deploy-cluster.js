@@ -53,9 +53,10 @@ async function deploy() {
     cd /home/sabeqmursyid/makna-grid
     git fetch origin main
     git reset --hard origin/main
-    bash scripts/setup-node1-gateway.sh
+    (fuser -k -9 3000/tcp 2>/dev/null || killall node 2>/dev/null || true)
+    rm -rf .next
     npm install
-    npm run build || true
+    npm run build
     HOSTNAME=0.0.0.0 PORT=3000 nohup node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
     echo "Node 1 production build & service active on http://100.65.62.63:3000!"
   `;
