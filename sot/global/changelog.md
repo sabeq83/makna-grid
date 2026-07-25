@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.45 — Header Akun Brand Kartu ContentFlow Hub dengan Warna Dinamis Per Brand (25/07/2026)
+- Penataan Ulang Header Kartu Feed: Badge Akun Brand Ditaruh di Paling Atas Paling Pertama Sebelum Judul Hook
+- Sistem Pewarnaan Dinamis Brand Badge:  (Biru),  (Merah), dan Fallback Brand Lain (Hijau Zamrud Sleek)
+
 ## V1.1.44 — Implementasi RBAC Brand Scope & Seeding 50 Data Dummy dummybrand01 dan dummybrand02 (25/07/2026)
 - Penyedia 50 Data Dummy untuk  (Niche Beauty & Skincare) dan 50 Data Dummy untuk  (Niche Healthy Food & Kitchen)
 - Integrasi Penyaringan RBAC Hak Akses Brand () pada API  dan

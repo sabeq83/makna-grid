@@ -46,6 +46,33 @@ const XIcon = ({ style }) => (
   </svg>
 );
 
+const getBrandBadgeStyle = (accountName) => {
+  const acc = (accountName || '').toLowerCase().trim();
+  if (acc === 'dummybrand01' || acc.includes('blue') || acc.includes('skincare')) {
+    return {
+      background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%)',
+      border: '1px solid #3b82f6',
+      color: '#93c5fd',
+      boxShadow: '0 2px 10px rgba(59, 130, 246, 0.35)'
+    };
+  }
+  if (acc === 'dummybrand02' || acc.includes('red') || acc.includes('food')) {
+    return {
+      background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(239, 68, 68, 0.25) 100%)',
+      border: '1px solid #ef4444',
+      color: '#fca5a5',
+      boxShadow: '0 2px 10px rgba(239, 68, 68, 0.35)'
+    };
+  }
+  // Fallback Option D (Sleek Emerald Green)
+  return {
+    background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.25) 0%, rgba(16, 185, 129, 0.25) 100%)',
+    border: '1px solid #10b981',
+    color: '#6ee7b7',
+    boxShadow: '0 2px 10px rgba(16, 185, 129, 0.35)'
+  };
+};
+
 export default function ContentFlowHubPage() {
   const [items, setItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -591,13 +618,18 @@ export default function ContentFlowHubPage() {
 
                   {/* Column 2: Content Details & Monospace Caption */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
+                    {/* Top Row: Prominent Brand Header & Metadata Badges */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      {getSourceBadge(item.source_type)}
                       {item.account_name && (
-                        <span style={{ fontSize: '11px', color: '#818cf8', fontWeight: 700, background: 'rgba(99, 102, 241, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
-                          @{item.account_name}
+                        <span style={{
+                          fontSize: '12px', fontWeight: 800, padding: '3px 10px', borderRadius: '8px',
+                          display: 'inline-flex', alignItems: 'center', gap: '4px',
+                          ...getBrandBadgeStyle(item.account_name)
+                        }}>
+                          🏷️ @{item.account_name}
                         </span>
                       )}
+                      {getSourceBadge(item.source_type)}
                       {item.nama_produk && (
                         <span style={{ fontSize: '11px', color: '#e2e8f0', background: '#1e293b', padding: '2px 8px', borderRadius: '6px', border: '1px solid #334155' }}>
                           📦 {item.nama_produk}
