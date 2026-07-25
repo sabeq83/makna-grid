@@ -1,5 +1,9 @@
 # Changelog
 
+## V1.1.41 — Penyederhanaan Filter Panel & Pembersihan Pipeline Status ContentFlow Hub (25/07/2026)
+- Hapus Filter Pipeline Status (Karena Seluruh Konten Terindeks Berstatus Completed/Siap Publish)
+- Reorganisasi Filter Panel Menjadi 2 Baris 4-Kolom Simetris dengan Tombol Reset Filter Instan
+
 ## V1.1.40 — Redesain Layout 1-Kolom Vertikal Terpusat ContentFlow Hub (25/07/2026)
 - Perombakan Layout Feed Menjadi 1 Kolom Vertikal Terpusat (1050px Centered Container) Setara OPC / RE
 - Kartu Konten Horizontal Wide 3-Seksi: Thumbnail Box, Metadata & Monospace Caption, Stack Status Platform

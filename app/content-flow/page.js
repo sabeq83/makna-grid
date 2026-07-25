@@ -58,7 +58,6 @@ export default function ContentFlowHubPage() {
   const [sourceFilter, setSourceFilter] = useState('all');
   const [accountFilter, setAccountFilter] = useState('all');
   const [productFilter, setProductFilter] = useState('all');
-  const [pipelineFilter, setPipelineFilter] = useState('all');
   const [tiktokFilter, setTiktokFilter] = useState('Semua');
   const [fbFilter, setFbFilter] = useState('Semua');
   const [igFilter, setIgFilter] = useState('Semua');
@@ -103,6 +102,16 @@ export default function ContentFlowHubPage() {
     }
   }, [showToast]);
 
+  const resetFilters = useCallback(() => {
+    setSearchTerm('');
+    setSourceFilter('all');
+    setAccountFilter('all');
+    setProductFilter('all');
+    setTiktokFilter('Semua');
+    setFbFilter('Semua');
+    setIgFilter('Semua');
+  }, []);
+
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
@@ -111,7 +120,6 @@ export default function ContentFlowHubPage() {
       if (sourceFilter !== 'all') url += `source_type=${encodeURIComponent(sourceFilter)}&`;
       if (accountFilter !== 'all') url += `account=${encodeURIComponent(accountFilter)}&`;
       if (productFilter !== 'all') url += `product=${encodeURIComponent(productFilter)}&`;
-      if (pipelineFilter !== 'all') url += `pipeline_status=${encodeURIComponent(pipelineFilter)}&`;
       if (tiktokFilter !== 'Semua') url += `tiktok_status=${encodeURIComponent(tiktokFilter)}&`;
       if (fbFilter !== 'Semua') url += `facebook_status=${encodeURIComponent(fbFilter)}&`;
       if (igFilter !== 'Semua') url += `instagram_status=${encodeURIComponent(igFilter)}&`;
@@ -130,7 +138,7 @@ export default function ContentFlowHubPage() {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, sourceFilter, accountFilter, productFilter, pipelineFilter, tiktokFilter, fbFilter, igFilter, showToast]);
+  }, [searchTerm, sourceFilter, accountFilter, productFilter, tiktokFilter, fbFilter, igFilter, showToast]);
 
   useEffect(() => {
     loadContent();
@@ -350,7 +358,8 @@ export default function ContentFlowHubPage() {
 
           {/* Multi-level Search & Filter Panel */}
           <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+            {/* Row 1: Universal Search & Metadata Filters (4 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '14px' }}>
               {/* Universal Search */}
               <div style={{ position: 'relative' }}>
                 <SearchIcon style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }} />
@@ -410,31 +419,17 @@ export default function ContentFlowHubPage() {
                   ))}
                 </select>
               </div>
-
-              {/* Pipeline Status Filter */}
-              <div>
-                <select
-                  value={pipelineFilter}
-                  onChange={(e) => setPipelineFilter(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
-                >
-                  <option value="all">Semua Status Pipeline</option>
-                  <option value="Completed">Completed (Siap Publish)</option>
-                  <option value="In Production">In Production (Proses Render)</option>
-                </select>
-              </div>
             </div>
 
-            {/* Platform Status Filter Row */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', paddingTop: '12px', borderTop: '1px solid #1f2937' }}>
+            {/* Row 2: Platform Status Filters + Reset Button (4 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', paddingTop: '14px', borderTop: '1px solid #1f2937', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>TikTok Status</span>
                 <select
                   value={tiktokFilter}
                   onChange={(e) => setTiktokFilter(e.target.value)}
-                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px', outline: 'none' }}
                 >
-                  <option value="Semua">Semua TikTok</option>
+                  <option value="Semua">🎵 Semua TikTok Status</option>
                   <option value="Not Published">Not Published</option>
                   <option value="Scheduled">Scheduled</option>
                   <option value="Published">Published</option>
@@ -442,13 +437,12 @@ export default function ContentFlowHubPage() {
               </div>
 
               <div>
-                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Facebook Status</span>
                 <select
                   value={fbFilter}
                   onChange={(e) => setFbFilter(e.target.value)}
-                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px', outline: 'none' }}
                 >
-                  <option value="Semua">Semua Facebook</option>
+                  <option value="Semua">📘 Semua Facebook Status</option>
                   <option value="Not Published">Not Published</option>
                   <option value="Scheduled">Scheduled</option>
                   <option value="Published">Published</option>
@@ -456,17 +450,31 @@ export default function ContentFlowHubPage() {
               </div>
 
               <div>
-                <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Instagram Status</span>
                 <select
                   value={igFilter}
                   onChange={(e) => setIgFilter(e.target.value)}
-                  style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px' }}
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#d4d4d8', fontSize: '12px', outline: 'none' }}
                 >
-                  <option value="Semua">Semua Instagram</option>
+                  <option value="Semua">📷 Semua Instagram Status</option>
                   <option value="Not Published">Not Published</option>
                   <option value="Scheduled">Scheduled</option>
                   <option value="Published">Published</option>
                 </select>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  style={{
+                    width: '100%', padding: '8px 12px', borderRadius: '8px',
+                    background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1',
+                    fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'all 0.2s ease'
+                  }}
+                >
+                  🔄 Reset Filter
+                </button>
               </div>
             </div>
           </div>
