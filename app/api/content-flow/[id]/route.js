@@ -5,7 +5,8 @@ import { getCurrentUser } from '@/lib/auth';
 
 export async function PATCH(request, { params }) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const id = resolvedParams?.id || params?.id;
     const body = await request.json();
 
     const currentUser = getCurrentUser(request);

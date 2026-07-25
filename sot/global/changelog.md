@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.0.3 — Fix Save Pencil Edit & Reaktifitas Tombol Modal + Panel Accordion DATA PRODUK & LINK (25/07/2026)
+- Fix Next.js 16 params Promise pada API PATCH /api/content-flow/[id] agar simpan data ke PostgreSQL Node 3 & SQLite berhasil 100%
+- Reaktifitas realtime state activeItem dan items array agar tombol atas modal (Copy Affiliate, Buka Link Produk) seketika aktif begitu data disimpan
+- Pembaruan header teks menjadi DATA PRODUK & LINK disertai panel Expand/Collapse (Accordion UI)
+
 ## V2.0.2 — Fitur Inline Pencil Edit (✏️) untuk Data Produk di Modal Detail ContentFlow (25/07/2026)
 - Penggantian form input statis produk menjadi tampilan clean metadata + Inline Pencil Editor (✏️)
 - Simpan cepat data produk (Nama Produk, Link Produk, Link Affiliate) secara realtime ke PostgreSQL Node 3
