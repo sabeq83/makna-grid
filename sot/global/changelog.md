@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.36 — Fitur ContentFlow Publishing Tracker Hub (25/07/2026)
+- Integrasi Halaman & API /content-flow untuk Melacak Status Tayang
+- Mockup Card Presisi Mengacu Desain ContentFlow v2
+- Support Auto Sync Retroaktif Seluruh Aset Kampanye Database
+
 ## V1.1.35 — Perbaikan Menu OPC: Save as Draft & Penyelarasan Tombol Modal (25/07/2026)
 - Tambah tombol Save as Draft pada modal import Content Planner ke OPC
 - Penyelarasan warna & hirarki 3 tombol modal (Batal, Save as Draft, Ingest & Launch)
