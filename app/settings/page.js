@@ -864,7 +864,7 @@ export default function SettingsPage() {
             <div className="card-title" style={{ justifyContent: 'space-between' }}>
               <span><span className="icon">📚</span> Knowledge Base Management</span>
               <button className="btn btn-sm btn-primary" onClick={seedKBs} disabled={seeding}>
-                {seeding ? '⏳' : '📥'} Load dari kb-seeds/
+                {seeding ? '⏳' : '📥'} Load dari kb/
               </button>
             </div>
 
@@ -903,7 +903,7 @@ export default function SettingsPage() {
               </div>
             ) : (
               <div className="empty-state" style={{ padding: '30px' }}>
-                <p>Belum ada Knowledge Base. Upload file atau load dari kb-seeds/.</p>
+                <p>Belum ada Knowledge Base. Upload file atau load dari kb/.</p>
               </div>
             )}
           </div>

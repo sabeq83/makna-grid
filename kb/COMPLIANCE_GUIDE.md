@@ -1,6 +1,6 @@
 # COMPLIANCE_GUIDE
 
-Version: 1.0
+Version: 2.0 (Integrated TikTok Shop Medical Misinformation Policy)
 
 ---
 
@@ -708,35 +708,89 @@ Allowed `risk_level` values:
 - `medium`
 - `high`
 
-Example:
+---
 
-```json
-{
-  "compliance_status": "approved_with_revision",
-  "risk_level": "medium",
-  "flagged_claims": [
-    {
-      "original_text": "This drink cures high blood pressure.",
-      "issue": "Unsupported medical treatment claim."
-    }
-  ],
-  "required_revisions": [
-    "Remove the disease treatment claim.",
-    "Replace it with neutral ingredient or usage information supported by verified sources."
-  ],
-  "approved_copy": "This drink combines commonly used ingredients for a simple daily beverage."
-}
-```
+# 21. TikTok Shop | Tokopedia Official Medical Misinformation Policy
 
-Every approved output must be:
+## 21.1 Definition of Medical Misinformation
 
-- Accurate
-- Non-deceptive
-- Non-coercive
-- Supported by available information
-- Safe for the intended audience
-- Consistent with platform requirements
-- Ready for publication
+Medical Misinformation includes any statements, marketing copy, or content claiming that a product has the effect of:
+- Curing
+- Treating
+- Preventing
+- Reducing
+
+...any medical condition, illness, or disease.
+
+### Prohibited Claim Examples:
+- "Prevents cancer"
+- "Reduces high cholesterol"
+- "Prevents high blood pressure"
+- "Reduces diabetes"
+- "Prevents liver disease"
+- "Reverses cataracts"
+- "Prevents tumors"
+- "Stops Alzheimer's disease"
+
+## 21.2 Restricted Medical & Reproductive Conditions
+
+TikTok Shop strictly prohibits sellers and creators from making claims that products affect serious diseases or reproductive conditions.
+
+### Serious Diseases & Conditions (Prohibited Claims):
+- **Cardiovascular & Metabolic**: Diabetes, High blood sugar levels, High cholesterol / blood fat, Hypertension, High blood pressure, Heart disease, Stroke
+- **Internal Organs & Chronic**: Kidney disease, Kidney stones, Liver disease, Cirrhosis, Gallstones, Hypothyroidism, Chronic insomnia, Alzheimer's
+- **Respiratory & Infections**: Pneumonia, Dengue, Herpes, Drug addiction
+- **Ocular (Eye) Conditions**: Cataracts, Glaucoma
+
+### Reproductive & Other Medical Conditions (Prohibited Claims):
+- "Fixes gout" | "Treats UTI" | "Reverses menopause" | "Stopped my period" | "Cures arthritis" | "Treats hemorrhoids" | "Causes abortion" | "Prevents miscarriage" | "Treats asthma" | "Cures COVID"
+- **Restricted List**: Hormones / cortisol balance claims, Anaemia, Blood clots, Thrombosis, Migraine, Flu / food poisoning, COVID-19, Chickenpox, HFMD, Viral infections, Urinary tract infections (UTI), Impetigo, Sinus infections, Thrush, Arthritis, Eczema, Psoriasis, Rosacea, Hemorrhoids, Myopia, Presbyopia, Pregnancy / conception, Period / menstruation, Menopause, Abortion, Miscarriage, Impotence / infertility.
+
+## 21.3 Compliance Guidelines: DOs and DON'Ts
+
+### DO NOT ❌
+- **DO NOT** claim a product cures, treats, prevents, reverses, or reduces any disease.
+- **DO NOT** diagnose medical conditions during videos, short clips, or live streams.
+- **DO NOT** tell viewers or customers that they likely have a specific disease or medical condition.
+- **DO NOT** discourage individuals from consulting qualified medical doctors or taking prescribed medicines/vaccines.
+
+### DO ✅
+- **DO** support all product claims using the **exact wording** printed on approved product packaging or government-approved advertising material.
+- **DO** display product packaging clearly on screen so viewers can easily read the official printed claims.
+- **DO** adhere strictly to exact approved terminology.
+
+> **Example Rule Application:**
+> - ❌ **Prohibited:** "This product cures arthritis."
+> - ✅ **Allowed:** "This product relieves pain from arthritis."
+
+## 21.4 Product Promotion Reference Table (Phrasing Conversion)
+
+| Category / Product | Non-Compliant Claim (DON'T) ❌ | Compliant Phrasing (DO) ✅ |
+| :--- | :--- | :--- |
+| **Low-Sugar Drinks** | Reduces diabetes | Has low sugar |
+| **Fish Oil Supplements** | Reduced my high cholesterol | Provides healthy fats |
+| **Vitamin Supplements** | Lowers high blood pressure | Can help balance blood circulation |
+| **Fruits & Vegetables** | Helps prevent heart disease | Keeps my heart healthy |
+| **Calcium Tablets** | Heals bone fractures | Supports healthy bone growth |
+| **Cleaning Products** | Treats asthma | Helps prevent allergies |
+| **Moisturizers / Creams** | Cures hemorrhoids | Soothes hemorrhoids |
+| **Medicated Plasters** | Solution to arthritis | Relieves joint pain |
+| **Pregnancy Support Vitamins** | Helped me get pregnant | Was used during pregnancy / Good for pregnant mothers |
+| **Menopause Supplements** | Reverses menopause | Helps reduce the discomfort of menopause |
+| **Urinary Health Supplements** | Treats UTI | Helps prevent UTI |
+| **Cough Drops** | Cures COVID | Helps relieve cough, sore throat and symptoms of flu |
+| **Essential Oils** | Cures sinus infections | Reduces sinus infections |
+
+## 21.5 Absolutely Prohibited Permanent-Effect Claims (CRITICAL OVERRIDE)
+
+> 🚨 **CRITICAL OVERRIDE NOTICE:**
+> Even if a claim is **physically printed on the product packaging**, claims of permanent cures or total solutions for serious diseases are **STRICTLY PROHIBITED**.
+
+TikTok Shop enforces an absolute ban on claims such as:
+- "Cure Cancer"
+- "Cures Diabetes"
+- "Removes Tumors"
+- "Solution to HIV"
 
 ---
 

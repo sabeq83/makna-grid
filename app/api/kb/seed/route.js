@@ -6,10 +6,10 @@ import path from 'path';
 
 export async function POST() {
   try {
-    const seedDir = path.join(process.cwd(), 'kb-seeds');
+    const seedDir = path.join(process.cwd(), 'kb');
     
     if (!fs.existsSync(seedDir)) {
-      return NextResponse.json({ success: false, error: 'kb-seeds directory not found' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'kb directory not found' }, { status: 404 });
     }
 
     const existing = getAllKnowledgeBases();

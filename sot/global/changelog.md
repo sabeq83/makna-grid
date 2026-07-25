@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.0.20 — Konsolidasi & Standarisasi Knowledge Base (KB) (26/07/2026)
+- Merger folder kb-seeds dan kb_2call menjadi 1 folder terpusat kb
+- Merge TikTok Shop Medical Misinformation Policy ke COMPLIANCE_GUIDE.md Section 21
+- Standarisasi 7 Core KB di seluruh prompt builder RE, OPC, SC, Multiplier Lab, Content Planner, dan Recipe Labs
+- Pembersihan 6 file KB redundan dan folder backup kb_makna549
+
 ## V2.0.19 — Fix Leftover setTargetSpreadsheetId ReferenceError v2.0.19 (25/07/2026)
 - Fix ReferenceError setTargetSpreadsheetId is not defined pada RE, OPC, dan Strategic Campaign
 - Memulihkan aksesibilitas halaman RE Campaign 100%
