@@ -1,5 +1,8 @@
 # Changelog
 
+## V1.1.56 — Fix TypeError item.id.slice pada ContentFlow Sync (25/07/2026)
+- Penanganan konversi String(item.id) sebelum pemanggilan .slice() pada lib/contentflow-ingest.js
+
 ## V1.1.55 — Integrasi Access Permissions & Edit Data Produk ContentFlow Hub (25/07/2026)
 - Penambahan izin edit_link_product, edit_link_affiliate, dan edit_nama_product pada RBAC Access Permissions
 - Pembaruan nama seksi Matriks Izin Menu menjadi Access Permission pada halaman User Management
