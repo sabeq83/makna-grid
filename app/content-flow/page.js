@@ -613,191 +613,327 @@ export default function ContentFlowHubPage() {
         {/* Modal Detail & Update Status */}
         {activeItem && (
           <div style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '16px'
           }}>
             <div style={{
-              background: '#121318', border: '1px solid #27272a', borderRadius: '16px',
-              width: '100%', maxWidth: '680px', maxHeight: '90vh', overflowY: 'auto', padding: '24px'
+              background: '#0d1322', border: '1px solid #1e293b', borderRadius: '16px',
+              width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '24px',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #1f2937', pb: '12px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {getSourceBadge(activeItem.source_type)}
-                    <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', margin: 0 }}>
-                      {activeItem.video_id}
-                    </h2>
-                  </div>
-                  <span style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px', display: 'block' }}>
-                    Kampanye: <strong>{activeItem.campaign_title}</strong> | Produk: <strong>{activeItem.nama_produk}</strong>
+              {/* Modal Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                  <span style={{
+                    padding: '5px 12px', borderRadius: '8px', background: '#1e293b', border: '1px solid #3b82f6',
+                    color: '#60a5fa', fontFamily: 'monospace', fontSize: '13px', fontWeight: 700, flexShrink: 0
+                  }}>
+                    {activeItem.video_id}
                   </span>
+                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {activeItem.hook}
+                  </h2>
                 </div>
-                <button onClick={() => setActiveItem(null)} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}>
-                  <XIcon style={{ width: 20, height: 20 }} />
+                <button
+                  onClick={() => setActiveItem(null)}
+                  style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                >
+                  <XIcon style={{ width: 22, height: 22 }} />
                 </button>
               </div>
 
-              <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* Hook & Caption Details */}
-                <div style={{ background: '#09090b', padding: '12px', borderRadius: '10px', border: '1px solid #1f2937' }}>
-                  <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Hook Video</label>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: '#fff', margin: '0 0 10px' }}>{activeItem.hook}</p>
+              {/* 4 Action Buttons Row */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(activeItem.caption, 'Caption')}
+                  disabled={!activeItem.caption}
+                  style={{
+                    padding: '10px 14px', borderRadius: '10px', background: activeItem.caption ? '#1e293b' : 'rgba(30, 41, 59, 0.5)',
+                    border: '1px solid #334155', color: activeItem.caption ? '#f1f5f9' : '#64748b', fontWeight: 600, fontSize: '13px',
+                    cursor: activeItem.caption ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                  }}
+                >
+                  📋 Copy Caption
+                </button>
 
-                  <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Caption & Hashtags</label>
-                  <div style={{ fontSize: '12px', fontFamily: 'monospace', color: '#d4d4d8', whiteSpace: 'pre-wrap', maxHeight: '120px', overflowY: 'auto', background: '#121318', padding: '8px', borderRadius: '6px' }}>
-                    {activeItem.caption || 'Tanpa Caption'}
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate')}
+                  disabled={!activeItem.link_affiliate}
+                  style={{
+                    padding: '10px 14px', borderRadius: '10px',
+                    background: activeItem.link_affiliate ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'rgba(30, 41, 59, 0.5)',
+                    border: activeItem.link_affiliate ? '1px solid #818cf8' : '1px solid #334155',
+                    color: activeItem.link_affiliate ? '#ffffff' : '#64748b', fontWeight: 700, fontSize: '13px',
+                    cursor: activeItem.link_affiliate ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                    boxShadow: activeItem.link_affiliate ? '0 4px 14px rgba(99, 102, 241, 0.35)' : 'none'
+                  }}
+                >
+                  📋 Copy Affiliate Link
+                </button>
+
+                {activeItem.link_produk ? (
+                  <a
+                    href={activeItem.link_produk}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: '10px 14px', borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+                      border: '1px solid #38bdf8', color: '#ffffff', fontWeight: 700, fontSize: '13px',
+                      textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)'
+                    }}
+                  >
+                    🔗 Buka Link Produk
+                  </a>
+                ) : (
+                  <button
+                    disabled
+                    style={{
+                      padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
+                      border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
+                      cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                    }}
+                  >
+                    🔗 Tanpa Link Produk
+                  </button>
+                )}
+
+                {activeItem.url_asset || activeItem.drive_link || activeItem.nextcloud_url ? (
+                  <a
+                    href={activeItem.url_asset || activeItem.drive_link || activeItem.nextcloud_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: '10px 14px', borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                      border: '1px solid #10b981', color: '#ffffff', fontWeight: 700, fontSize: '13px',
+                      textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    📥 Asset Ready
+                  </a>
+                ) : (
+                  <button
+                    disabled
+                    style={{
+                      padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
+                      border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
+                      cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                    }}
+                  >
+                    📥 Asset Kosong
+                  </button>
+                )}
+              </div>
+
+              {/* Metadata Panel */}
+              <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', marginBottom: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '12px' }}>
+                  <div>
+                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Nama Produk:</span>
+                    <strong style={{ fontSize: '13px', color: '#ffffff' }}>{activeItem.nama_produk || 'Umum'}</strong>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Production Date:</span>
+                    <strong style={{ fontSize: '13px', color: '#ffffff', fontFamily: 'monospace' }}>
+                      {activeItem.production_date ? new Date(activeItem.production_date).toISOString().split('T')[0] : 'N/A'}
+                    </strong>
                   </div>
                 </div>
 
-                {/* Account Name */}
                 <div>
-                  <label style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Nama Akun Brand Target:</label>
-                  <input
-                    type="text"
-                    value={editStatusForm.account_name}
-                    onChange={(e) => setEditStatusForm({ ...editStatusForm, account_name: e.target.value })}
-                    placeholder="misal: @sabeqmursyid_official"
-                    style={{ width: '100%', padding: '9px 12px', background: '#09090b', border: '1px solid #3f3f46', borderRadius: '8px', color: '#fff', fontSize: '13px' }}
-                  />
-                </div>
-
-                {/* Cloud Storage Links */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div>
-                    <label style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Google Drive Link:</label>
-                    <input
-                      type="text"
-                      value={editStatusForm.drive_link}
-                      onChange={(e) => setEditStatusForm({ ...editStatusForm, drive_link: e.target.value })}
-                      placeholder="https://drive.google.com/..."
-                      style={{ width: '100%', padding: '9px 12px', background: '#09090b', border: '1px solid #3f3f46', borderRadius: '8px', color: '#fff', fontSize: '12px' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Nextcloud URL:</label>
-                    <input
-                      type="text"
-                      value={editStatusForm.nextcloud_url}
-                      onChange={(e) => setEditStatusForm({ ...editStatusForm, nextcloud_url: e.target.value })}
-                      placeholder="http://100.78.186.123:8080/..."
-                      style={{ width: '100%', padding: '9px 12px', background: '#09090b', border: '1px solid #3f3f46', borderRadius: '8px', color: '#fff', fontSize: '12px' }}
-                    />
+                  <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Caption:</span>
+                  <div style={{
+                    fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', background: '#05070d',
+                    padding: '12px', borderRadius: '8px', border: '1px solid #1e293b', whiteSpace: 'pre-wrap',
+                    maxHeight: '140px', overflowY: 'auto', lineHeight: '1.6'
+                  }}>
+                    {activeItem.caption || '(Tidak ada caption)'}
                   </div>
                 </div>
+              </div>
 
-                {/* TikTok Status Controls */}
-                <div style={{ background: '#09090b', padding: '14px', borderRadius: '12px', border: '1px solid #1f2937', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    🎵 TikTok Publishing Tracker
+              {/* Sub-Header */}
+              <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 16px' }}>
+                STATUS PUBLIKASI PER PLATFORM
+              </h3>
+
+              <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* TikTok Controls */}
+                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📱 TIKTOK
                   </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Status:</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
                       <select
                         value={editStatusForm.tiktok_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_status: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
                       </select>
                     </div>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Tanggal Publish/Jadwal:</label>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <button
+                          type="button"
+                          onClick={() => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: new Date().toISOString().split('T')[0] })}
+                          style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                        >
+                          Hari Ini
+                        </button>
+                      </div>
                       <input
                         type="date"
                         value={editStatusForm.tiktok_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink TikTok</label>
+                      <input
+                        type="text"
+                        value={editStatusForm.permalink_tiktok}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_tiktok: e.target.value })}
+                        placeholder="https://tiktok.com/@..."
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       />
                     </div>
                   </div>
-                  <div>
-                    <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Permalink Video (URL TikTok):</label>
-                    <input
-                      type="text"
-                      value={editStatusForm.permalink_tiktok}
-                      onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_tiktok: e.target.value })}
-                      placeholder="https://vt.tiktok.com/..."
-                      style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
-                    />
-                  </div>
                 </div>
 
-                {/* Facebook Status Controls */}
-                <div style={{ background: '#09090b', padding: '14px', borderRadius: '12px', border: '1px solid #1f2937', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#60a5fa', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📘 Facebook Reels Tracker
+                {/* Facebook Controls */}
+                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#60a5fa', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📘 FACEBOOK
                   </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Status:</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
                       <select
                         value={editStatusForm.facebook_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_status: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
                       </select>
                     </div>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Tanggal Publish/Jadwal:</label>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <button
+                          type="button"
+                          onClick={() => setEditStatusForm({ ...editStatusForm, facebook_publish_date: new Date().toISOString().split('T')[0] })}
+                          style={{ background: 'none', border: 'none', color: '#60a5fa', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                        >
+                          Hari Ini
+                        </button>
+                      </div>
                       <input
                         type="date"
                         value={editStatusForm.facebook_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink FB</label>
+                      <input
+                        type="text"
+                        value={editStatusForm.permalink_facebook}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_facebook: e.target.value })}
+                        placeholder="https://facebook.com/..."
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Instagram Status Controls */}
-                <div style={{ background: '#09090b', padding: '14px', borderRadius: '12px', border: '1px solid #1f2937', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#f472b6', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📷 Instagram Reels Tracker
+                {/* Instagram Controls */}
+                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#f472b6', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📷 INSTAGRAM
                   </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Status:</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
                       <select
                         value={editStatusForm.instagram_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_status: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
                       </select>
                     </div>
-                    <div>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px' }}>Tanggal Publish/Jadwal:</label>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <button
+                          type="button"
+                          onClick={() => setEditStatusForm({ ...editStatusForm, instagram_publish_date: new Date().toISOString().split('T')[0] })}
+                          style={{ background: 'none', border: 'none', color: '#f472b6', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                        >
+                          Hari Ini
+                        </button>
+                      </div>
                       <input
                         type="date"
                         value={editStatusForm.instagram_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px', background: '#121318', border: '1px solid #3f3f46', borderRadius: '6px', color: '#fff', fontSize: '12px' }}
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div style={{ gridColumn: 'span 4' }}>
+                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink Instagram</label>
+                      <input
+                        type="text"
+                        value={editStatusForm.permalink_instagram}
+                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_instagram: e.target.value })}
+                        placeholder="https://instagram.com/p/..."
+                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Submit Bar */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', pt: '10px' }}>
+                {/* Modal Footer Submit Bar */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
                   <button
                     type="button"
                     onClick={() => setActiveItem(null)}
-                    style={{ padding: '9px 16px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+                    style={{ padding: '10px 18px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
                     disabled={savingStatus}
-                    style={{ padding: '9px 20px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', border: 'none', color: '#fff', borderRadius: '8px', fontWeight: 700, cursor: savingStatus ? 'not-allowed' : 'pointer', fontSize: '13px', boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)' }}
+                    style={{
+                      padding: '10px 22px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+                      border: 'none', color: '#ffffff', borderRadius: '10px', fontWeight: 700,
+                      cursor: savingStatus ? 'not-allowed' : 'pointer', fontSize: '13px',
+                      boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
+                    }}
                   >
                     {savingStatus ? 'Menyimpan...' : '💾 Simpan Perubahan Status'}
                   </button>

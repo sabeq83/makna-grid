@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.1.38 — Penyempurnaan Layout Modal Detail & Status Publikasi ContentFlow Hub (25/07/2026)
+- Redesain Modal Presisi Tangkapan Layar: Header Video ID Badge & Hook
+- 4 Tombol Aksi Cepat: Copy Caption, Copy Affiliate, Buka Produk, Download Asset
+- Penolong Instan Hari Ini untuk Publish Date TikTok, Facebook, dan Instagram
+
 ## V1.1.37 — Relokasi & Perbaikan Aksesibilitas Menu ContentFlow Hub (25/07/2026)
 - Pindahkan Menu ContentFlow Hub ke Puncak Seksi WORKFLOW Sidebar
 - Perbaikan Logika Hak Akses Menu Agar Selalu Bisa Diklik Seluruh User
