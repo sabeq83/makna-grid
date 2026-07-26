@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { sanitizeLogContent } from '@/lib/log-sanitizer';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
+    const isRaw = searchParams.get('raw') === 'true';
 
     if (!type) {
       return NextResponse.json({ error: 'Parameter type wajib diisi' }, { status: 400 });
@@ -39,7 +41,9 @@ export async function GET(request) {
     }
 
     const content = fs.readFileSync(logPath, 'utf8');
-    return new NextResponse(content, {
+    const finalContent = isRaw ? content : sanitizeLogContent(content);
+
+    return new NextResponse(finalContent, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   } catch (err) {

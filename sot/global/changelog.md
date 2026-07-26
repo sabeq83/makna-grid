@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.1.2 — Humanized System Poller Log Engine (Sanitizer Layer) (26/07/2026)
+- Implementasi lib/log-sanitizer.js untuk menyaring istilah teknis backend AI, TTS, FFmpeg, Cloud, dan DB menjadi bahasa Indonesia sederhana
+- Integrasi sanitizer layer pada API GET /api/system-logs dengan opsi ?raw=true
+- Perlindungan arsitektur internal backend pada seluruh widget terminal UI kampanye
+
 ## V2.1.1 — Update SOP AGENTS.md dengan Execution Task List Real-time Progress (26/07/2026)
 - Penambahan aturan seksi wajib Execution Task List pada implementation_plan.md
 - Penambahan aturan pembaruan real-time checkbox progress [x] saat eksekusi
