@@ -60,6 +60,9 @@ export default function SettingsPage() {
   const [bulkKeysText, setBulkKeysText] = useState('');
   const [bulkDefaultLimit, setBulkDefaultLimit] = useState(20);
   const [bulkAliasPrefix, setBulkAliasPrefix] = useState('AISKey');
+  const [validateLive, setValidateLive] = useState(true);
+  const [testingHealth, setTestingHealth] = useState(false);
+  const [cleaningDead, setCleaningDead] = useState(false);
   
   const [storageProvider, setStorageProvider] = useState('gdrive');
   const [nextcloudUrl, setNextcloudUrl] = useState('');
@@ -548,15 +551,6 @@ export default function SettingsPage() {
     }
     setAddingKey(false);
   }
-
-  // Bulk API Keys Import states
-  const [poolAddMode, setPoolAddMode] = useState('bulk'); // 'bulk' | 'single'
-  const [bulkKeysText, setBulkKeysText] = useState('');
-  const [bulkDefaultLimit, setBulkDefaultLimit] = useState(20);
-  const [bulkAliasPrefix, setBulkAliasPrefix] = useState('AISKey');
-  const [validateLive, setValidateLive] = useState(true);
-  const [testingHealth, setTestingHealth] = useState(false);
-  const [cleaningDead, setCleaningDead] = useState(false);
 
   async function addPoolKeysBulk() {
     if (!bulkKeysText.trim()) return;

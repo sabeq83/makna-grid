@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.1.6 — Fix duplicate state declaration in Settings page (26/07/2026)
+- Pembersihan duplikasi deklarasi state poolAddMode pada app/settings/page.js
+- Kompilasi Next.js build 25/25 halaman static sukses 100%
+
 ## V2.1.5 — Gemini API Key Validation & Health Check Engine (26/07/2026)
 - Implementasi Triple-Guard API Key Validation (Pre-Validation ping test, Audit Health Check All Keys, dan Runtime Failover Auto-Disable)
 - Penambahan tombol 🔍 Audit & Test All Keys dan 🗑️ Clean Dead Keys pada Gemini API Pool Manager
