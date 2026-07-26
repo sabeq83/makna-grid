@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.1 — Optimize Gemini API Key Pool Validation Speed with Parallel Execution (26/07/2026)
+- Optimisasi pengujian keaktifan API Key dari sekuensial menjadi paralel via Promise.all
+- Waktu pengujian Bulk Add 23 API Keys dipangkas drastis dari 45 detik menjadi ~1.5 detik
+
 ## V2.2.0 — Settings UI Refactoring & Google Drive Setup Simplification (26/07/2026)
 - Refaktorisasi Halaman Settings dengan 3 Tab Kategori Utama (Engine & AI, Storage & Cloud, Otomasi & Integrasi)
 - Fitur Collapsible Cards dengan tombol Buka/Tutup dan memori localStorage

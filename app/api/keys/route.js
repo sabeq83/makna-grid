@@ -26,22 +26,22 @@ export async function POST(request) {
     // Action: Health Check All Keys in Pool
     if (body.action === 'health-check-all') {
       const allKeys = getAllApiKeys();
-      let liveCount = 0;
-      let deadCount = 0;
-      const results = [];
+      
+      const checkResults = await Promise.all(
+        allKeys.map(async (k) => {
+          const check = await testGeminiConnection(k.api_key);
+          if (check.success) {
+            markApiKeyStatus(k.id, 'ACTIVE', 1);
+            return { id: k.id, name: k.key_name, status: 'LIVE', message: check.message, success: true };
+          } else {
+            markApiKeyStatus(k.id, 'INVALID', 0);
+            return { id: k.id, name: k.key_name, status: 'DEAD', message: check.message, success: false };
+          }
+        })
+      );
 
-      for (const k of allKeys) {
-        const check = await testGeminiConnection(k.api_key);
-        if (check.success) {
-          liveCount++;
-          markApiKeyStatus(k.id, 'ACTIVE', 1);
-          results.push({ id: k.id, name: k.key_name, status: 'LIVE', message: check.message });
-        } else {
-          deadCount++;
-          markApiKeyStatus(k.id, 'INVALID', 0);
-          results.push({ id: k.id, name: k.key_name, status: 'DEAD', message: check.message });
-        }
-      }
+      const liveCount = checkResults.filter(r => r.success).length;
+      const deadCount = checkResults.filter(r => !r.success).length;
 
       const keys = getAllApiKeys();
       const pool = getPoolSummary();
@@ -49,7 +49,7 @@ export async function POST(request) {
         success: true,
         message: `Health Check Selesai: ${liveCount} Key Aktif (Live), ${deadCount} Key Mati/Ditolak (Invalid).`,
         summary: { liveCount, deadCount, total: allKeys.length },
-        data: { keys, pool, results }
+        data: { keys, pool, results: checkResults }
       });
     }
 
@@ -59,9 +59,15 @@ export async function POST(request) {
       let rejectedKeys = [];
 
       if (body.validate_live === true) {
+        const checks = await Promise.all(
+          body.bulk_keys.map(async (item) => {
+            const check = await testGeminiConnection(item.api_key);
+            return { item, check };
+          })
+        );
+
         const validated = [];
-        for (const item of body.bulk_keys) {
-          const check = await testGeminiConnection(item.api_key);
+        for (const { item, check } of checks) {
           if (check.success) {
             validated.push(item);
           } else {
