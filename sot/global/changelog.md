@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.14 — Implement shouldSyncGoogleSheets Smart Helper & Audit All Generator Logics (26/07/2026)
+- Penambahan helper shouldSyncGoogleSheets pada lib/google-auth.js untuk mendeteksi pilihan penyimpanan Nextcloud vs GDrive
+- Eliminasi hardcoded uploadSpreadsheet = true dan pembungkusan aman Google Sheets sync di OPC, RE, Strategic, Instant Factory, Recipe Labs, dan Content Planner
+- Pemberesan import path .js pada tiktok-compliance-service
+
 ## V2.2.13 — Fix Log Sanitizer Masking Rules & Export auditScriptForTikTok (26/07/2026)
 - Ekspor fungsi auditScriptForTikTok pada lib/tiktok-compliance-service.js untuk mencegah TypeError compliance checker
 - Pembaruan aturan sanitasi log lib/log-sanitizer.js dengan masking URL Shopee/E-commerce dan pembersihan log teknis poller
