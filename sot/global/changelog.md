@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.34 — Populate re_campaign_items for imported RE Campaign 66b4d649-8045-4edf-b3e4-375428108797 (26/07/2026)
+- Penambahan sinkronisasi 25 item kampanye RE ke tabel re_campaign_items pada Node 1 SQLite dan Node 3 PostgreSQL
+- Perbaikan tampilan UI menu /re-campaigns dan detail kampanye RE
+
 ## V2.2.33 — Fix crypto import syntax in id-generator.js (26/07/2026)
 - Koreksi sintaks import crypto dari default export nodejs crypto pada lib/id-generator.js
 - Pembaruan eksekusi impor kampanye RE nutribake
