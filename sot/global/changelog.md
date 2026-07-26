@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.0 — Settings UI Refactoring & Google Drive Setup Simplification (26/07/2026)
+- Refaktorisasi Halaman Settings dengan 3 Tab Kategori Utama (Engine & AI, Storage & Cloud, Otomasi & Integrasi)
+- Fitur Collapsible Cards dengan tombol Buka/Tutup dan memori localStorage
+- Penyederhanaan Google Drive Setup menjadi 1 Default Target Folder tunggal
+- Penghapusan Card Content Flow API & Penggantian Nama Card G Labs Webhook
+
 ## V2.1.6 — Fix duplicate state declaration in Settings page (26/07/2026)
 - Pembersihan duplikasi deklarasi state poolAddMode pada app/settings/page.js
 - Kompilasi Next.js build 25/25 halaman static sukses 100%

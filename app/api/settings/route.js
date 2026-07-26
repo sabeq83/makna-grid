@@ -25,7 +25,8 @@ export async function GET() {
         webhook_delay_min: getSetting('webhook_delay_min') !== null ? Number(getSetting('webhook_delay_min')) : 10,
         webhook_delay_max: getSetting('webhook_delay_max') !== null ? Number(getSetting('webhook_delay_max')) : 20,
         webhook_t2i_pattern: getSetting('webhook_t2i_pattern') || 'threading',
-        // V3 Workspace
+        // V3 Workspace & Drive Target Folder
+        drive_target_folder: getSetting('drive_target_folder') || '/MAKNA_Video_Generations',
         drive_glabs_folder_id: getSetting('drive_glabs_folder_id') || '',
         drive_re_markdown_folder_id: getSetting('drive_re_markdown_folder_id') || '',
         master_re_sheet_id: getSetting('master_re_sheet_id') || '',
@@ -102,6 +103,7 @@ export async function POST(request) {
     if (webhook_delay_max !== undefined) setSetting('webhook_delay_max', String(webhook_delay_max));
     if (webhook_t2i_pattern !== undefined) setSetting('webhook_t2i_pattern', webhook_t2i_pattern);
     // V3 Workspace
+    if (drive_target_folder !== undefined) setSetting('drive_target_folder', drive_target_folder);
     if (drive_glabs_folder_id !== undefined) setSetting('drive_glabs_folder_id', drive_glabs_folder_id);
     if (drive_re_markdown_folder_id !== undefined) setSetting('drive_re_markdown_folder_id', drive_re_markdown_folder_id);
     if (master_re_sheet_id !== undefined) setSetting('master_re_sheet_id', master_re_sheet_id);
