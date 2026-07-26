@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.5 — Fix SQLite db.exec schema initialization syntax error for Webhook Client (26/07/2026)
+- Fix sintaks db.exec pada lib/db.js yang menyebabkan getSetting terganggu
+- Koneksi G Labs Webhook ke 100.117.59.92:8765 kini terverifikasi 🟢 Online (HTTP 200 OK)
+
 ## V2.2.4 — Redesign Toast Notification UI: Compact Glassmorphism & Copy Error Button (26/07/2026)
 - Redesign Notifikasi Toast: Kompak, cantik, max-width 420px di pojok kanan bawah
 - Notifikasi sukses tampil singkat 3.5s
