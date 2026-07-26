@@ -25,6 +25,7 @@ export default function ContentPlannerDashboard() {
   const [productPhotoUrl, setProductPhotoUrl] = useState('');
   const [platform, setPlatform] = useState('tiktok');
   const [objective, setObjective] = useState('soft_sell');
+  const [plannerCount, setPlannerCount] = useState(12);
   const [targetAudience, setTargetAudience] = useState('genz_casual');
   const [customTargetAudience, setCustomTargetAudience] = useState('');
   const [isTitleManuallyEdited, setIsTitleManuallyEdited] = useState(false);

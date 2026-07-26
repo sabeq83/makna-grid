@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.10 — Fix ReferenceError: plannerCount is not defined in Content Planner modal (26/07/2026)
+- Restore deklarasi state plannerCount pada app/content-planner/page.js
+- Memastikan modal pembuatan Content Planner berjalan tanpa error runtime
+
 ## V2.2.9 — Implement Autofill Title Format (namaakun - YYYYMMDD - 2 Kata nama produk) in Content Planner (26/07/2026)
 - Otomatisasi pengisian Judul Content Planner dengan format namaakun - YYYYMMDD - 2 Kata nama produk
 - Tombol ✨ Auto-fill pada modal UI untuk meregenerasi judul otomatis 1-klik
