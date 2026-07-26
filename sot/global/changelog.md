@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.11 — Fix db is not defined error in createDraftContentPlanner (26/07/2026)
+- Restore inisialisasi const db = getDb() dan plannerId pada lib/content-planner-engine.js
+- Memastikan simpan draft Content Planner sukses tanpa error
+
 ## V2.2.10 — Fix ReferenceError: plannerCount is not defined in Content Planner modal (26/07/2026)
 - Restore deklarasi state plannerCount pada app/content-planner/page.js
 - Memastikan modal pembuatan Content Planner berjalan tanpa error runtime
