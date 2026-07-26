@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.32 — Fix Hook and Caption Extraction for RE Campaign ContentFlow Sync (26/07/2026)
+- Peningkatan parser Hook dari narration klip pertama dan Caption dari tiktok_caption/ig_caption pada import-re-campaign-to-nutribake.js
+- Pembaruan migrasi data nutribake ke ContentFlow
+
 ## V2.2.31 — Mandatory resolveProductBase64 Resolution for OPC T2I Start Frames (26/07/2026)
 - Penyelarasan pemanggilan Base64 produk T2I Start Frame menggunakan resolveProductBase64 pada OPC & IFC Generator
 - Penambahan skrip pemulihan Start Frame kampanye opc_260726_der820

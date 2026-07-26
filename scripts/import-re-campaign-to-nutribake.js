@@ -64,18 +64,19 @@ async function importReCampaignToNutribake() {
     });
     const cfId = `cf_nutribake_re_${item.id}`;
 
-    // Extract caption
-    let caption = item.caption || '';
-    if (!caption && item.result_json) {
+    // Parse result_json if available
+    let parsedRes = {};
+    if (item.result_json) {
       try {
-        const parsedRes = JSON.parse(item.result_json);
-        if (parsedRes.social_package && parsedRes.social_package.caption) {
-          caption = parsedRes.social_package.caption;
-        } else if (parsedRes.hook) {
-          caption = parsedRes.hook;
-        }
+        parsedRes = typeof item.result_json === 'string' ? JSON.parse(item.result_json) : item.result_json;
       } catch (_) {}
     }
+
+    // Extract caption
+    let caption = item.caption || parsedRes.tiktok_caption || parsedRes.ig_caption || (parsedRes.social_package && parsedRes.social_package.caption) || parsedRes.caption || '';
+
+    // Extract hook
+    let hook = item.hook || (parsedRes.voiceover && parsedRes.voiceover[0] ? parsedRes.voiceover[0].narration : '') || parsedRes.hook || '';
 
     // Extract best video asset URL
     let assetUrl = item.drive_link || item.ffmpeg_output_path || item.local_video_path || '';
@@ -84,14 +85,6 @@ async function importReCampaignToNutribake() {
       if (completedGlabs) {
         assetUrl = completedGlabs.video_url;
       }
-    }
-
-    let hook = item.hook || '';
-    if (!hook && item.result_json) {
-      try {
-        const parsedRes = JSON.parse(item.result_json);
-        if (parsedRes.hook) hook = parsedRes.hook;
-      } catch (_) {}
     }
 
     const namaProduk = item.product_name || campaign.product_name || 'Nutribake Alpukat Smoothie';
@@ -165,6 +158,7 @@ async function importReCampaignToNutribake() {
       );
     } catch (sqErr) {
       console.warn(`[SQLite Node 1 Error] Item ${item.id}:`, sqErr.message);
+    }
     console.log(`  [Item ${insertedCount}/${items.length}] Ingested video_id: "${videoId}" for account: "${TARGET_ACCOUNT}"`);
   }
 
