@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.25 — Fix parseGeminiJSON import path from json-parser.js in lib/tiktok-compliance-service.js (26/07/2026)
+- Perbaikan path import parseGeminiJSON dari json-parser.js
+- Penyelesaian error (0, parseGeminiJSON) is not a function pada AI Compliance Audit
+
 ## V2.2.24 — Fix JSDoc header syntax in lib/prompts.js and release v2.2.24 (26/07/2026)
 - Perbaikan sintaks JSDoc header di lib/prompts.js
 - Penyelesaian ReferenceError sanitizeCustomInstruction pada OPC Generator
