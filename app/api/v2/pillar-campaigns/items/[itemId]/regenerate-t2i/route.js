@@ -72,15 +72,22 @@ export async function POST(req, { params }) {
       return `data:${mimeType};base64,${buffer.toString('base64')}`;
     };
 
-    let productBase64 = null;
-    if (campaign.product_ref_image_path) {
-      productBase64 = fileToBase64(campaign.product_ref_image_path);
-    } else {
-      const rowPayload = item.row_creative_payload ? JSON.parse(item.row_creative_payload) : {};
-      if (rowPayload.product_ref_image_path) {
-        productBase64 = fileToBase64(rowPayload.product_ref_image_path);
+    let productData = null;
+    if (campaign.target_product_id) {
+      productData = db.prepare("SELECT * FROM product_extractions WHERE id = ?").get(campaign.target_product_id);
+    }
+    if (!productData) {
+      const rowPayloadTmp = item.row_creative_payload ? JSON.parse(item.row_creative_payload) : {};
+      const prodTerm = rowPayloadTmp.product_name || campaign.campaign_name || '';
+      if (prodTerm) {
+        const firstWord = prodTerm.split(' ')[0] || prodTerm;
+        productData = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${firstWord}%`);
       }
     }
+
+    const { resolveProductBase64 } = await import('../../../../../../../lib/scheduler-processors');
+    const rowPayload = item.row_creative_payload ? JSON.parse(item.row_creative_payload) : {};
+    const productBase64 = resolveProductBase64(campaign, productData, rowPayload);
 
     const bridgeAtClip = campaign.bridge_at_clip || 2;
     const bridgeDurationClips = campaign.bridge_duration_clips !== undefined ? Number(campaign.bridge_duration_clips) : 1;

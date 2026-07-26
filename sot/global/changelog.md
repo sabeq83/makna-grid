@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.38 — Fix Web UI Regenerate Start Frame routes to enforce resolveProductBase64 Studio Photo Mandate (26/07/2026)
+- Integrasi resolveProductBase64 pada regenerate-t2i dan regenerate-start-frames API routes
+- Kunci Foto Studio Bersih saat user klik Re-generate pada Web UI
+- Pembaruan rilis v2.2.38
+
 ## V2.2.37 — Mandat Permanen Studio Photo untuk OPC Engine dan Content Planner Ingest (26/07/2026)
 - Prioritas Foto Studio Bersih (clean_photo_url) pada resolveProductBase64
 - Auto-lock Studio Photo pada ingest-planner route
