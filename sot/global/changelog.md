@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.24 — Fix JSDoc header syntax in lib/prompts.js and release v2.2.24 (26/07/2026)
+- Perbaikan sintaks JSDoc header di lib/prompts.js
+- Penyelesaian ReferenceError sanitizeCustomInstruction pada OPC Generator
+
 ## V2.2.23 — Fix sanitizeCustomInstruction declaration and resume OPC generator (26/07/2026)
 - Penetapan fungsi sanitizeCustomInstruction secara eksplisit di lib/prompts.js
 - Pemberhentian error ReferenceError pada OPC Generator scheduler
