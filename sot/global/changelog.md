@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.7 — Migrate 250 products & image assets from _maknagen to MAKNA Grid (26/07/2026)
+- Sukses menyalin 250 produk beserta metadata lengkap dari database _maknagen ke MAKNA Grid
+- Sinkronisasi seluruh berkas gambar foto produk ke public/uploads/products
+
 ## V2.2.6 — Mask G Labs Webhook API Key & Dynamic IP Test Connection (26/07/2026)
 - Implementasi pengamanan masking password (••••••••xxxxxx) pada API Key G Labs Webhook
 - Tombol Test Connection Webhook kini menguji Host IP & Port yang sedang diketik secara real-time
