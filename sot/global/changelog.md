@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.29 — 3-Layered Compliance Architecture with Local Pre-Prompt Product Title Sanitizer (26/07/2026)
+- Penyaringan lokal nama produk e-commerce mentah sebelum masuk prompt Gemini AI
+- Mandat Negative Lexicon Blocker pada Call 1
+- Penyesuaian Closed-Loop Auto-Rewrite untuk kebersihan naskah kampanye aktif
+
 ## V2.2.28 — Universal Base64 Data-URI Auto-Sanitizer for I2V Video Generation in Webhook Client (26/07/2026)
 - Penetapan Base64 Data-URI auto-sanitizer pada generateVideo di lib/webhook-client.js
 - Penyesuaian mode: start_image dan Data-URI Base64 pada Multiplier & Autopilot Workers
