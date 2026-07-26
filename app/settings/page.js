@@ -967,8 +967,20 @@ export default function SettingsPage() {
                         </span>
                       </div>
                       
-                      <button className="btn btn-sm" onClick={() => togglePoolKey(k.id, k.is_active)}
-                        style={{ fontSize: '0.75rem', padding: '4px 10px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                      <button
+                        className="btn btn-sm"
+                        onClick={() => togglePoolKey(k.id, k.is_active)}
+                        style={{
+                          fontSize: '0.75rem',
+                          padding: '4px 12px',
+                          fontWeight: 600,
+                          background: k.is_active ? 'rgba(253, 203, 110, 0.18)' : 'rgba(0, 184, 148, 0.22)',
+                          color: k.is_active ? '#ffeaa7' : '#00b894',
+                          border: `1px solid ${k.is_active ? 'rgba(253, 203, 110, 0.4)' : 'rgba(0, 184, 148, 0.4)'}`,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
                         {k.is_active ? '⏸ Pause' : '▶ Enable'}
                       </button>
                       

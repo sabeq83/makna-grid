@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.3 — Enhance Pause & Enable button contrast in Gemini Pool Manager (26/07/2026)
+- Peningkatan kontras visual tombol Pause (amber glow) dan Enable (green glow) pada Gemini API Pool Manager
+
 ## V2.2.2 — Fix ReferenceError drive_target_folder when saving MiniMax settings (26/07/2026)
 - Fix destructuring error variable drive_target_folder pada POST /api/settings route
 - Penyimpanan API Key MiniMax, Gemini, dan Facebook kini 100% lancar tanpa error
