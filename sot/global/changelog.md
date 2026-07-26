@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.18 — Bulletproof Single-Pass Deploy Script for Node 1 (26/07/2026)
+- Penambahan penanganan toleransi pkill
+- true pada skrip deploy-node1.js
+- Sanitasi escape character string SSH remote execution
+
 ## V2.2.17 — Implement Single-Pass Node 1 Deployment Script & Update Agent SOP (26/07/2026)
 - Penambahan skrip automasi scripts/deploy-node1.js dan npm script deploy:node1 untuk eksekusi deployment 1-Call SSH
 - Optimasi waktu tunggu kompilasi 120s untuk spesifikasi prosesor Intel Core i3 + RAM 16GB pada Node 1
