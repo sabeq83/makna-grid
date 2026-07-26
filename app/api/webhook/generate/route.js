@@ -41,9 +41,12 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const health = await webhookHealth();
+    const { searchParams } = new URL(request.url);
+    const host = searchParams.get('host');
+    const port = searchParams.get('port');
+    const health = await webhookHealth(host, port);
     return NextResponse.json({ success: true, data: health });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Webhook server offline', detail: error.message }, { status: 503 });

@@ -16,7 +16,8 @@ export async function GET() {
         minimax_api_key: minimaxKey ? '••••••••' + minimaxKey.slice(-6) : null,
         has_minimax_key: !!minimaxKey,
         minimax_group_id: getSetting('minimax_group_id') || '',
-        webhook_api_key: getSetting('webhook_api_key') || '',
+        webhook_api_key: getSetting('webhook_api_key') ? '••••••••' + getSetting('webhook_api_key').slice(-6) : '',
+        has_webhook_key: !!getSetting('webhook_api_key'),
         webhook_host: getSetting('webhook_host') || '100.117.59.92',
         webhook_port: getSetting('webhook_port') || '8765',
         webhook_image_model: getSetting('webhook_image_model') || 'nano_banana_pro',
@@ -93,7 +94,7 @@ export async function POST(request) {
     if (google_client_secret) {
       setSetting('google_client_secret', google_client_secret);
     }
-    if (webhook_api_key !== undefined) setSetting('webhook_api_key', webhook_api_key);
+    if (webhook_api_key) setSetting('webhook_api_key', webhook_api_key);
     if (webhook_host !== undefined) setSetting('webhook_host', webhook_host);
     if (webhook_port !== undefined) setSetting('webhook_port', webhook_port);
     if (webhook_image_model !== undefined) setSetting('webhook_image_model', webhook_image_model);

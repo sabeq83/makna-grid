@@ -23,6 +23,9 @@ export default function SettingsPage() {
 
   // Webhook / G-Labs Settings
   const [webhookApiKey, setWebhookApiKey] = useState('');
+  const [maskedWebhookKey, setMaskedWebhookKey] = useState('');
+  const [hasWebhookKey, setHasWebhookKey] = useState(false);
+  const [editingWebhookKey, setEditingWebhookKey] = useState(false);
   const [webhookHost, setWebhookHost] = useState('100.117.59.92');
   const [webhookPort, setWebhookPort] = useState('8765');
   const [webhookImageModel, setWebhookImageModel] = useState('nano_banana_pro');
@@ -167,7 +170,8 @@ export default function SettingsPage() {
       setHasKey(data.data.has_api_key);
       setMaskedMinimaxKey(data.data.minimax_api_key || '');
       setHasMinimaxKey(data.data.has_minimax_key);
-      setWebhookApiKey(data.data.webhook_api_key || '');
+      setMaskedWebhookKey(data.data.webhook_api_key || '');
+      setHasWebhookKey(data.data.has_webhook_key);
       setWebhookHost(data.data.webhook_host || '100.117.59.92');
       setWebhookPort(data.data.webhook_port || '8765');
       setWebhookImageModel(data.data.webhook_image_model || 'nano_banana_pro');
@@ -1521,7 +1525,7 @@ export default function SettingsPage() {
                 <button className="btn btn-sm btn-secondary" onClick={async () => {
                   setTestingWebhook(true); setWebhookStatus(null);
                   try {
-                    const res = await fetch('/api/webhook/generate');
+                    const res = await fetch(`/api/webhook/generate?host=${encodeURIComponent(webhookHost.trim())}&port=${encodeURIComponent(webhookPort.trim())}`);
                     const data = await res.json();
                     setWebhookStatus(data);
                     showToast(data.success ? '🟢 Webhook online!' : '🔴 Webhook offline', data.success ? 'success' : 'error');
@@ -1554,14 +1558,31 @@ export default function SettingsPage() {
                   onChange={e => setWebhookPort(e.target.value)}
                 />
               </div>
+
               <div className="form-group" style={{ marginBottom: '12px' }}>
-                <label className="form-label">API Key</label>
-                <input
-                  className="form-input"
-                  placeholder="API key dari webhook app"
-                  value={webhookApiKey}
-                  onChange={e => setWebhookApiKey(e.target.value)}
-                />
+                <label className="form-label">API Key Webhook G Labs</label>
+                {hasWebhookKey && !editingWebhookKey ? (
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div className="form-input" style={{ display: 'flex', alignItems: 'center', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', cursor: 'default', flex: 1 }}>
+                      {maskedWebhookKey}
+                    </div>
+                    <button type="button" className="btn btn-secondary" onClick={() => { setEditingWebhookKey(true); setWebhookApiKey(''); }}>✏️ Ganti</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      type="password"
+                      className="form-input"
+                      placeholder="Masukkan API Key Webhook G-Labs..."
+                      value={webhookApiKey}
+                      onChange={e => setWebhookApiKey(e.target.value)}
+                      style={{ flex: 1 }}
+                    />
+                    {hasWebhookKey && (
+                      <button type="button" className="btn btn-secondary" onClick={() => { setEditingWebhookKey(false); setWebhookApiKey(''); }}>Batal</button>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="form-group" style={{ marginBottom: '12px' }}>
                 <label className="form-label">Image Model</label>

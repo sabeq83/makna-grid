@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.6 — Mask G Labs Webhook API Key & Dynamic IP Test Connection (26/07/2026)
+- Implementasi pengamanan masking password (••••••••xxxxxx) pada API Key G Labs Webhook
+- Tombol Test Connection Webhook kini menguji Host IP & Port yang sedang diketik secara real-time
+
 ## V2.2.5 — Fix SQLite db.exec schema initialization syntax error for Webhook Client (26/07/2026)
 - Fix sintaks db.exec pada lib/db.js yang menyebabkan getSetting terganggu
 - Koneksi G Labs Webhook ke 100.117.59.92:8765 kini terverifikasi 🟢 Online (HTTP 200 OK)
