@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.17 — Implement Single-Pass Node 1 Deployment Script & Update Agent SOP (26/07/2026)
+- Penambahan skrip automasi scripts/deploy-node1.js dan npm script deploy:node1 untuk eksekusi deployment 1-Call SSH
+- Optimasi waktu tunggu kompilasi 120s untuk spesifikasi prosesor Intel Core i3 + RAM 16GB pada Node 1
+- Eliminasi total polling SSH loop berulang yang memicu prompt persetujuan UI
+
 ## V2.2.16 — Implement UNIVERSAL_ZERO_TESTIMONY_MANDATE Across All Prompt Builders (26/07/2026)
 - Penambahan modul UNIVERSAL_ZERO_TESTIMONY_MANDATE pada lib/prompts.js untuk melarang total kata ganti orang pertama (aku/saya/gue/moms) dan klaim pengakuan pribadi fiktif
 - Sanitasi contoh sampel transisi produk lama yang mengandung kata ganti aku/saya

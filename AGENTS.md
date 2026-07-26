@@ -38,6 +38,19 @@ Gunakan prosedur ini untuk menguji kesehatan atau menginspeksi server 3-node MAK
    node scripts/test-cluster-health.js
    ```
 
+# SOP Deployment Node 1 (Single-Pass & Zero-Spam Mode)
+
+Node 1 (`ssh makna-ui`) menggunakan spesifikasi **Intel Core i3 dengan RAM 16GB**. Kompilasi Next.js 16 (`npm run build`) memerlukan waktu **90 - 120 detik**.
+
+Aturan Wajib Deployment Node 1:
+1. **Gunakan Perintah Deployment Single-Pass 1-Call**:
+   - Jalankan `npm run deploy:node1` (atau `node scripts/deploy-node1.js`).
+   - Skrip ini mengeksekusi git sync, build, dan restart server dalam **1x panggilan SSH tunggal**.
+2. **DILARANG KERAS Polling SSH Loop**:
+   - Agen **DILARANG KERAS** melakukan polling SSH berulang-ulang (`ssh ... ps aux | grep 'next build'`) setiap 10-15 detik yang memicu pop-up persetujuan berulang.
+3. **Timer Tunggu 120 Detik**:
+   - Pasang `schedule` timer 120 detik (2 menit) tanpa melakukan pemanggilan SSH di antaranya.
+
 # Strategic Campaign Engine Architecture Rule
 
 - Strategic Campaign di MAKNA sepenuhnya menggunakan **Single-Pass Engine (1-Call Architecture)**. Dalam 1x call API ke Gemini AI, sistem sekaligus menghasilkan Storyboard, Naskah Voice-Over, 10 Parameter Video DNA, dan Social Media Package (Caption, Hashtags, CTA).
