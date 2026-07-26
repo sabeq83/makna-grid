@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.44 — Universal 6-Module Product Truth and Geometric Truth Contract Ingestion (27/07/2026)
+- Injeksi sentral buildProductTruthContractSection ke 5 Prompt Builder (OPC, RE, Multiplier, Strategic, Bridge Injector)
+- Integrasi product_truth & geometric_truth ke Sheets Autopilot & Instant Factory Worker
+- Auto-fallback override di Strategic Engine & Bridge Injector API
+- Pembaruan rilis v2.2.44
+
 ## V2.2.43 — Product Truth and Geometric Truth Database Contract & UI Integration (26/07/2026)
 - Penambahan kolom product_truth dan geometric_truth di database product_extractions
 - Injeksi Mandatory Truth Contract ke System Prompt Gemini AI Call 1

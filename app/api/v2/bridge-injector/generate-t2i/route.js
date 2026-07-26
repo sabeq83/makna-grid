@@ -47,13 +47,18 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Output naskah belum dibuat untuk kampanye ini.' }, { status: 404 });
     }
 
+    let finalPrompt = output.clip2_t2i_prompt || '';
+
     // Resolusi gambar produk dari database
     const campaign = db.prepare('SELECT target_product_id FROM bridge_injector_campaigns WHERE id = ?').get(campaignId);
     const reference_images = [];
 
     if (campaign && campaign.target_product_id) {
-      const product = db.prepare('SELECT photo_url, active_photo, clean_photo_url, cleaned_photo_url, generated_photo_url FROM product_extractions WHERE id = ?').get(campaign.target_product_id);
+      const product = db.prepare('SELECT photo_url, active_photo, clean_photo_url, cleaned_photo_url, generated_photo_url, product_truth, geometric_truth FROM product_extractions WHERE id = ?').get(campaign.target_product_id);
       if (product) {
+        if (product.product_truth && !finalPrompt.includes('Product Truth:')) {
+          finalPrompt = `${finalPrompt} [LAYER 2: SUBJECT & VISUAL TRUTH] (Product Truth: ${product.product_truth}, geometry_lock: DO NOT HALLUCINATE)`;
+        }
         const activePhotoField = product.active_photo || 'photo_url';
         const photoPath = product[activePhotoField] || product.photo_url || product.generated_photo_url;
         if (photoPath) {
@@ -70,11 +75,11 @@ export async function POST(request) {
       }
     }
 
-    logToBridgeInjector(`[${campaignId}] Memulai pemicuan Image Generation (T2I) ke G-Labs dengan prompt: "${output.clip2_t2i_prompt}"`);
+    logToBridgeInjector(`[${campaignId}] Memulai pemicuan Image Generation (T2I) ke G-Labs dengan prompt: "${finalPrompt}"`);
     
     // Submit prompt ke G-Labs
     const res = await generateImage({
-      prompt: output.clip2_t2i_prompt,
+      prompt: finalPrompt,
       model: 'nano_banana_pro',
       aspect_ratio: '9:16',
       reference_images
