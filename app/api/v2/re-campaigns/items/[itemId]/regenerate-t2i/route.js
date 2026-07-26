@@ -67,10 +67,17 @@ export async function POST(req, { params }) {
       return `data:${mimeType};base64,${buffer.toString('base64')}`;
     };
 
-    let productBase64 = null;
-    if (campaign.product_ref_image_path) {
-      productBase64 = fileToBase64(campaign.product_ref_image_path);
+    let productData = null;
+    if (campaign.target_product_id) {
+      productData = db.prepare("SELECT * FROM product_extractions WHERE id = ?").get(campaign.target_product_id);
     }
+    if (!productData && campaign.campaign_name) {
+      const firstWord = campaign.campaign_name.split(' ')[0] || campaign.campaign_name;
+      productData = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${firstWord}%`);
+    }
+
+    const { resolveProductBase64 } = await import('../../../../../../../lib/scheduler-processors');
+    const productBase64 = resolveProductBase64(campaign, productData);
 
     console.log(`[RE UI Regenerate] Submitting T2I task for clip ${clipIndex}...`);
     const t2iResult = await generateImage({

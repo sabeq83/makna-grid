@@ -44,10 +44,17 @@ export async function POST(req, { params }) {
       return `data:${mimeType};base64,${buffer.toString('base64')}`;
     };
 
-    let productBase64 = null;
-    if (workflow.product_ref_image_path) {
-      productBase64 = fileToBase64(workflow.product_ref_image_path);
+    let productData = null;
+    if (workflow.target_product_id) {
+      productData = db.prepare("SELECT * FROM product_extractions WHERE id = ?").get(workflow.target_product_id);
     }
+    if (!productData && workflow.product_name) {
+      const firstWord = workflow.product_name.split(' ')[0] || workflow.product_name;
+      productData = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${firstWord}%`);
+    }
+
+    const { resolveProductBase64 } = await import('@/lib/scheduler-processors');
+    const productBase64 = resolveProductBase64(workflow, productData);
 
     const scenes = db.prepare('SELECT id FROM strategic_campaign_scenes WHERE campaign_item_id = ?').all(itemId);
     const bridgeAt = Math.min(Math.max(2, workflow.bridge_at_clip || 2), scenes.length || 4);

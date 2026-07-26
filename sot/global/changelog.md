@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.39 — Universal Studio Photo Mandate across Strategic, RE, and Bridge Injector regenerate-t2i routes (26/07/2026)
+- Standardisasi resolveProductBase64 pada seluruh API regenerate-t2i di Strategic, RE, dan Bridge Injector
+- Kunci Foto Studio Bersih (clean_photo_url) universal di seluruh tombol T2I Web UI
+- Pembaruan rilis v2.2.39
+
 ## V2.2.38 — Fix Web UI Regenerate Start Frame routes to enforce resolveProductBase64 Studio Photo Mandate (26/07/2026)
 - Integrasi resolveProductBase64 pada regenerate-t2i dan regenerate-start-frames API routes
 - Kunci Foto Studio Bersih saat user klik Re-generate pada Web UI

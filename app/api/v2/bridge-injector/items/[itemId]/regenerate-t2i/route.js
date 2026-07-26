@@ -64,22 +64,12 @@ export async function POST(req, { params }) {
     // 1. Update t2i prompt di DB
     db.prepare("UPDATE bridge_injector_items SET clip2_t2i_prompt = ? WHERE id = ?").run(t2i_prompt, itemId);
 
-    // 2. Dapatkan gambar produk dari DB untuk reference
-    let productBase64 = null;
+    let productData = null;
     if (item.target_product_id) {
-      const product = db.prepare('SELECT photo_url, active_photo, clean_photo_url, cleaned_photo_url, generated_photo_url FROM product_extractions WHERE id = ?').get(item.target_product_id);
-      if (product) {
-        const activePhotoField = product.active_photo || 'photo_url';
-        const photoPath = product[activePhotoField] || product.photo_url || product.generated_photo_url;
-        if (photoPath) {
-          try {
-            productBase64 = fileToBase64(photoPath);
-          } catch (e) {
-            console.error('[Regen T2I] Gagal base64 produk:', e.message);
-          }
-        }
-      }
+      productData = db.prepare('SELECT * FROM product_extractions WHERE id = ?').get(item.target_product_id);
     }
+    const { resolveProductBase64 } = await import('../../../../../../../lib/scheduler-processors');
+    const productBase64 = resolveProductBase64({}, productData);
 
     // 3. Trigger image generation
     const imageModel = getSetting('webhook_image_model') || 'nano_banana_pro';
