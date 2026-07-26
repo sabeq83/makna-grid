@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.31 — Mandatory resolveProductBase64 Resolution for OPC T2I Start Frames (26/07/2026)
+- Penyelarasan pemanggilan Base64 produk T2I Start Frame menggunakan resolveProductBase64 pada OPC & IFC Generator
+- Penambahan skrip pemulihan Start Frame kampanye opc_260726_der820
+
 ## V2.2.30 — Update Source of Truth (SOT) Documents for 3-Layered Compliance Architecture (26/07/2026)
 - Pembaruan dokumen SOT TikTok Compliance Gate dengan arsitektur 3 layer
 - Pembaruan dokumen SOT Organic Pillar Campaign dengan arsitektur terkini
