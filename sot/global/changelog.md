@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.20 — Fix fuser exit code safety in Single-Pass deploy script (26/07/2026)
+- Penambahan
+- true pada fuser port kill
+
 ## V2.2.19 — Fix Port Kill Logic in Single-Pass Deploy Script (26/07/2026)
 - Penggantian pkill dengan fuser -k 3000/tcp dan 4000/tcp agar tidak membunuh proses SSH aktif
 
