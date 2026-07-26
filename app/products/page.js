@@ -39,6 +39,8 @@ export default function ProductDatabasePage() {
     packaging_type: '',
     i2v_action_prompt: '',
     t2i_prompt: '',
+    product_truth: '',
+    geometric_truth: '',
   });
 
   // Scraper fields
@@ -529,6 +531,8 @@ export default function ProductDatabasePage() {
       packaging_type: product.packaging_type || '',
       i2v_action_prompt: product.i2v_action_prompt || '',
       t2i_prompt: product.t2i_prompt || '',
+      product_truth: product.product_truth || '',
+      geometric_truth: product.geometric_truth || '',
     });
     setShowAddEditModal(true);
   }
@@ -565,6 +569,8 @@ export default function ProductDatabasePage() {
       packaging_type: '',
       i2v_action_prompt: '',
       t2i_prompt: '',
+      product_truth: '',
+      geometric_truth: '',
     });
   }
 
@@ -1658,6 +1664,28 @@ export default function ProductDatabasePage() {
                       style={{ opacity: (formData.is_in_packaging === 1 || formData.is_in_packaging === true) ? 1 : 0.5 }}
                     />
                   </div>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '12px' }}>
+                  <label className="form-label" style={{ color: '#10b981', fontWeight: 600 }}>🛡️ Product Truth (T2I Physics & Packaging Lock)</label>
+                  <textarea
+                    className="form-textarea"
+                    value={formData.product_truth}
+                    onChange={e => setFormData({ ...formData, product_truth: e.target.value })}
+                    placeholder="Deskripsi fisik kemasan resmi (misal: Official Omura Premium Cocoa Powder in an authentic standing aluminium foil sachet packaging...)"
+                    style={{ minHeight: '60px', fontSize: '0.82rem', borderColor: 'rgba(16, 185, 129, 0.3)' }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '12px' }}>
+                  <label className="form-label" style={{ color: '#a855f7', fontWeight: 600 }}>📐 Geometric Truth (I2V Geometry & Material Lock)</label>
+                  <textarea
+                    className="form-textarea"
+                    value={formData.geometric_truth}
+                    onChange={e => setFormData({ ...formData, geometric_truth: e.target.value })}
+                    placeholder="Deskripsi geometri wadah & fisika permukaan (misal: Flexible standing sachet pouch, rectangular front face, metallic matte foil...)"
+                    style={{ minHeight: '60px', fontSize: '0.82rem', borderColor: 'rgba(168, 85, 247, 0.3)' }}
+                  />
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '12px' }}>

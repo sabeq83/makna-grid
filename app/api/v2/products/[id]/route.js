@@ -49,7 +49,9 @@ export async function PUT(req, { params }) {
       'is_in_packaging',
       'packaging_type',
       'i2v_action_prompt',
-      't2i_prompt'
+      't2i_prompt',
+      'product_truth',
+      'geometric_truth'
     ];
     
     const updateData = {};

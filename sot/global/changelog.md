@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.43 — Product Truth and Geometric Truth Database Contract & UI Integration (26/07/2026)
+- Penambahan kolom product_truth dan geometric_truth di database product_extractions
+- Injeksi Mandatory Truth Contract ke System Prompt Gemini AI Call 1
+- Integrasi Web UI Form Editor di Menu Produk Database
+- Pembaruan rilis v2.2.43
+
 ## V2.2.42 — Human-Readable Log Synthesis and Zero-Config ContentFlow Direct Ingest (26/07/2026)
 - Sintesis bahasa log FFmpeg & TTS menjadi Bahasa Indonesia yang bersih dan ramah
 - Zero-Config ContentFlow Internal Direct Sync tanpa syarat API Key
