@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.1.4 — Fix JSX closing brace in Settings Bulk API Key Importer (26/07/2026)
+- Perbaikan sintaksis penutupan kurung kurawal fungsi addPoolKey di app/settings/page.js
+- Verifikasi ulang kompilasi Next.js build 25/25 halaman static sukses
+
 ## V2.1.3 — Bulk Multi-Line Gemini API Key Importer (26/07/2026)
 - Implementasi fungsi addApiKeysBulk di lib/db.js dengan transaksi atomic SQLite
 - Dukungan bulk_keys payload pada API route POST /api/keys

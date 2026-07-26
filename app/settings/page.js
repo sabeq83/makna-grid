@@ -547,6 +547,8 @@ export default function SettingsPage() {
       showToast(e.message, 'error');
     }
     setAddingKey(false);
+  }
+
   async function addPoolKeysBulk() {
     if (!bulkKeysText.trim()) return;
     
