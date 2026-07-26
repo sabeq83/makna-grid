@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.30 — Update Source of Truth (SOT) Documents for 3-Layered Compliance Architecture (26/07/2026)
+- Pembaruan dokumen SOT TikTok Compliance Gate dengan arsitektur 3 layer
+- Pembaruan dokumen SOT Organic Pillar Campaign dengan arsitektur terkini
+- Pembaruan changelog global rilis v2.2.30
+
 ## V2.2.29 — 3-Layered Compliance Architecture with Local Pre-Prompt Product Title Sanitizer (26/07/2026)
 - Penyaringan lokal nama produk e-commerce mentah sebelum masuk prompt Gemini AI
 - Mandat Negative Lexicon Blocker pada Call 1
