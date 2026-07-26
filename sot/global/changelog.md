@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.36 — Fix null check in rescan-re-contentflow-hooks script (26/07/2026)
+- Penambahan validasi objek non-null pada parser rescan-re-contentflow-hooks.js
+- Pembaruan rilis v2.2.36
+
 ## V2.2.35 — Layer 1 Engine Fallback Ingestion for RE Campaign Hooks in ContentFlow (26/07/2026)
 - Penerapan Multi-Tier Fallback Hook Parser pada contentflow-ingest.js dan strategic-campaign-engine.js
 - Penambahan skrip rescan-re-contentflow-hooks.js untuk pembaruan Hook otomatis seluruh kampanye RE

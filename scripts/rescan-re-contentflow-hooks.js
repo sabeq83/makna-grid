@@ -19,7 +19,8 @@ async function rescanReContentFlowHooks() {
     let resObj = {};
     if (item.result_json) {
       try {
-        resObj = typeof item.result_json === 'object' ? item.result_json : JSON.parse(item.result_json);
+        const parsed = typeof item.result_json === 'object' ? item.result_json : JSON.parse(item.result_json);
+        if (parsed && typeof parsed === 'object') resObj = parsed;
       } catch (_) {}
     }
 
@@ -27,8 +28,8 @@ async function rescanReContentFlowHooks() {
       || item.hook
       || resObj.hook
       || (resObj.social_media_package && resObj.social_media_package.hook)
-      || (resObj.new_video_plan && resObj.new_video_plan[0] ? resObj.new_video_plan[0].new_vo : '')
-      || (resObj.voiceover && resObj.voiceover[0] ? resObj.voiceover[0].narration : '')
+      || (resObj.new_video_plan && Array.isArray(resObj.new_video_plan) && resObj.new_video_plan[0] ? resObj.new_video_plan[0].new_vo : '')
+      || (resObj.voiceover && Array.isArray(resObj.voiceover) && resObj.voiceover[0] ? resObj.voiceover[0].narration : '')
       || '';
 
     const caption = item.tiktok_caption
