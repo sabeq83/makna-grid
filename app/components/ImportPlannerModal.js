@@ -24,7 +24,7 @@ export default function ImportPlannerModal({
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [nextcloudParentFolder, setNextcloudParentFolder] = useState('/MAKNA_Assets');
-  const [customInstruction, setCustomInstruction] = useState('');
+  const [customInstruction, setCustomInstruction] = useState('akhiran skrip/voiceover : produk ori ada di keranjang ya!');
 
   // Accordion 1: Strategy & Compliance
   const [narrativeMode, setNarrativeMode] = useState('auto'); // 'auto' | 'Storytelling' | 'Promo Hard Sell' | 'Educational Review'
@@ -123,7 +123,10 @@ export default function ImportPlannerModal({
         setProductDesc(p.product_description || '');
         setProductUsp(p.product_usp || '');
         setProductRefImage(p.product_ref_image || p.product_photo_url || '');
-        setCustomInstruction(p.product_description || '');
+        setCustomInstruction(p.custom_instruction || 'akhiran skrip/voiceover : produk ori ada di keranjang ya!');
+        if (p.target_audience) {
+          setTargetDemographic(p.target_audience);
+        }
 
         if (p.brand_id) setSelectedBrandId(p.brand_id);
       }

@@ -80,7 +80,7 @@ export default function OrganicPillarPage() {
   const [contentPillar, setContentPillar] = useState('');
   const [customHook, setCustomHook] = useState('');
   const [visualActionGuideline, setVisualActionGuideline] = useState('');
-  const [customInstruction, setCustomInstruction] = useState('');
+  const [customInstruction, setCustomInstruction] = useState('akhiran skrip/voiceover : produk ori ada di keranjang ya!');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
 

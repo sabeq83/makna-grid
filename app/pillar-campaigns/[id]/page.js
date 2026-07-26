@@ -2369,51 +2369,24 @@ export default function PillarCampaignDetailPage() {
               );
             })}
 
-            {/* Social Caption Editor (Specific OPC enhancement) */}
+            {/* Unified Social Caption Editor */}
             <div style={{ background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.05)', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--accent-light)', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
-                📲 Social Caption & Distribution Assets
+                📲 Social Media Package & Caption
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '4px' }}>TikTok Caption</label>
-                  <textarea
-                    disabled={isReadOnly}
-                    style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', padding: '8px', color: '#fff', fontSize: '0.78rem', resize: 'vertical', lineHeight: 1.4 }}
-                    value={sc.tiktok_caption || ''}
-                    onChange={(e) => updateSocialField('tiktok_caption', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '4px' }}>Instagram Reels Caption</label>
-                  <textarea
-                    disabled={isReadOnly}
-                    style={{ width: '100%', minHeight: '80px', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', padding: '8px', color: '#fff', fontSize: '0.78rem', resize: 'vertical', lineHeight: 1.4 }}
-                    value={sc.ig_caption || ''}
-                    onChange={(e) => updateSocialField('ig_caption', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '4px' }}>YouTube Shorts Title</label>
-                  <input
-                    type="text"
-                    disabled={isReadOnly}
-                    style={{ width: '100%', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', padding: '8px', color: '#fff', fontSize: '0.78rem' }}
-                    value={sc.yt_title || ''}
-                    onChange={(e) => updateSocialField('yt_title', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '4px' }}>YouTube Shorts Description</label>
-                  <textarea
-                    disabled={isReadOnly}
-                    style={{ width: '100%', minHeight: '40px', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', padding: '8px', color: '#fff', fontSize: '0.78rem', resize: 'vertical', lineHeight: 1.4 }}
-                    value={sc.yt_desc || ''}
-                    onChange={(e) => updateSocialField('yt_desc', e.target.value)}
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '6px' }}>Caption & Social Media Copy (Unified Single Field)</label>
+                <textarea
+                  disabled={isReadOnly}
+                  style={{ width: '100%', minHeight: '140px', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '12px', color: '#fff', fontSize: '0.82rem', resize: 'vertical', lineHeight: 1.5 }}
+                  value={sc.caption || sc.tiktok_caption || sc.ig_caption || ''}
+                  onChange={(e) => {
+                    updateSocialField('caption', e.target.value);
+                    updateSocialField('tiktok_caption', e.target.value);
+                    updateSocialField('ig_caption', e.target.value);
+                  }}
+                  placeholder="Caption media sosial lengkap..."
+                />
               </div>
             </div>
           </div>

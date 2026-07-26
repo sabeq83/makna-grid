@@ -1,5 +1,12 @@
 # Changelog
 
+## V2.2.21 — Universal product_usp Truth Anchor, Full COMPLIANCE_GUIDE AI Auditor, Caption UI Unification & Custom Instruction Lock (26/07/2026)
+- Penegakan product_usp sebagai Primary Product Truth Anchor di seluruh Prompt Builder kampanye
+- Integrasi utuh COMPLIANCE_GUIDE.md dan AI Gemini pada tiktok-compliance-service.js
+- Pembersihan log info Google Sheets dan penanganan alias verdict/risk_score
+- Unifikasi UI Tab 2 menjadi 1 single Caption field di seluruh halaman detail kampanye video
+- Autofill default customInstruction menjadi akhiran skrip/voiceover : produk ori ada di keranjang ya!
+
 ## V2.2.20 — Fix fuser exit code safety in Single-Pass deploy script (26/07/2026)
 - Penambahan
 - true pada fuser port kill

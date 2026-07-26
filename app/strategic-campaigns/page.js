@@ -38,7 +38,7 @@ export default function StrategicCampaignDashboard() {
   const [voicePersona, setVoicePersona] = useState('Indonesian_casual_reporter_vv2');
   const [sfxSetting, setSfxSetting] = useState('without_sfx');
   const [enableVoAudit, setEnableVoAudit] = useState(1);
-  const [customInstruction, setCustomInstruction] = useState('');
+  const [customInstruction, setCustomInstruction] = useState('akhiran skrip/voiceover : produk ori ada di keranjang ya!');
   const [selectedBrandId, setSelectedBrandId] = useState('');
   const [nextcloudParentFolder, setNextcloudParentFolder] = useState('MAKNA_Strategic_Campaigns');
 

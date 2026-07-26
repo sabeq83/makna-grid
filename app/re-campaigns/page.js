@@ -56,7 +56,7 @@ export default function RECampaignsPage() {
   const [aspectRatio, setAspectRatio] = useState('9:16');
   const [targetAi, setTargetAi] = useState('Google Veo (8s)');
   const [videoModel, setVideoModel] = useState('veo_31_lite');
-  const [customInstruction, setCustomInstruction] = useState('');
+  const [customInstruction, setCustomInstruction] = useState('akhiran skrip/voiceover : produk ori ada di keranjang ya!');
   const [toast, setToast] = useState(null);
   const [processingId, setProcessingId] = useState(null);
   const [brandProfiles, setBrandProfiles] = useState([]);
