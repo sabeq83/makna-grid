@@ -1473,9 +1473,11 @@ export default function PillarCampaignDetailPage() {
       let sc = { tiktok_caption: '', ig_caption: '', yt_title: '', yt_desc: '' };
       try {
         const parsed = JSON.parse(item.result_json || '{}');
+        const capVal = parsed.caption || (typeof parsed.social_media_package === 'object' ? parsed.social_media_package?.caption : '') || parsed.tiktok_caption || parsed.ig_caption || '';
         sc = {
-          tiktok_caption: parsed.tiktok_caption || '',
-          ig_caption: parsed.ig_caption || '',
+          caption: capVal,
+          tiktok_caption: parsed.tiktok_caption || capVal,
+          ig_caption: parsed.ig_caption || capVal,
           yt_title: parsed.yt_title || '',
           yt_desc: parsed.yt_desc || ''
         };

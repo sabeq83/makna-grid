@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.27 — Mandatory Base64 product image reference resolution across all video campaign engines and Tab 2 Caption UI fix (26/07/2026)
+- Penerapan helper resolveProductBase64 untuk pengiriman Base64 reference_images di seluruh 7 engine kampanye
+- Perbaikan ekstraksi caption universal pada Tab 2 UI detail kampanye
+
 ## V2.2.26 — Enforce hashtag and caption compliance filter in lib/prompts.js (26/07/2026)
 - Penegakan filter compliance pada Hashtags dan Caption agar bebas kata detox
 - Peningkatan mutu caption universal pada social_media_package
