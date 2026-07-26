@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.4 — Redesign Toast Notification UI: Compact Glassmorphism & Copy Error Button (26/07/2026)
+- Redesign Notifikasi Toast: Kompak, cantik, max-width 420px di pojok kanan bawah
+- Notifikasi sukses tampil singkat 3.5s
+- Notifikasi error tampil lebih lama (15s) dengan tombol Copy Error Message dan tombol Tutup ✕
+
 ## V2.2.3 — Enhance Pause & Enable button contrast in Gemini Pool Manager (26/07/2026)
 - Peningkatan kontras visual tombol Pause (amber glow) dan Enable (green glow) pada Gemini API Pool Manager
 

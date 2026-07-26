@@ -117,9 +117,13 @@ export default function SettingsPage() {
     return () => clearInterval(interval);
   }, []);
 
+  const toastTimerRef = useRef(null);
+
   function showToast(msg, type = 'success') {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+    const duration = type === 'error' ? 15000 : 3500;
+    toastTimerRef.current = setTimeout(() => setToast(null), duration);
   }
 
   function toggleCardCollapse(cardKey) {
@@ -697,8 +701,84 @@ export default function SettingsPage() {
 
           {/* Toast Notification */}
           {toast && (
-            <div className={`toast toast-${toast.type}`} style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 9999 }}>
-              {toast.msg}
+            <div
+              className={`toast toast-${toast.type}`}
+              style={{
+                position: 'fixed',
+                bottom: '28px',
+                right: '28px',
+                maxWidth: '420px',
+                width: 'calc(100vw - 56px)',
+                zIndex: 9999,
+                background: toast.type === 'error' ? 'rgba(225, 29, 72, 0.96)' : 'rgba(16, 185, 129, 0.95)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                borderRadius: '12px',
+                padding: '14px 18px',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
+                color: '#ffffff',
+                animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                  <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{toast.type === 'error' ? '🔴' : '✅'}</span>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.01em' }}>
+                      {toast.type === 'error' ? 'Error / Peringatan' : 'Berhasil'}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', lineHeight: 1.4, marginTop: '2px', opacity: 0.95, wordBreak: 'break-word', userSelect: 'text' }}>
+                      {toast.msg}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setToast(null)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    lineHeight: 1,
+                    padding: '2px 4px'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {toast.type === 'error' && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.2)' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (navigator?.clipboard) {
+                        navigator.clipboard.writeText(toast.msg);
+                      }
+                      showToast('📋 Pesan error berhasil disalin ke clipboard!', 'success');
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      border: 'none',
+                      borderRadius: '4px',
+                      color: '#ffffff',
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📋 Copy Error Message
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
