@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.13 — Fix Log Sanitizer Masking Rules & Export auditScriptForTikTok (26/07/2026)
+- Ekspor fungsi auditScriptForTikTok pada lib/tiktok-compliance-service.js untuk mencegah TypeError compliance checker
+- Pembaruan aturan sanitasi log lib/log-sanitizer.js dengan masking URL Shopee/E-commerce dan pembersihan log teknis poller
+
 ## V2.2.12 — Fix ReferenceError: count is not defined in createDraftContentPlanner (26/07/2026)
 - Restore deklarasi variabel count pada lib/content-planner-engine.js
 - Draft Content Planner dapat disimpan dengan sukses
