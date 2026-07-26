@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.16 — Implement UNIVERSAL_ZERO_TESTIMONY_MANDATE Across All Prompt Builders (26/07/2026)
+- Penambahan modul UNIVERSAL_ZERO_TESTIMONY_MANDATE pada lib/prompts.js untuk melarang total kata ganti orang pertama (aku/saya/gue/moms) dan klaim pengakuan pribadi fiktif
+- Sanitasi contoh sampel transisi produk lama yang mengandung kata ganti aku/saya
+- Penyuntikan mandat secara universal ke seluruh Prompt Builder (OPC, RE, Strategic, Multiplier, Content Planner)
+
 ## V2.2.15 — Sync 250 Product Extractions & Image Assets to Node 1 SQLite DB (26/07/2026)
 - Penambahan skrip utilitas scripts/sync-products-to-node1.js untuk sinkronisasi katalog produk
 - Penyatuan 250 data produk dan 294 berkas foto produk dari MacBook lokal ke Node 1 Gateway UI
