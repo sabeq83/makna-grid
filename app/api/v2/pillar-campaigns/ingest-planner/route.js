@@ -74,7 +74,25 @@ export async function POST(request) {
     const campaignId = generateCampaignId('opc');
     const finalCampaignName = campaign_name?.trim() || `[OPC Planner] ${planner.title || planner.product_name}`;
 
-    const refImage = global_settings.product_ref_image_path || planner.product_ref_image || planner.product_photo_url || null;
+    let refImage = global_settings.product_ref_image_path || planner.product_ref_image || planner.product_photo_url || null;
+    let targetProdId = global_settings.target_product_id || planner.target_product_id || null;
+
+    // MANDATE: Auto-lock Studio Clean Photo from product_extractions DB
+    try {
+      let prodMatch = null;
+      if (targetProdId) {
+        prodMatch = db.prepare("SELECT * FROM product_extractions WHERE id = ?").get(targetProdId);
+      } else if (planner.product_name) {
+        const queryTerm = planner.product_name.split(' ')[0] || planner.product_name;
+        prodMatch = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${queryTerm}%`);
+      }
+      if (prodMatch) {
+        if (!targetProdId) targetProdId = prodMatch.id;
+        const studioPhoto = prodMatch.clean_photo_url || prodMatch.cleaned_photo_url || prodMatch.raw_photo_url;
+        if (studioPhoto) refImage = studioPhoto;
+      }
+    } catch (_) {}
+
     const campaignStatus = global_settings.status || 'running';
 
     // 3. Create global pillar campaign row

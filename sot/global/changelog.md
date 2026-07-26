@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.37 — Mandat Permanen Studio Photo untuk OPC Engine dan Content Planner Ingest (26/07/2026)
+- Prioritas Foto Studio Bersih (clean_photo_url) pada resolveProductBase64
+- Auto-lock Studio Photo pada ingest-planner route
+- Skrip perbaikan otomatis repair-studio-photos-all.js
+- Pembaruan rilis v2.2.37
+
 ## V2.2.36 — Fix null check in rescan-re-contentflow-hooks script (26/07/2026)
 - Penambahan validasi objek non-null pada parser rescan-re-contentflow-hooks.js
 - Pembaruan rilis v2.2.36
