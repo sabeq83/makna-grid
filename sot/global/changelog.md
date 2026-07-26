@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.26 — Enforce hashtag and caption compliance filter in lib/prompts.js (26/07/2026)
+- Penegakan filter compliance pada Hashtags dan Caption agar bebas kata detox
+- Peningkatan mutu caption universal pada social_media_package
+
 ## V2.2.25 — Fix parseGeminiJSON import path from json-parser.js in lib/tiktok-compliance-service.js (26/07/2026)
 - Perbaikan path import parseGeminiJSON dari json-parser.js
 - Penyelesaian error (0, parseGeminiJSON) is not a function pada AI Compliance Audit
