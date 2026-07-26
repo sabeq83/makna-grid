@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.41 — Targeted Product Truth Lock and Conflict Guard for Bridging Clips (26/07/2026)
+- Mandat geometry_lock DO NOT HALLUCINATE pada system prompts
+- Conflict Guard Sanitizer pada webhook client untuk menghapus halusinasi cardboard box
+- Pembaruan rilis v2.2.41
+
 ## V2.2.40 — Safe Hybrid Resolution for resolveProductBase64 to auto-use latest studio photo on re-gen (26/07/2026)
 - Mendahulukan foto studio terbaru dari Database Produk (product_extractions) saat re-gen T2I
 - Menghilangkan kebutuhan membuat kampanye baru saat mengganti foto produk di database
