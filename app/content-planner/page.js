@@ -26,6 +26,8 @@ export default function ContentPlannerDashboard() {
   const [platform, setPlatform] = useState('tiktok');
   const [objective, setObjective] = useState('soft_sell');
   const [plannerCount, setPlannerCount] = useState(12);
+  const [targetAudience, setTargetAudience] = useState('genz_casual');
+  const [customTargetAudience, setCustomTargetAudience] = useState('');
 
   // Existing Product / Brand Selection State
   const [existingProducts, setExistingProducts] = useState([]);
@@ -74,6 +76,18 @@ export default function ContentPlannerDashboard() {
       // Extract product photo URL if available
       const detectedPhoto = prod.product_photo_url || prod.product_image_url || '';
       setProductPhotoUrl(detectedPhoto || '');
+
+      // Extract target audience if available
+      if (prod.target_audience) {
+        const presets = ['genz_casual', 'ibu_rumah_tangga', 'professional_executive', 'hijab_syari_family', 'fitness_health_enthusiast'];
+        if (presets.includes(prod.target_audience)) {
+          setTargetAudience(prod.target_audience);
+          setCustomTargetAudience('');
+        } else {
+          setTargetAudience('custom');
+          setCustomTargetAudience(prod.target_audience);
+        }
+      }
     }
   }
 
@@ -96,6 +110,10 @@ export default function ContentPlannerDashboard() {
       productName
     ).trim();
 
+    const effectiveTargetAudience = targetAudience === 'custom'
+      ? (customTargetAudience.trim() || 'General Audience')
+      : targetAudience;
+
     try {
       setGenerating(true);
       const res = await fetch('/api/content-planner', {
@@ -116,7 +134,8 @@ export default function ContentPlannerDashboard() {
           product_photo_url: productPhotoUrl.trim(),
           platform,
           objective,
-          planner_count: plannerCount
+          planner_count: plannerCount,
+          target_audience: effectiveTargetAudience
         })
       });
 
@@ -591,6 +610,35 @@ export default function ContentPlannerDashboard() {
                     </div>
                   </div>
                 )}
+
+                {/* Target Demografi Audiens (Preset Prompt Builder) */}
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px', fontWeight: 600 }}>
+                    🎯 Target Demografi Audiens (Personalitas Hook):
+                  </label>
+                  <select
+                    value={targetAudience}
+                    onChange={e => setTargetAudience(e.target.value)}
+                    style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
+                  >
+                    <option value="genz_casual">🔥 Gen-Z & Milenial Muda (Gaul, Santai, Relatable)</option>
+                    <option value="ibu_rumah_tangga">🏡 Ibu Rumah Tangga & Keluarga (Hangat, Ramah, Solutif)</option>
+                    <option value="professional_executive">💼 Profesional & Pekerja Kantoran (Lugas, Berbobot, Refined)</option>
+                    <option value="hijab_syari_family">🧕 Komunitas Syari & Keluarga Hijrah (Santun, Islami Alami)</option>
+                    <option value="fitness_health_enthusiast">💪 Penggiat Olahraga & Kesehatan (Energik, Motivatif, Informatif)</option>
+                    <option value="custom">✏️ Custom / Bebas (Tentukan Sendiri...)</option>
+                  </select>
+
+                  {targetAudience === 'custom' && (
+                    <input
+                      type="text"
+                      placeholder="Ketik deskripsi target audiens kustom (misal: Gamers 18-24th)..."
+                      value={customTargetAudience}
+                      onChange={e => setCustomTargetAudience(e.target.value)}
+                      style={{ width: '100%', padding: '10px', marginTop: '8px', background: '#18181b', border: '1px solid #6366f1', borderRadius: '8px', color: '#fff' }}
+                    />
+                  )}
+                </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                   <div>

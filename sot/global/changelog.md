@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.8 — Add Target Demografi Audiens Preset Dropdown to Content Planner Modal (26/07/2026)
+- Integrasi dropdown Target Demografi Audiens (Gen-Z, IRT, Profesional, Syari, Fitness, Custom) pada modal Content Planner
+- Penyelarasan intonasi & gaya bahasa Hook 3-detik Gemini AI dengan preset demografi
+- Otomatisasi pengisian target demografi saat memilih produk dari database
+
 ## V2.2.7 — Migrate 250 products & image assets from _maknagen to MAKNA Grid (26/07/2026)
 - Sukses menyalin 250 produk beserta metadata lengkap dari database _maknagen ke MAKNA Grid
 - Sinkronisasi seluruh berkas gambar foto produk ke public/uploads/products
