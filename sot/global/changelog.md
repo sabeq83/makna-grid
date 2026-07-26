@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.15 — Sync 250 Product Extractions & Image Assets to Node 1 SQLite DB (26/07/2026)
+- Penambahan skrip utilitas scripts/sync-products-to-node1.js untuk sinkronisasi katalog produk
+- Penyatuan 250 data produk dan 294 berkas foto produk dari MacBook lokal ke Node 1 Gateway UI
+
 ## V2.2.14 — Implement shouldSyncGoogleSheets Smart Helper & Audit All Generator Logics (26/07/2026)
 - Penambahan helper shouldSyncGoogleSheets pada lib/google-auth.js untuk mendeteksi pilihan penyimpanan Nextcloud vs GDrive
 - Eliminasi hardcoded uploadSpreadsheet = true dan pembungkusan aman Google Sheets sync di OPC, RE, Strategic, Instant Factory, Recipe Labs, dan Content Planner
