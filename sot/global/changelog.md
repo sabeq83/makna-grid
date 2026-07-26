@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.33 — Fix crypto import syntax in id-generator.js (26/07/2026)
+- Koreksi sintaks import crypto dari default export nodejs crypto pada lib/id-generator.js
+- Pembaruan eksekusi impor kampanye RE nutribake
+
 ## V2.2.32 — Fix Hook and Caption Extraction for RE Campaign ContentFlow Sync (26/07/2026)
 - Peningkatan parser Hook dari narration klip pertama dan Caption dari tiktok_caption/ig_caption pada import-re-campaign-to-nutribake.js
 - Pembaruan migrasi data nutribake ke ContentFlow
