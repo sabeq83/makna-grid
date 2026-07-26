@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.22 — Closed-Loop Dual-Pass Compliance Engine, Auto-Rewrite & Auto T2I Dispatch (26/07/2026)
+- Isolasi total product_description mentah dari prompt context dan penegakan Whitelist Benefit Mandate
+- Closed-Loop Dual-Pass Compliance Engine dengan Auto-Rewrite Naskah Aman otomatis sebelum disimpan
+- Sanitasi metadata custom_instruction dan pencegahan kebocoran label UI ke audio narasi
+- Otomatisasi pemicuan T2I Start Frame ke Webhook G-Labs secara langsung
+
 ## V2.2.21 — Universal product_usp Truth Anchor, Full COMPLIANCE_GUIDE AI Auditor, Caption UI Unification & Custom Instruction Lock (26/07/2026)
 - Penegakan product_usp sebagai Primary Product Truth Anchor di seluruh Prompt Builder kampanye
 - Integrasi utuh COMPLIANCE_GUIDE.md dan AI Gemini pada tiktok-compliance-service.js
