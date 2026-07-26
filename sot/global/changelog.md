@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.40 — Safe Hybrid Resolution for resolveProductBase64 to auto-use latest studio photo on re-gen (26/07/2026)
+- Mendahulukan foto studio terbaru dari Database Produk (product_extractions) saat re-gen T2I
+- Menghilangkan kebutuhan membuat kampanye baru saat mengganti foto produk di database
+- Pembaruan rilis v2.2.40
+
 ## V2.2.39 — Universal Studio Photo Mandate across Strategic, RE, and Bridge Injector regenerate-t2i routes (26/07/2026)
 - Standardisasi resolveProductBase64 pada seluruh API regenerate-t2i di Strategic, RE, dan Bridge Injector
 - Kunci Foto Studio Bersih (clean_photo_url) universal di seluruh tombol T2I Web UI
