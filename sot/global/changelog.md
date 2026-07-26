@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.42 — Human-Readable Log Synthesis and Zero-Config ContentFlow Direct Ingest (26/07/2026)
+- Sintesis bahasa log FFmpeg & TTS menjadi Bahasa Indonesia yang bersih dan ramah
+- Zero-Config ContentFlow Internal Direct Sync tanpa syarat API Key
+- Pembaruan rilis v2.2.42
+
 ## V2.2.41 — Targeted Product Truth Lock and Conflict Guard for Bridging Clips (26/07/2026)
 - Mandat geometry_lock DO NOT HALLUCINATE pada system prompts
 - Conflict Guard Sanitizer pada webhook client untuk menghapus halusinasi cardboard box

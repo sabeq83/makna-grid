@@ -64,3 +64,5 @@ Setiap kali Anda menyusun **Implementation Plan** (`implementation_plan.md`), An
    - Sertakan seksi `## Execution Task List` di dalam `implementation_plan.md` yang memuat tahapan pengerjaan secara kronologis dalam bentuk Markdown Checkbox (`- [ ]`).
 2. **Pembaruan Progress Real-Time**:
    - Selama tahap eksekusi berlangsung, setelah menyelesaikan setiap tahapan task, Anda **WAJIB memperbarui** file `implementation_plan.md` dengan mengubah `- [ ]` menjadi **`- [x]`** agar pengguna dapat memantau progres pengerjaan secara transparan dan real-time.
+3. **Format Sebelum & Sesudah Kode (Before & After Code Snippets)**:
+   - Setiap kali menyusun **Implementation Plan** (`implementation_plan.md`), Anda **WAJIB** menyertakan potongan kode awal sebelum diedit (**Code Sebelum (Current/Before)**) dan potongan kode usulan setelah diedit (**Code Sesudah (Proposed/After)**) untuk setiap file yang akan dimodifikasi.
