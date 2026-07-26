@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.28 — Universal Base64 Data-URI Auto-Sanitizer for I2V Video Generation in Webhook Client (26/07/2026)
+- Penetapan Base64 Data-URI auto-sanitizer pada generateVideo di lib/webhook-client.js
+- Penyesuaian mode: start_image dan Data-URI Base64 pada Multiplier & Autopilot Workers
+
 ## V2.2.27 — Mandatory Base64 product image reference resolution across all video campaign engines and Tab 2 Caption UI fix (26/07/2026)
 - Penerapan helper resolveProductBase64 untuk pengiriman Base64 reference_images di seluruh 7 engine kampanye
 - Perbaikan ekstraksi caption universal pada Tab 2 UI detail kampanye
