@@ -66,7 +66,7 @@ export async function POST(request) {
     const { gemini_api_key, gemini_api_tier, gemini_context_caching, google_client_id, google_client_secret,
       webhook_api_key, webhook_host, webhook_port, webhook_image_model, webhook_video_model,
       webhook_delay_enabled, webhook_delay_min, webhook_delay_max, webhook_t2i_pattern,
-      drive_glabs_folder_id, drive_re_markdown_folder_id, master_re_sheet_id, drive_product_photo_folder,
+      drive_target_folder, drive_glabs_folder_id, drive_re_markdown_folder_id, master_re_sheet_id, drive_product_photo_folder,
       storage_provider, nextcloud_url, nextcloud_username, nextcloud_app_password, nextcloud_target_folder,
       minimax_api_key, minimax_group_id, save_to_local_storage, local_storage_path,
       fb_page_id, fb_page_ids, fb_page_token, fb_server_url, scraper_headless_enabled, scraper_use_cdp, scraper_chrome_profile, ytdlp_cookies_from_browser,

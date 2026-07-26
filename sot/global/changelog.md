@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.2 — Fix ReferenceError drive_target_folder when saving MiniMax settings (26/07/2026)
+- Fix destructuring error variable drive_target_folder pada POST /api/settings route
+- Penyimpanan API Key MiniMax, Gemini, dan Facebook kini 100% lancar tanpa error
+
 ## V2.2.1 — Optimize Gemini API Key Pool Validation Speed with Parallel Execution (26/07/2026)
 - Optimisasi pengujian keaktifan API Key dari sekuensial menjadi paralel via Promise.all
 - Waktu pengujian Bulk Add 23 API Keys dipangkas drastis dari 45 detik menjadi ~1.5 detik
