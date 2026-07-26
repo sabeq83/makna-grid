@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.23 — Fix sanitizeCustomInstruction declaration and resume OPC generator (26/07/2026)
+- Penetapan fungsi sanitizeCustomInstruction secara eksplisit di lib/prompts.js
+- Pemberhentian error ReferenceError pada OPC Generator scheduler
+
 ## V2.2.22 — Closed-Loop Dual-Pass Compliance Engine, Auto-Rewrite & Auto T2I Dispatch (26/07/2026)
 - Isolasi total product_description mentah dari prompt context dan penegakan Whitelist Benefit Mandate
 - Closed-Loop Dual-Pass Compliance Engine dengan Auto-Rewrite Naskah Aman otomatis sebelum disimpan
