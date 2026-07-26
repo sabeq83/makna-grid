@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.35 — Layer 1 Engine Fallback Ingestion for RE Campaign Hooks in ContentFlow (26/07/2026)
+- Penerapan Multi-Tier Fallback Hook Parser pada contentflow-ingest.js dan strategic-campaign-engine.js
+- Penambahan skrip rescan-re-contentflow-hooks.js untuk pembaruan Hook otomatis seluruh kampanye RE
+
 ## V2.2.34 — Populate re_campaign_items for imported RE Campaign 66b4d649-8045-4edf-b3e4-375428108797 (26/07/2026)
 - Penambahan sinkronisasi 25 item kampanye RE ke tabel re_campaign_items pada Node 1 SQLite dan Node 3 PostgreSQL
 - Perbaikan tampilan UI menu /re-campaigns dan detail kampanye RE
