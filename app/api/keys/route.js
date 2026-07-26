@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getAllApiKeys, addApiKey, addApiKeysBulk, updateApiKey, deleteApiKey, getPoolSummary } from '@/lib/db';
+import { getAllApiKeys, addApiKey, addApiKeysBulk, updateApiKey, deleteApiKey, deleteInvalidApiKeys, markApiKeyStatus, getPoolSummary } from '@/lib/db';
+import { testGeminiConnection } from '@/lib/gemini';
 
 export async function GET() {
   try {
@@ -22,22 +23,91 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    if (body.bulk_keys && Array.isArray(body.bulk_keys)) {
-      const result = addApiKeysBulk(body.bulk_keys);
+    // Action: Health Check All Keys in Pool
+    if (body.action === 'health-check-all') {
+      const allKeys = getAllApiKeys();
+      let liveCount = 0;
+      let deadCount = 0;
+      const results = [];
+
+      for (const k of allKeys) {
+        const check = await testGeminiConnection(k.api_key);
+        if (check.success) {
+          liveCount++;
+          markApiKeyStatus(k.id, 'ACTIVE', 1);
+          results.push({ id: k.id, name: k.key_name, status: 'LIVE', message: check.message });
+        } else {
+          deadCount++;
+          markApiKeyStatus(k.id, 'INVALID', 0);
+          results.push({ id: k.id, name: k.key_name, status: 'DEAD', message: check.message });
+        }
+      }
+
       const keys = getAllApiKeys();
       const pool = getPoolSummary();
       return NextResponse.json({
         success: true,
-        message: `Berhasil mengimpor ${result.addedCount} API Key baru ke pool. ${result.skippedCount > 0 ? `(${result.skippedCount} duplikat dilewati)` : ''}`,
-        summary: result,
+        message: `Health Check Selesai: ${liveCount} Key Aktif (Live), ${deadCount} Key Mati/Ditolak (Invalid).`,
+        summary: { liveCount, deadCount, total: allKeys.length },
+        data: { keys, pool, results }
+      });
+    }
+
+    // Action: Bulk Import Keys
+    if (body.bulk_keys && Array.isArray(body.bulk_keys)) {
+      let keysToInsert = body.bulk_keys;
+      let rejectedKeys = [];
+
+      if (body.validate_live === true) {
+        const validated = [];
+        for (const item of body.bulk_keys) {
+          const check = await testGeminiConnection(item.api_key);
+          if (check.success) {
+            validated.push(item);
+          } else {
+            rejectedKeys.push({ name: item.key_name, key: item.api_key, reason: check.message });
+          }
+        }
+        keysToInsert = validated;
+      }
+
+      const result = addApiKeysBulk(keysToInsert);
+      const keys = getAllApiKeys();
+      const pool = getPoolSummary();
+      
+      let msg = `Berhasil mengimpor ${result.addedCount} API Key baru ke pool.`;
+      if (rejectedKeys.length > 0) {
+        msg += ` ⚠️ ${rejectedKeys.length} Key ditolak oleh Google API (Key Mati/Revoked).`;
+      }
+      if (result.skippedCount > 0) {
+        msg += ` (${result.skippedCount} duplikat dilewati).`;
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: msg,
+        summary: { ...result, rejectedCount: rejectedKeys.length },
+        rejectedKeys,
         data: { keys, pool }
       });
     }
 
-    const { key_name, api_key, tier, daily_limit } = body;
+    // Single Key Import
+    const { key_name, api_key, tier, daily_limit, validate_live } = body;
     if (!key_name || !api_key) {
       return NextResponse.json({ success: false, error: 'key_name dan api_key wajib diisi' }, { status: 400 });
     }
+
+    if (validate_live === true) {
+      const check = await testGeminiConnection(api_key);
+      if (!check.success) {
+        return NextResponse.json({
+          success: false,
+          error: `API Key ditolak oleh Google API: ${check.message}`
+        }, { status: 400 });
+      }
+    }
+
     addApiKey(key_name, api_key, tier || 'FREE', daily_limit || 20);
     const keys = getAllApiKeys();
     const pool = getPoolSummary();
@@ -68,6 +138,19 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+
+    if (action === 'clean-dead') {
+      const result = deleteInvalidApiKeys();
+      const keys = getAllApiKeys();
+      const pool = getPoolSummary();
+      return NextResponse.json({
+        success: true,
+        message: `Berhasil menghapus ${result.deletedCount} API Key yang mati/invalid dari pool.`,
+        data: { keys, pool }
+      });
+    }
+
     const id = searchParams.get('id');
     if (!id) {
       return NextResponse.json({ success: false, error: 'id wajib diisi' }, { status: 400 });

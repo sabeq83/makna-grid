@@ -549,6 +549,15 @@ export default function SettingsPage() {
     setAddingKey(false);
   }
 
+  // Bulk API Keys Import states
+  const [poolAddMode, setPoolAddMode] = useState('bulk'); // 'bulk' | 'single'
+  const [bulkKeysText, setBulkKeysText] = useState('');
+  const [bulkDefaultLimit, setBulkDefaultLimit] = useState(20);
+  const [bulkAliasPrefix, setBulkAliasPrefix] = useState('AISKey');
+  const [validateLive, setValidateLive] = useState(true);
+  const [testingHealth, setTestingHealth] = useState(false);
+  const [cleaningDead, setCleaningDead] = useState(false);
+
   async function addPoolKeysBulk() {
     if (!bulkKeysText.trim()) return;
     
@@ -587,7 +596,7 @@ export default function SettingsPage() {
       const res = await fetch('/api/keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bulk_keys: formattedKeys }),
+        body: JSON.stringify({ bulk_keys: formattedKeys, validate_live: validateLive }),
       });
 
       const data = await res.json();
@@ -602,6 +611,46 @@ export default function SettingsPage() {
       showToast(e.message, 'error');
     }
     setAddingKey(false);
+  }
+
+  async function healthCheckAllPoolKeys() {
+    setTestingHealth(true);
+    showToast('⏳ Memulai pengujian keaktifan seluruh API Key di pool...');
+    try {
+      const res = await fetch('/api/keys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'health-check-all' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        fetchPool();
+      } else {
+        showToast(data.error, 'error');
+      }
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+    setTestingHealth(false);
+  }
+
+  async function cleanDeadPoolKeys() {
+    if (!confirm('Hapus semua API Key yang mati/invalid dari pool?')) return;
+    setCleaningDead(true);
+    try {
+      const res = await fetch('/api/keys?action=clean-dead', { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        fetchPool();
+      } else {
+        showToast(data.error, 'error');
+      }
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+    setCleaningDead(false);
   }
 
   async function togglePoolKey(id, currentActive) {
@@ -757,11 +806,26 @@ export default function SettingsPage() {
 
           {/* ==================== POOL MANAGER ==================== */}
           <div className="card" style={{ marginBottom: '24px' }}>
-            <div className="card-title" style={{ justifyContent: 'space-between' }}>
+            <div className="card-title" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
               <span><span className="icon">🏊</span> Gemini API Pool Manager</span>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                📊 Total pool load: {poolSummary.total_used || 0} / {poolSummary.total_capacity || 0} queries today
-              </span>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  className="btn btn-sm btn-secondary"
+                  onClick={healthCheckAllPoolKeys}
+                  disabled={testingHealth}
+                  style={{ fontSize: '0.75rem', padding: '4px 10px' }}
+                >
+                  {testingHealth ? '⏳ Testing Keys...' : '🔍 Audit & Test All Keys'}
+                </button>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={cleanDeadPoolKeys}
+                  disabled={cleaningDead}
+                  style={{ fontSize: '0.75rem', padding: '4px 10px' }}
+                >
+                  {cleaningDead ? '⏳ Cleaning...' : '🗑️ Clean Dead Keys'}
+                </button>
+              </div>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px', lineHeight: 1.6 }}>
               Maximize Gemini Free tier limits by stacking multiple API Keys. The engine intelligently round-robins queries and immediately fails-over / handles 429 rate limit exhausting automatically.
@@ -811,6 +875,21 @@ export default function SettingsPage() {
                         fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px',
                         background: 'rgba(255,255,255,0.08)', color: 'var(--text-muted)'
                       }}>{k.tier}</span>
+
+                      {/* Status Badges */}
+                      {k.status === 'INVALID' || k.is_active === 0 ? (
+                        <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: 'rgba(225,112,85,0.2)', color: '#e17055', fontWeight: 600 }}>
+                          🔴 DEAD / INVALID
+                        </span>
+                      ) : (k.used_today || 0) >= k.daily_limit ? (
+                        <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: 'rgba(253,203,110,0.2)', color: '#ffeaa7', fontWeight: 600 }}>
+                          ⏸️ COOLDOWN
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: 'rgba(0,184,148,0.2)', color: '#00b894', fontWeight: 600 }}>
+                          🟢 LIVE
+                        </span>
+                      )}
                     </div>
                     <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginTop: '4px' }}>
                       {k.api_key} · Daily Cap: {k.daily_limit} calls

@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.1.5 — Gemini API Key Validation & Health Check Engine (26/07/2026)
+- Implementasi Triple-Guard API Key Validation (Pre-Validation ping test, Audit Health Check All Keys, dan Runtime Failover Auto-Disable)
+- Penambahan tombol 🔍 Audit & Test All Keys dan 🗑️ Clean Dead Keys pada Gemini API Pool Manager
+- Badge indikator visual LIVE, COOLDOWN, dan DEAD/INVALID pada daftar API Key
+
 ## V2.1.4 — Fix JSX closing brace in Settings Bulk API Key Importer (26/07/2026)
 - Perbaikan sintaksis penutupan kurung kurawal fungsi addPoolKey di app/settings/page.js
 - Verifikasi ulang kompilasi Next.js build 25/25 halaman static sukses
