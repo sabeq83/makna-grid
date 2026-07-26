@@ -54,6 +54,12 @@ export default function SettingsPage() {
   const [newKeyValue, setNewKeyValue] = useState('');
   const [newKeyLimit, setNewKeyLimit] = useState(20);
   const [addingKey, setAddingKey] = useState(false);
+
+  // Bulk API Keys Import states
+  const [poolAddMode, setPoolAddMode] = useState('bulk'); // 'bulk' | 'single'
+  const [bulkKeysText, setBulkKeysText] = useState('');
+  const [bulkDefaultLimit, setBulkDefaultLimit] = useState(20);
+  const [bulkAliasPrefix, setBulkAliasPrefix] = useState('AISKey');
   
   const [storageProvider, setStorageProvider] = useState('gdrive');
   const [nextcloudUrl, setNextcloudUrl] = useState('');
@@ -541,6 +547,59 @@ export default function SettingsPage() {
       showToast(e.message, 'error');
     }
     setAddingKey(false);
+  async function addPoolKeysBulk() {
+    if (!bulkKeysText.trim()) return;
+    
+    const lines = bulkKeysText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) return;
+
+    setAddingKey(true);
+    try {
+      const formattedKeys = lines.map((line, idx) => {
+        let name = '';
+        let key = line;
+
+        if (line.includes(':')) {
+          const parts = line.split(':');
+          name = parts[0].trim();
+          key = parts.slice(1).join(':').trim();
+        } else if (line.includes(',')) {
+          const parts = line.split(',');
+          name = parts[0].trim();
+          key = parts.slice(1).join(',').trim();
+        }
+
+        if (!name) {
+          const num = String(idx + 1).padStart(2, '0');
+          name = `${bulkAliasPrefix || 'AISKey'}_${num}`;
+        }
+
+        return {
+          key_name: name,
+          api_key: key,
+          daily_limit: Number(bulkDefaultLimit) || 20,
+          tier: 'FREE'
+        };
+      });
+
+      const res = await fetch('/api/keys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bulk_keys: formattedKeys }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'API Keys successfully imported to pool!');
+        setBulkKeysText('');
+        fetchPool();
+      } else {
+        showToast(data.error || 'Failed to import bulk API Keys', 'error');
+      }
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+    setAddingKey(false);
   }
 
   async function togglePoolKey(id, currentActive) {
@@ -783,34 +842,117 @@ export default function SettingsPage() {
               )}
             </div>
 
-            {/* Add Key Form */}
+            {/* Add Key Form (Single & Bulk Multi-line Modes) */}
             <div style={{ 
               marginTop: '20px', padding: '16px', background: 'rgba(255,255,255,0.02)',
               borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)'
             }}>
-              <h5 style={{ margin: '0 0 12px 0', fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>+ Add New API Key to Pool</h5>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <input className="form-input" placeholder="Alias Name (e.g. WorkKey1)"
-                  value={newKeyName} onChange={e => setNewKeyName(e.target.value)}
-                  style={{ flex: '1 1 150px', fontSize: '0.82rem', padding: '8px 12px' }} />
-                
-                <input className="form-input" type="password" placeholder="Gemini API Key"
-                  value={newKeyValue} onChange={e => setNewKeyValue(e.target.value)}
-                  style={{ flex: '2 1 250px', fontSize: '0.82rem', padding: '8px 12px' }} />
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Daily Cap:</span>
-                  <input className="form-input" type="number" placeholder="Cap" min="1" max="1500"
-                    value={newKeyLimit} onChange={e => setNewKeyLimit(Number(e.target.value))}
-                    style={{ width: '80px', fontSize: '0.82rem', padding: '8px 12px', textAlign: 'center' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+                <h5 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                  + Tambah Gemini API Key ke Pool
+                </h5>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setPoolAddMode('bulk')}
+                    className={`btn btn-sm ${poolAddMode === 'bulk' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ fontSize: '0.75rem', padding: '4px 12px' }}
+                  >
+                    📋 Bulk Add (Paste Multi-line)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPoolAddMode('single')}
+                    className={`btn btn-sm ${poolAddMode === 'single' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ fontSize: '0.75rem', padding: '4px 12px' }}
+                  >
+                    ➕ Single Input
+                  </button>
                 </div>
-
-                <button className="btn btn-primary" onClick={addPoolKey} 
-                  disabled={addingKey || !newKeyName.trim() || !newKeyValue.trim()}
-                  style={{ fontSize: '0.82rem', padding: '8px 16px' }}>
-                  {addingKey ? '⏳ Adding...' : 'Add Key'}
-                </button>
               </div>
+
+              {poolAddMode === 'bulk' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Prefix Alias:</span>
+                      <input 
+                        className="form-input" 
+                        placeholder="e.g. AISKey"
+                        value={bulkAliasPrefix} 
+                        onChange={e => setBulkAliasPrefix(e.target.value)}
+                        style={{ width: '110px', fontSize: '0.8rem', padding: '6px 10px' }} 
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Default Daily Cap:</span>
+                      <input 
+                        className="form-input" 
+                        type="number" 
+                        placeholder="20" 
+                        min="1" 
+                        max="1500"
+                        value={bulkDefaultLimit} 
+                        onChange={e => setBulkDefaultLimit(Number(e.target.value))}
+                        style={{ width: '80px', fontSize: '0.8rem', padding: '6px 10px', textAlign: 'center' }} 
+                      />
+                    </div>
+
+                    {(() => {
+                      const linesCount = bulkKeysText.split('\n').map(l => l.trim()).filter(l => l.length > 0).length;
+                      return (
+                        <span style={{ fontSize: '0.75rem', color: linesCount > 0 ? '#00b894' : 'var(--text-muted)', fontWeight: 600 }}>
+                          🔑 Terdeteksi {linesCount} API Key {linesCount > 0 ? `(${bulkAliasPrefix}_01 s/d ${bulkAliasPrefix}_${String(linesCount).padStart(2, '0')})` : ''}
+                        </span>
+                      );
+                    })()}
+                  </div>
+
+                  <textarea
+                    className="form-input"
+                    rows="6"
+                    placeholder="Tempelkan daftar Gemini API Keys di sini (1 baris per API Key)&#10;Contoh:&#10;AIzaSyA1234567890abcdef...&#10;AIzaSyB0987654321fedcba...&#10;&#10;Atau format custom:&#10;Akun_Kerja_1 : AIzaSyA1234567890abcdef..."
+                    value={bulkKeysText}
+                    onChange={e => setBulkKeysText(e.target.value)}
+                    style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', lineHeight: '1.5' }}
+                  />
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button 
+                      className="btn btn-primary" 
+                      onClick={addPoolKeysBulk}
+                      disabled={addingKey || !bulkKeysText.trim()}
+                      style={{ fontSize: '0.82rem', padding: '8px 20px' }}
+                    >
+                      {addingKey ? '⏳ Importing Keys...' : '⚡ Bulk Import API Keys'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <input className="form-input" placeholder="Alias Name (e.g. WorkKey1)"
+                    value={newKeyName} onChange={e => setNewKeyName(e.target.value)}
+                    style={{ flex: '1 1 150px', fontSize: '0.82rem', padding: '8px 12px' }} />
+                  
+                  <input className="form-input" type="password" placeholder="Gemini API Key"
+                    value={newKeyValue} onChange={e => setNewKeyValue(e.target.value)}
+                    style={{ flex: '2 1 250px', fontSize: '0.82rem', padding: '8px 12px' }} />
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Daily Cap:</span>
+                    <input className="form-input" type="number" placeholder="Cap" min="1" max="1500"
+                      value={newKeyLimit} onChange={e => setNewKeyLimit(Number(e.target.value))}
+                      style={{ width: '80px', fontSize: '0.82rem', padding: '8px 12px', textAlign: 'center' }} />
+                  </div>
+
+                  <button className="btn btn-primary" onClick={addPoolKey} 
+                    disabled={addingKey || !newKeyName.trim() || !newKeyValue.trim()}
+                    style={{ fontSize: '0.82rem', padding: '8px 16px' }}>
+                    {addingKey ? '⏳ Adding...' : 'Add Key'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

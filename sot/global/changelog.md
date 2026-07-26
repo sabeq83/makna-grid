@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.1.3 — Bulk Multi-Line Gemini API Key Importer (26/07/2026)
+- Implementasi fungsi addApiKeysBulk di lib/db.js dengan transaksi atomic SQLite
+- Dukungan bulk_keys payload pada API route POST /api/keys
+- Fitur UI Bulk Add pada Gemini API Pool Manager di Settings dengan penamaan alias otomatis AISKey_01, AISKey_02, dst.
+
 ## V2.1.2 — Humanized System Poller Log Engine (Sanitizer Layer) (26/07/2026)
 - Implementasi lib/log-sanitizer.js untuk menyaring istilah teknis backend AI, TTS, FFmpeg, Cloud, dan DB menjadi bahasa Indonesia sederhana
 - Integrasi sanitizer layer pada API GET /api/system-logs dengan opsi ?raw=true

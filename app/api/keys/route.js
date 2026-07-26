@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllApiKeys, addApiKey, updateApiKey, deleteApiKey, getPoolSummary } from '@/lib/db';
+import { getAllApiKeys, addApiKey, addApiKeysBulk, updateApiKey, deleteApiKey, getPoolSummary } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -20,7 +20,21 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { key_name, api_key, tier, daily_limit } = await request.json();
+    const body = await request.json();
+
+    if (body.bulk_keys && Array.isArray(body.bulk_keys)) {
+      const result = addApiKeysBulk(body.bulk_keys);
+      const keys = getAllApiKeys();
+      const pool = getPoolSummary();
+      return NextResponse.json({
+        success: true,
+        message: `Berhasil mengimpor ${result.addedCount} API Key baru ke pool. ${result.skippedCount > 0 ? `(${result.skippedCount} duplikat dilewati)` : ''}`,
+        summary: result,
+        data: { keys, pool }
+      });
+    }
+
+    const { key_name, api_key, tier, daily_limit } = body;
     if (!key_name || !api_key) {
       return NextResponse.json({ success: false, error: 'key_name dan api_key wajib diisi' }, { status: 400 });
     }
