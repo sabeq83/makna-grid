@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.19 — Fix Port Kill Logic in Single-Pass Deploy Script (26/07/2026)
+- Penggantian pkill dengan fuser -k 3000/tcp dan 4000/tcp agar tidak membunuh proses SSH aktif
+
 ## V2.2.18 — Bulletproof Single-Pass Deploy Script for Node 1 (26/07/2026)
 - Penambahan penanganan toleransi pkill
 - true pada skrip deploy-node1.js

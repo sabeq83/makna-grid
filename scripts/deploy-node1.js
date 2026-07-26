@@ -10,17 +10,17 @@ async function deployNode1() {
     export PATH=/home/sabeqmursyid/.local/bin:$PATH
     cd /home/sabeqmursyid/makna-grid
     echo "[1/4] Pulling latest main code from GitHub..."
-    git fetch origin main || true
-    git reset --hard origin/main || true
+    git fetch origin main
+    git reset --hard origin/main
 
     echo "[2/4] Building Next.js production bundle..."
-    pkill -9 -f 'next' || true
+    fuser -k -9 3000/tcp 2>/dev/null || pkill -f 'next-server' || true
     npm run build
 
     echo "[3/4] Restarting Gateway UI (3000) & API Server (4000)..."
-    pkill -9 -f 'next-server' || true
-    pkill -9 -f 'apps/api/server.js' || true
-    sleep 2
+    fuser -k -9 3000/tcp 2>/dev/null || true
+    fuser -k -9 4000/tcp 2>/dev/null || true
+    sleep 1
 
     HOSTNAME=0.0.0.0 PORT=4000 nohup /home/sabeqmursyid/.local/bin/node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
     HOSTNAME=0.0.0.0 PORT=3000 nohup /home/sabeqmursyid/.local/bin/node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
