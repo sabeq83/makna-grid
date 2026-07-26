@@ -25,9 +25,30 @@ export default function ContentPlannerDashboard() {
   const [productPhotoUrl, setProductPhotoUrl] = useState('');
   const [platform, setPlatform] = useState('tiktok');
   const [objective, setObjective] = useState('soft_sell');
-  const [plannerCount, setPlannerCount] = useState(12);
   const [targetAudience, setTargetAudience] = useState('genz_casual');
   const [customTargetAudience, setCustomTargetAudience] = useState('');
+  const [isTitleManuallyEdited, setIsTitleManuallyEdited] = useState(false);
+
+  function generateAutofillTitle(accName, prodName) {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}${mm}${dd}`;
+
+    const cleanAcc = (accName || '').trim();
+    const words = (prodName || '').trim().split(/\s+/).filter(Boolean);
+    const twoWordsProd = words.slice(0, 2).join(' ');
+
+    if (cleanAcc && twoWordsProd) {
+      return `${cleanAcc} - ${dateStr} - ${twoWordsProd}`;
+    } else if (twoWordsProd) {
+      return `${dateStr} - ${twoWordsProd}`;
+    } else if (cleanAcc) {
+      return `${cleanAcc} - ${dateStr}`;
+    }
+    return '';
+  }
 
   // Existing Product / Brand Selection State
   const [existingProducts, setExistingProducts] = useState([]);
@@ -86,6 +107,16 @@ export default function ContentPlannerDashboard() {
         } else {
           setTargetAudience('custom');
           setCustomTargetAudience(prod.target_audience);
+        }
+      }
+
+      // Auto-fill Title if title was not manually edited or is empty
+      if (!isTitleManuallyEdited || !title) {
+        const selectedBrand = brandProfiles.find(b => b.id === selectedBrandId);
+        const effectiveAcc = selectedBrand?.brand_name || accountName;
+        const autoTitle = generateAutofillTitle(effectiveAcc, prod.product_name);
+        if (autoTitle) {
+          setTitle(autoTitle);
         }
       }
     }
@@ -485,8 +516,13 @@ export default function ContentPlannerDashboard() {
                       const bId = e.target.value;
                       setSelectedBrandId(bId);
                       const b = brandProfiles.find(item => item.id === bId);
+                      const acc = b ? (b.brand_name || '') : accountName;
                       if (b) {
                         setAccountName(b.brand_name || '');
+                      }
+                      if (!isTitleManuallyEdited || !title) {
+                        const autoTitle = generateAutofillTitle(acc, productName);
+                        if (autoTitle) setTitle(autoTitle);
                       }
                     }}
                     style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
@@ -501,12 +537,35 @@ export default function ContentPlannerDashboard() {
                 </div>
 
                 <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '6px' }}>Judul Planner (Opsional):</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '13px', color: '#9ca3af', fontWeight: 600 }}>Judul Planner (Opsional):</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const selectedBrand = brandProfiles.find(b => b.id === selectedBrandId);
+                        const acc = selectedBrand?.brand_name || accountName;
+                        const autoTitle = generateAutofillTitle(acc, productName);
+                        if (autoTitle) {
+                          setTitle(autoTitle);
+                          setIsTitleManuallyEdited(false);
+                          showToast('✨ Judul planner berhasil di-autofill!', 'success');
+                        } else {
+                          showToast('Silakan isi Nama Produk atau Brand terlebih dahulu', 'error');
+                        }
+                      }}
+                      style={{ background: 'none', border: 'none', color: '#818cf8', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
+                    >
+                      ✨ Auto-fill
+                    </button>
+                  </div>
                   <input
                     type="text"
-                    placeholder="misal: Campaign Launching Serum Cokelat Q3"
+                    placeholder="namaakun - YYYYMMDD - 2 Kata nama produk"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={e => {
+                      setTitle(e.target.value);
+                      setIsTitleManuallyEdited(true);
+                    }}
                     style={{ width: '100%', padding: '10px', background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', color: '#fff' }}
                   />
                 </div>

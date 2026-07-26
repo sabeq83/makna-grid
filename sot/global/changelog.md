@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.9 — Implement Autofill Title Format (namaakun - YYYYMMDD - 2 Kata nama produk) in Content Planner (26/07/2026)
+- Otomatisasi pengisian Judul Content Planner dengan format namaakun - YYYYMMDD - 2 Kata nama produk
+- Tombol ✨ Auto-fill pada modal UI untuk meregenerasi judul otomatis 1-klik
+- Fallback naming engine backend yang selaras apabila judul dikosongkan
+
 ## V2.2.8 — Add Target Demografi Audiens Preset Dropdown to Content Planner Modal (26/07/2026)
 - Integrasi dropdown Target Demografi Audiens (Gen-Z, IRT, Profesional, Syari, Fitness, Custom) pada modal Content Planner
 - Penyelarasan intonasi & gaya bahasa Hook 3-detik Gemini AI dengan preset demografi
