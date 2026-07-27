@@ -43,7 +43,7 @@ export async function POST(request) {
         brandId,
         slot.slot_index,
         slot.product_id || '',
-        slot.product_name || 'Umum',
+        slot.product_name || '',
         slot.target_daily_posts || 1
       );
     }

@@ -283,7 +283,7 @@ function ContentFlowHubPageContent() {
       return {
         slot_index: idx,
         product_id: existing?.product_id || '',
-        product_name: existing?.product_name || (availableProducts[idx - 1] || ''),
+        product_name: existing ? (existing.product_name || '') : '',
         target_daily_posts: existing?.target_daily_posts || 1
       };
     });
@@ -658,16 +658,22 @@ function ContentFlowHubPageContent() {
                 )}
               </div>
 
-              {activeBrandSchedules.length === 0 ? (
-                <div style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', padding: '8px 0' }}>
-                  Belum ada skedul 5 produk yang diatur oleh Admin. {(!currentUser || currentUser.role === 'admin') && 'Klik "Edit Skedul" untuk memilih 5 produk aktif.'}
-                </div>
-              ) : (
-                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>
-                  {activeBrandSchedules.map((slot) => {
-                    const prodName = slot.product_name || 'Produk';
-                    const targetCount = slot.target_daily_posts || 1;
-                    const publishedToday = items.filter(i => (i.nama_produk || '').toLowerCase().includes(prodName.toLowerCase()) && (i.tiktok_status === 'Published' || i.facebook_status === 'Published' || i.instagram_status === 'Published')).length;
+              {(() => {
+                const filledSlots = activeBrandSchedules.filter(s => s.product_name && s.product_name.trim() !== '');
+                if (filledSlots.length === 0) {
+                  return (
+                    <div style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', padding: '8px 0' }}>
+                      Belum ada produk aktif yang diisi pada skedul ini. {(!currentUser || currentUser.role === 'admin') && 'Klik "Edit Skedul" untuk memilih produk aktif.'}
+                    </div>
+                  );
+                }
+
+                return (
+                  <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>
+                    {filledSlots.map((slot) => {
+                      const prodName = slot.product_name;
+                      const targetCount = slot.target_daily_posts || 1;
+                      const publishedToday = items.filter(i => (i.nama_produk || '').toLowerCase().includes(prodName.toLowerCase()) && (i.tiktok_status === 'Published' || i.facebook_status === 'Published' || i.instagram_status === 'Published')).length;
 
                     return (
                       <div
@@ -689,8 +695,9 @@ function ContentFlowHubPageContent() {
                       </div>
                     );
                   })}
-                </div>
-              )}
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -1852,7 +1859,7 @@ function ContentFlowHubPageContent() {
                               }}
                               style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
                             >
-                              <option value="">-- Pilih Produk Aktif --</option>
+                              <option value="">-- (Kosong / Tidak Digunakan) --</option>
                               {availableProducts.map(p => (
                                 <option key={p} value={p}>{p}</option>
                               ))}

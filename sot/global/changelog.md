@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.62 — Make Admin Skedul Controller Flexible (Allow Empty Slots) (27/07/2026)
+- Allow Admin to select -- (Kosong / Tidak Digunakan) -- on any slot in Skedul Controller modal
+- Filter out empty schedule slots from Header Controller Card rendering
+- Update API route to persist empty slot selections cleanly
+
 ## V2.2.61 — Upgrade ContentFlow Video Item Card Layout to 3-Column and 3/3 Published Glowing Border (27/07/2026)
 - Implement 3-column video item card layout (Column 1: Thumbnail & Cloud Link, Column 2: Product Name -> Caption 10 Words -> Platform Status Bar, Column 3: Brand Tag, Hook, Detail & Status)
 - Add top badge banner 🎉 3/3 PUBLISHED (ALL PLATFORMS) and emerald glowing border highlight for completed videos
