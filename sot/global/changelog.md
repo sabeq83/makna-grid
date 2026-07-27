@@ -1,5 +1,12 @@
 # Changelog
 
+## V2.2.79 — Square 1:1 Product Photo Layout (27/07/2026)
+- Mengubah foto produk menjadi square 1:1 berukuran 90px
+- Mencegah foto produk meregang secara horizontal
+
+## V2.2.79 — Square 1:1 Product Photo Layout (27/07/2026)
+- Mengubah dimensi foto produk menjadi bentuk kotak bujur sangkar (1:1) berukuran `90px x 90px` di tengah kartu agar tampilan proporsional dan tidak meregang secara horizontal
+
 ## V2.2.78 — Fallback Product Name JOIN & Grouping Fix (27/07/2026)
 - Pencocokan join berbasis nama produk jika product_id bukan UUID
 - Mencegah multiplikasi baris data dengan subquery GROUP BY

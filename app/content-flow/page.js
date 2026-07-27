@@ -755,10 +755,11 @@ function ContentFlowHubPageContent() {
                             {prodName}
                           </div>
 
-                          {/* Large Product Image (Middle) */}
+                          {/* Large Product Image (Middle - Square 1:1) */}
                           <div style={{
-                            width: '100%', height: '80px', position: 'relative', borderRadius: '8px',
-                            overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', margin: '8px 0'
+                            width: '90px', height: '90px', position: 'relative', borderRadius: '12px',
+                            overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', margin: '8px 0',
+                            background: 'rgba(255,255,255,0.02)', display: 'flex', justifyContent: 'center', alignItems: 'center'
                           }}>
                             {prodImageUrl ? (
                               <img
