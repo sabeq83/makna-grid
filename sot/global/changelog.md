@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.45 — Full Human-Readable Log Synthesizer Engine for OPC Analyzer T2I and Webhook Client (27/07/2026)
+- Penambahan 14 aturan regex baru di lib/log-sanitizer.js untuk mentransformasikan log OPC T2I, Compliance Audit, Safety Delay, dan ContentFlow
+- Penyembunyian URL internal dan ID teknis secara otomatis dari tampilan UI
+- Pembaruan rilis v2.2.45
+
 ## V2.2.44 — Universal 6-Module Product Truth and Geometric Truth Contract Ingestion (27/07/2026)
 - Injeksi sentral buildProductTruthContractSection ke 5 Prompt Builder (OPC, RE, Multiplier, Strategic, Bridge Injector)
 - Integrasi product_truth & geometric_truth ke Sheets Autopilot & Instant Factory Worker
