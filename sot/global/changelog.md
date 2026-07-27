@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.46 — Mandatory Product Reference Photo Filename Declaration Engine (27/07/2026)
+- Injeksi otomatis nama berkas foto referensi produk ke dalam buildProductTruthContractSection
+- Deklarasi explicit visual anchor binding dengan formula non-ambigu aman dari kecenderungan square ratio
+- Pembaruan rilis v2.2.46
+
 ## V2.2.45 — Full Human-Readable Log Synthesizer Engine for OPC Analyzer T2I and Webhook Client (27/07/2026)
 - Penambahan 14 aturan regex baru di lib/log-sanitizer.js untuk mentransformasikan log OPC T2I, Compliance Audit, Safety Delay, dan ContentFlow
 - Penyembunyian URL internal dan ID teknis secara otomatis dari tampilan UI
