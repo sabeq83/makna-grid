@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.56 — Move Skipped Status to Platform Publishing Dropdowns & Clean UI (27/07/2026)
+- Remove Skipped status from pipeline_status video card badges
+- Remove Video Status control UI from ContentFlow Modal Header
+- Add Skipped option with purple glow style to TikTok, Facebook, and Instagram publishing status dropdowns
+
 ## V2.2.55 — Add ContentFlow Video Status Skipped and Catatan Field (27/07/2026)
 - Add Skipped video status option with purple glow badge in ContentFlow Modal and Video Cards
 - Add Catatan (Notes) textarea field placed at the top above Product Data & Links in ContentFlow Modal

@@ -122,6 +122,9 @@ function ContentFlowHubPageContent() {
     if (statusVal === 'Scheduled') {
       return { background: 'rgba(245, 158, 11, 0.2)', border: '1px solid #fbbf24', color: '#fcd34d', fontWeight: 700 };
     }
+    if (statusVal === 'Skipped') {
+      return { background: 'rgba(168, 85, 247, 0.2)', border: '1px solid #a855f7', color: '#e9d5ff', fontWeight: 700 };
+    }
     return { background: '#05070d', border: '1px solid #334155', color: '#a1a1aa' };
   };
 
@@ -1377,27 +1380,10 @@ function ContentFlowHubPageContent() {
                 )}
               </div>
 
-              {/* Sub-Header with Video Status Dropdown */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
-                <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
-                  STATUS PUBLIKASI PER PLATFORM
-                </h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Status Video:</label>
-                  <select
-                    value={editStatusForm.pipeline_status || 'Completed'}
-                    onChange={(e) => setEditStatusForm({ ...editStatusForm, pipeline_status: e.target.value })}
-                    style={{
-                      padding: '6px 12px', borderRadius: '8px', outline: 'none', fontSize: '12px', cursor: 'pointer',
-                      ...getStatusSelectStyle(editStatusForm.pipeline_status)
-                    }}
-                  >
-                    <option value="Completed">Completed</option>
-                    <option value="In Production">In Production</option>
-                    <option value="Skipped">Skipped</option>
-                  </select>
-                </div>
-              </div>
+              {/* Sub-Header */}
+              <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 16px' }}>
+                STATUS PUBLIKASI PER PLATFORM
+              </h3>
 
               <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
@@ -1417,6 +1403,7 @@ function ContentFlowHubPageContent() {
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
+                        <option value="Skipped">Skipped</option>
                       </select>
                     </div>
 
@@ -1470,6 +1457,7 @@ function ContentFlowHubPageContent() {
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
+                        <option value="Skipped">Skipped</option>
                       </select>
                     </div>
 
@@ -1523,6 +1511,7 @@ function ContentFlowHubPageContent() {
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
                         <option value="Published">Published</option>
+                        <option value="Skipped">Skipped</option>
                       </select>
                     </div>
 
