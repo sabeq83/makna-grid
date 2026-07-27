@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.68 — Purge All Dummy Data and Dummybrand References (27/07/2026)
+- Pembersihan total data dummy seed dan dummybrand dari SQLite dan PostgreSQL Node 3
+- Penghapusan hardcoded option dummybrand01 dan dummybrand02 dari UI seluruh modul
+- Pembersihan dropdown produk ContentFlow
+
 ## V2.2.67 — SOT Update Single-Database ContentFlow Ingest Architecture (27/07/2026)
 - Pembaruan SOT MAKNA_GRID_DISTRIBUTED_ARCHITECTURE_SOT dan SOP Cluster untuk arsitektur Single-Database Direct Sync Satu Atap
 - Penghapusan variabel legacy CONTENT_FLOW_API_URL dari dokumentasi SOT

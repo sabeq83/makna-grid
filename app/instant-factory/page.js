@@ -929,8 +929,6 @@ export default function InstantFactoryPage() {
                         ))}
                         <option value="nutribake">nutribake</option>
                         <option value="siasatsehat">siasatsehat</option>
-                        <option value="dummybrand01">dummybrand01</option>
-                        <option value="dummybrand02">dummybrand02</option>
                       </select>
                     </div>
 
@@ -1143,8 +1141,6 @@ export default function InstantFactoryPage() {
                             ))}
                             <option value="nutribake">nutribake</option>
                             <option value="siasatsehat">siasatsehat</option>
-                            <option value="dummybrand01">dummybrand01</option>
-                            <option value="dummybrand02">dummybrand02</option>
                           </select>
                         </div>
 
