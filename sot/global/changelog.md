@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.64 — Precision Product Truth Prompt Injection for OPC (27/07/2026)
+- Update product_truth dan geometric_truth presisi pada product_extractions
+- Injeksi otomatis prompt T2I dan I2V Klip 3 presisi pada 18 item kampanye opc_260727_dnarsz
+- Penyelarasan scheduler-processors productData
+
 ## V2.2.63 — Product Clean Verification & OPC Repair (27/07/2026)
 - Penambahan Kartu Verifikasi Visual Produk pada Modal Content Planner & Import Modal
 - Fallback Sync Engine product_ref_image_path ke foto clean aktif
