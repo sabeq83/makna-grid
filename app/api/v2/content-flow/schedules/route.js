@@ -14,7 +14,11 @@ export async function GET(request) {
       SELECT bs.*, 
              pe.cleaned_photo_url, pe.clean_photo_url, pe.generated_photo_url, pe.active_photo
       FROM brand_schedules bs
-      LEFT JOIN product_extractions pe ON bs.product_id = pe.id
+      LEFT JOIN (
+        SELECT id, product_name, cleaned_photo_url, clean_photo_url, generated_photo_url, active_photo 
+        FROM product_extractions 
+        GROUP BY product_name
+      ) pe ON (bs.product_id = pe.id OR bs.product_name = pe.product_name)
       WHERE bs.brand_id = ? 
       ORDER BY bs.slot_index ASC
     `).all(brandId);

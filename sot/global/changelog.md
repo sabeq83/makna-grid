@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.2.78 — Fallback Product Name JOIN & Grouping Fix (27/07/2026)
+- Pencocokan join berbasis nama produk jika product_id bukan UUID
+- Mencegah multiplikasi baris data dengan subquery GROUP BY
+
+## V2.2.78 — Fallback Product Name JOIN & Grouping Fix (27/07/2026)
+- Memperbaiki kueri `LEFT JOIN` pada schedules API dengan mencocokkan string `product_name` apabila `product_id` di database menyimpan nama produk literal (bukan UUID)
+- Menambahkan kueri bersarang dengan `GROUP BY product_name` untuk mencegah multiplikasi baris data duplikat
+
 ## V2.2.77 — Centered Proportional Layout & Large Product Photo Heroes (27/07/2026)
 - Tata letak kartu rata tengah dan lebar flex grow proporsional
 - Foto produk diposisikan di tengah sebagai hero utama
