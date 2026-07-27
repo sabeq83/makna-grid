@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.48 — Integrate ContentFlow Assigned Brand Sidebar & Quick Tabs (27/07/2026)
+- Add collapsible Brand Account sub-items under ContentFlow Hub in Sidebar.js
+- Add Header Quick-Switch Brand Tab Bar with URL query param sync in content-flow/page.js
+- Wrap useSearchParams in Suspense boundary for Next.js App Router compliance
+
 ## V2.2.47 — Fix ContentFlow OPC Ingestion SQL Query (27/07/2026)
 - Fix SQL JOIN query for brand_profiles and product_extractions in lib/contentflow-ingest.js
 - Resync OPC completed video items including Item #106 to content_flow_items table

@@ -174,15 +174,78 @@ export default function Sidebar() {
           }
 
           const isActive = pathname === item.href;
+          const isContentFlow = item.href === '/content-flow';
+
+          // Get assigned brand accounts from user
+          const userBrandAccounts = (user && Array.isArray(user.assignedBrandNames) && user.assignedBrandNames.length > 0)
+            ? user.assignedBrandNames
+            : ['nutribake', 'siasatsehat', 'nutriblend', 'dapurbotani'];
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`nav-link ${isActive ? 'active' : ''}`}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {item.label}
-            </Link>
+            <div key={item.href}>
+              <Link
+                href={item.href}
+                className={`nav-link ${isActive ? 'active' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="nav-icon">{item.icon}</span>
+                  {item.label}
+                </div>
+                {isContentFlow && (
+                  <span style={{ fontSize: '10px', opacity: 0.6 }}>▼</span>
+                )}
+              </Link>
+
+              {/* Sub-menu Brand Accounts for ContentFlow Hub */}
+              {isContentFlow && (pathname.startsWith('/content-flow')) && (
+                <div style={{
+                  paddingLeft: '28px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  marginTop: '4px',
+                  marginBottom: '8px'
+                }}>
+                  <Link
+                    href="/content-flow?account=all"
+                    style={{
+                      fontSize: '11px',
+                      color: '#a1a1aa',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'rgba(255,255,255,0.03)'
+                    }}
+                  >
+                    <span>🌐</span> Semua Akun
+                  </Link>
+                  {userBrandAccounts.map(acc => (
+                    <Link
+                      key={acc}
+                      href={`/content-flow?account=${encodeURIComponent(acc)}`}
+                      style={{
+                        fontSize: '11px',
+                        color: '#34d399',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: 'rgba(16,185,129,0.08)',
+                        borderLeft: '2px solid #10b981'
+                      }}
+                    >
+                      <span>🏷️</span> @{acc}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           );
         })}
       </nav>

@@ -1,7 +1,8 @@
 'use client';
 
 import Sidebar from '../components/Sidebar';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const SearchIcon = ({ style }) => (
   <svg style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +82,11 @@ const getBrandBadgeStyle = (accountName) => {
   };
 };
 
-export default function ContentFlowHubPage() {
+function ContentFlowHubPageContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const accountQuery = searchParams.get('account') || 'all';
+
   const [items, setItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -91,11 +96,17 @@ export default function ContentFlowHubPage() {
   // Filter States
   const [searchTerm, setSearchTerm] = useState('');
   const [sourceFilter, setSourceFilter] = useState('all');
-  const [accountFilter, setAccountFilter] = useState('all');
+  const [accountFilter, setAccountFilter] = useState(accountQuery);
   const [productFilter, setProductFilter] = useState('all');
   const [tiktokFilter, setTiktokFilter] = useState('Semua');
   const [fbFilter, setFbFilter] = useState('Semua');
   const [igFilter, setIgFilter] = useState('Semua');
+
+  useEffect(() => {
+    if (accountQuery) {
+      setAccountFilter(accountQuery);
+    }
+  }, [accountQuery]);
 
   const [availableAccounts, setAvailableAccounts] = useState([]);
   const [availableProducts, setAvailableProducts] = useState([]);
@@ -453,6 +464,70 @@ export default function ContentFlowHubPage() {
               </div>
             </div>
           </div>
+
+          {/* Quick-Switch Brand Account Tab Bar */}
+          {availableAccounts.length > 0 && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '16px',
+              overflowX: 'auto',
+              paddingBottom: '4px'
+            }}>
+              <button
+                onClick={() => {
+                  setAccountFilter('all');
+                  router.push('/content-flow?account=all');
+                }}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: accountFilter === 'all' ? '1px solid #10b981' : '1px solid #27272a',
+                  background: accountFilter === 'all' ? 'rgba(16, 185, 129, 0.15)' : '#121318',
+                  color: accountFilter === 'all' ? '#34d399' : '#a1a1aa',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>🌐</span> Semua Akun ({totalItems})
+              </button>
+              {availableAccounts.map((acc) => {
+                const isSelected = accountFilter.toLowerCase() === acc.toLowerCase();
+                return (
+                  <button
+                    key={acc}
+                    onClick={() => {
+                      setAccountFilter(acc);
+                      router.push(`/content-flow?account=${encodeURIComponent(acc)}`);
+                    }}
+                    style={{
+                      padding: '7px 16px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      border: isSelected ? '1px solid #10b981' : '1px solid #27272a',
+                      background: isSelected ? 'rgba(16, 185, 129, 0.15)' : '#121318',
+                      color: isSelected ? '#34d399' : '#e4e4e7',
+                      transition: 'all 0.2s ease',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>🏷️</span> @{acc}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Multi-level Search & Filter Panel */}
           <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
@@ -1327,5 +1402,13 @@ export default function ContentFlowHubPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ContentFlowHubPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem', color: '#34d399', background: '#0b0f17', minHeight: '100vh' }}>Loading ContentFlow...</div>}>
+      <ContentFlowHubPageContent />
+    </Suspense>
   );
 }
