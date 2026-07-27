@@ -37,7 +37,6 @@ NODE_ROLE=gateway
 ENABLE_SCHEDULER_WORKER=false
 PORT=3005
 DATABASE_HOST=100.78.186.123
-CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 ```
 > **Catatan Port**: Untuk pengujian lokal di komputer development agar tidak bentrok dengan `maknagen` yang menggunakan Port `3000`, gunakan Port **`3005`** (`PORT=3005`). Node 1 **TIDAK** menjalankan Background Queue Worker (`ENABLE_SCHEDULER_WORKER=false`).
 
@@ -50,7 +49,6 @@ PORT=3000
 WEBHOOK_PORT=8765
 WEBHOOK_HOST=127.0.0.1
 DATABASE_HOST=100.78.186.123
-CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 ```
 > **Catatan**: Node 2 bertindak sebagai mesin komputasi GPU yang mengeksekusi T2I (Start Frame PNG), I2V (Video Veo MP4), TTS Studio, dan Muxing FFmpeg Smart Sync.
 
@@ -65,12 +63,7 @@ Ikuti urutan startup berantai berikut untuk memastikan ketergantungan database d
    ```bash
    ssh makna-db
    ```
-2. Pastikan layanan PostgreSQL dan ContentFlow Ingestion Service aktif pada port `:5432` dan `:3001`.
-3. Verifikasi API Ingestion endpoint:
-   ```bash
-   curl -I http://100.78.186.123:3001/api/v1/content/ingest
-   ```
-   *(Ekspektasi response: HTTP 405 Method Not Allowed / HTTP 200 OK).*
+2. Pastikan layanan PostgreSQL dan database Master terhubung pada port `:5432`. Sinkronisasi ContentFlow berjalan secara otomatis via Single-Database Direct DB Sync (Satu Atap).
 
 ---
 

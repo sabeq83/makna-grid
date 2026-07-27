@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.67 — SOT Update Single-Database ContentFlow Ingest Architecture (27/07/2026)
+- Pembaruan SOT MAKNA_GRID_DISTRIBUTED_ARCHITECTURE_SOT dan SOP Cluster untuk arsitektur Single-Database Direct Sync Satu Atap
+- Penghapusan variabel legacy CONTENT_FLOW_API_URL dari dokumentasi SOT
+- Pembaruan Knowledge Base ContentFlow Ingestion Architecture
+
 ## V2.2.66 — Double-Shield Architecture for Wardrobe & Demographic Presets (27/07/2026)
 - Penerapan Double-Shield Architecture pada DEMOGRAPHIC_PRESETS dan WARDROBE_PRESETS di lib/prompts.js
 - Penambahan mandat penulisan tag Anchor dan Wardrobe terpisah di vsoSection system prompt OPC

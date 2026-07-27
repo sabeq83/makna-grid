@@ -43,7 +43,7 @@ graph LR
     end
 
     subgraph NODE3["🗄️ Node 3: Storage & Central DB (100.78.186.123)"]
-        N3_Role["NODE_ROLE=storage<br/>CONTENT_FLOW_API_URL=http://100.78.186.123:3001"]
+        N3_Role["NODE_ROLE=storage<br/>Central Database & Vault Storage"]
     end
 ```
 
@@ -54,7 +54,6 @@ NODE_ROLE=gateway
 ENABLE_SCHEDULER_WORKER=false
 PORT=3000
 DATABASE_HOST=100.78.186.123
-CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 ```
 
 ### `.env.local` Node 2 (Windows Worker GPU):
@@ -66,7 +65,6 @@ PORT=3000
 WEBHOOK_PORT=8765
 WEBHOOK_HOST=127.0.0.1
 DATABASE_HOST=100.78.186.123
-CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 ```
 
 ---
@@ -81,7 +79,7 @@ sequenceDiagram
     participant N3_DB as Node 3: Central DB (100.78.186.123)
     participant N2 as Node 2: Worker GPU (100.117.59.92)
     participant GLabs as G-Labs Webhook (Windows 127.0.0.1)
-    participant N3_Storage as Node 3: Vault & ContentFlow
+    participant N3_Storage as Node 3: Vault & ContentFlow DB
 
     Staff->>N1: 1. Akses UI WebApp & Input Produk
     N1->>N1: 2. Generate Fase 1 (Gemini AI: Storyboard, VO, Naskah, DNA)
@@ -96,7 +94,7 @@ sequenceDiagram
     GLabs-->>N2: 9. Video Klip MP4 Terbuat
     N2->>N2: 10. Muxing Video + TTS via FFmpeg Smart Sync
     N2->>N3_Storage: 11. Stream & Upload Vault Aset (Video Final, Clips, PNG, MP3)
-    N3_Storage->>N3_Storage: 12. Auto Ingest ke ContentFlow (:3001) & Update Google Sheets
+    N3_Storage->>N3_DB: 12. Direct DB Upsert ke ContentFlow (Single-Database Sync) & Update Google Sheets
     N2->>N3_DB: 13. Update Status Item ke 'completed'
 ```
 

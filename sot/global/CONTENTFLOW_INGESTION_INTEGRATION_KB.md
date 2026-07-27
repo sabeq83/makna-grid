@@ -1,18 +1,19 @@
-# KNOWLEDGE BASE (KB): Content Flow Direct Ingestion API Integration
+# KNOWLEDGE BASE (KB): Content Flow Ingestion Architecture (Single-Database / Satu Atap)
 
-> **Dokumen Panduan Integrasi Backend & Automasi (n8n / AI Video Generator / Content Pipeline)**  
-> **Versi API**: 1.0  
-> **Base URL**: `https://contentflow.ast402.my.id/api/v1/content`  
-> **Protokol**: HTTP/2 HTTPS REST API  
+> **Dokumen Panduan Integrasi Backend & Content Pipeline (MAKNA Grid v2.2+)**  
+> **Arsitektur**: Single-Database Direct DB Sync (Satu Atap) & Optional Remote HTTP Ingest API  
+> **Status**: Zero-Config Local DB Ingest Active  
 
 ---
 
 ## 🎯 1. Ringkasan & Tujuan Integrasi
 
-Dokumen ini ditujukan untuk Agent AI atau pengembang backend pembuat konten.  
-API Ingestion **Content Flow** digunakan untuk **mengirimkan data konten video/produk yang telah selesai diproduksi (*Completed*) atau sedang diproduksi (*In Production*) secara instan** langsung ke database Content Flow tanpa perantara spreadsheet.
+Dokumen ini menjelaskan arsitektur ingest data dari seluruh modul kampanye MAKNA Grid (OPC, RE, Strategic, Instant Factory, Autopilot) ke **Content Flow**.
 
-Setelah data terkirim via API ini, tim publisher sosial media dapat langsung melihat, mengunduh asset, menyalin caption/link affiliate, dan memperbarui status tayang (TikTok, Facebook, Instagram) dari Web App **Content Flow**.
+Dalam arsitektur **Satu Atap (Zero-Config Direct Sync)**:
+- Data konten video/produk disinkronkan **secara langsung dan real-time ke database terpusat (`content_flow_items`)** tanpa perlu perantara API HTTP / `CONTENT_FLOW_API_URL` terpisah antar-node.
+- Tim publisher dapat langsung mengelola, mengunduh aset, menyalin caption/link affiliate, dan memperbarui status tayang (TikTok, Facebook, Instagram) dari Web App **Content Flow**.
+- Opsi HTTP REST Ingestion (`/api/v1/content/ingest` via `X-API-Key`) bersifat opsional jika ada aplikasi pihak ketiga (seperti n8n atau bot eksternal) yang ingin meng-ingest data dari luar cluster MAKNA Grid.
 
 ---
 
