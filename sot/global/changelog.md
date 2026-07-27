@@ -1,8 +1,10 @@
 # Changelog
 
-## V2.2.70 — Fix OPC ContentFlow Ingest SQL Compile Quote Issue (27/07/2026)
-- Mengganti != '' dengan LENGTH() > 0 untuk bypass SWC quote bug
-- Sinkronisasi campaign opc_260727_dnarsz ke PG
+## V2.2.71 — Fix ImportPlannerModal Syntax Compile Error (27/07/2026)
+- Memperbaiki penutupan tag kondisional !initialPlannerId pada ImportPlannerModal.js
+
+## V2.2.71 — Fix ImportPlannerModal Syntax Compile Error (27/07/2026)
+- Memperbaiki penutupan tag kondisional `{!initialPlannerId}` pada `ImportPlannerModal.js` untuk mengatasi kegagalan kompilasi produksi Next.js
 
 ## V2.2.70 — Fix OPC ContentFlow Ingest SQL Compile Quote Issue (27/07/2026)
 - Mengganti pembandingan string kosong `!= ''` dengan `LENGTH(cp.affiliate_url) > 0` untuk menghindari penulisan ulang tanda kutip oleh Next.js SWC minifier yang memicu error SQLite

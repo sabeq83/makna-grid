@@ -310,7 +310,8 @@ export default function ImportPlannerModal({
                         ))}
                       </select>
                     </div>
-                         {loading ? (
+                  )}
+                  {loading ? (
                     <div style={{ fontSize: '13px', color: '#9ca3af', textAlign: 'center', padding: '12px' }}>Memuat detail planner...</div>
                   ) : planner && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
