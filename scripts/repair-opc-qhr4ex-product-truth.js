@@ -34,27 +34,41 @@ for (let i = 0; i < targetItems.length; i++) {
     
     // Update t2i_prompts for clip 3 (Product Truth)
     if (Array.isArray(res.t2i_prompts)) {
-      const clip3 = res.t2i_prompts.find(p => p.clip === 3);
-      if (clip3 && clip3.prompt) {
-        if (/\(Product Truth: [^)]+\)/i.test(clip3.prompt)) {
-          clip3.prompt = clip3.prompt.replace(/\(Product Truth: [^)]+\)/i, `(Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`);
+      const clip3Obj = res.t2i_prompts.find(p => p && typeof p === 'object' && p.clip === 3);
+      if (clip3Obj && clip3Obj.prompt) {
+        if (/\(Product Truth: [^)]+\)/i.test(clip3Obj.prompt)) {
+          clip3Obj.prompt = clip3Obj.prompt.replace(/\(Product Truth: [^)]+\)/i, `(Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`);
         } else {
-          clip3.prompt += ` [LAYER 2: SUBJECT & VISUAL TRUTH] (Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`;
+          clip3Obj.prompt += ` [LAYER 2: SUBJECT & VISUAL TRUTH] (Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`;
         }
+      } else if (typeof res.t2i_prompts[2] === 'string') {
+        let pStr = res.t2i_prompts[2];
+        if (/\(Product Truth: [^)]+\)/i.test(pStr)) {
+          pStr = pStr.replace(/\(Product Truth: [^)]+\)/i, `(Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`);
+        } else {
+          pStr += ` [LAYER 2: SUBJECT & VISUAL TRUTH] (Product Truth: ${verifiedProductTruth}, geometry_lock: DO NOT HALLUCINATE)`;
+        }
+        res.t2i_prompts[2] = pStr;
       }
     }
 
     // Update i2v_prompts for clip 3 (Geometric Truth)
     if (Array.isArray(res.i2v_prompts)) {
-      const i2v3 = res.i2v_prompts.find(p => p.clip === 3);
-      if (i2v3) {
-        if (typeof i2v3.prompt === 'string') {
-          if (/\(Geometric Truth: [^)]+\)/i.test(i2v3.prompt)) {
-            i2v3.prompt = i2v3.prompt.replace(/\(Geometric Truth: [^)]+\)/i, `(Geometric Truth: ${verifiedGeometricTruth})`);
-          } else {
-            i2v3.prompt = `[LAYER 1: INPUT & TRUTH LOCK] (Geometric Truth: ${verifiedGeometricTruth}). ${i2v3.prompt}`;
-          }
+      const i2v3Obj = res.i2v_prompts.find(p => p && typeof p === 'object' && p.clip === 3);
+      if (i2v3Obj && typeof i2v3Obj.prompt === 'string') {
+        if (/\(Geometric Truth: [^)]+\)/i.test(i2v3Obj.prompt)) {
+          i2v3Obj.prompt = i2v3Obj.prompt.replace(/\(Geometric Truth: [^)]+\)/i, `(Geometric Truth: ${verifiedGeometricTruth})`);
+        } else {
+          i2v3Obj.prompt = `[LAYER 1: INPUT & TRUTH LOCK] (Geometric Truth: ${verifiedGeometricTruth}). ${i2v3Obj.prompt}`;
         }
+      } else if (typeof res.i2v_prompts[2] === 'string') {
+        let iStr = res.i2v_prompts[2];
+        if (/\(Geometric Truth: [^)]+\)/i.test(iStr)) {
+          iStr = iStr.replace(/\(Geometric Truth: [^)]+\)/i, `(Geometric Truth: ${verifiedGeometricTruth})`);
+        } else {
+          iStr = `[LAYER 1: INPUT & TRUTH LOCK] (Geometric Truth: ${verifiedGeometricTruth}). ${iStr}`;
+        }
+        res.i2v_prompts[2] = iStr;
       }
     }
 
