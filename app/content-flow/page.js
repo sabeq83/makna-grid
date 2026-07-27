@@ -112,6 +112,18 @@ function ContentFlowHubPageContent() {
   const [availableProducts, setAvailableProducts] = useState([]);
   const [productSearchTerm, setProductSearchTerm] = useState('');
 
+  // Admin Skedul Controller & Header Controller Card State
+  const [activeBrandSchedules, setActiveBrandSchedules] = useState([]);
+  const [showAdminScheduleModal, setShowAdminScheduleModal] = useState(false);
+  const [adminSlotsForm, setAdminSlotsForm] = useState([
+    { slot_index: 1, product_id: '', product_name: '', target_daily_posts: 1 },
+    { slot_index: 2, product_id: '', product_name: '', target_daily_posts: 1 },
+    { slot_index: 3, product_id: '', product_name: '', target_daily_posts: 1 },
+    { slot_index: 4, product_id: '', product_name: '', target_daily_posts: 1 },
+    { slot_index: 5, product_id: '', product_name: '', target_daily_posts: 1 }
+  ]);
+  const [savingSchedule, setSavingSchedule] = useState(false);
+
   // User Session & RBAC Permissions State
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -203,6 +215,22 @@ function ContentFlowHubPageContent() {
     setIgFilter('Semua');
   }, []);
 
+  const fetchBrandSchedules = useCallback(async (brandName) => {
+    if (!brandName || brandName === 'all') {
+      setActiveBrandSchedules([]);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/v2/content-flow/schedules?brandId=${encodeURIComponent(brandName)}`);
+      const data = await res.json();
+      if (data.success) {
+        setActiveBrandSchedules(data.schedules || []);
+      }
+    } catch (e) {
+      console.error('Failed to fetch brand schedules:', e);
+    }
+  }, []);
+
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
@@ -233,7 +261,56 @@ function ContentFlowHubPageContent() {
 
   useEffect(() => {
     loadContent();
-  }, [loadContent]);
+    if (accountFilter && accountFilter !== 'all') {
+      fetchBrandSchedules(accountFilter);
+    }
+  }, [loadContent, accountFilter, fetchBrandSchedules]);
+
+  function openAdminScheduleModal() {
+    if (!accountFilter || accountFilter === 'all') {
+      showToast('Pilih salah satu Akun Brand terlebih dahulu untuk mengatur Skedul!');
+      return;
+    }
+    const initialSlots = [1, 2, 3, 4, 5].map(idx => {
+      const existing = activeBrandSchedules.find(s => s.slot_index === idx);
+      return {
+        slot_index: idx,
+        product_id: existing?.product_id || '',
+        product_name: existing?.product_name || (availableProducts[idx - 1] || ''),
+        target_daily_posts: existing?.target_daily_posts || 1
+      };
+    });
+    setAdminSlotsForm(initialSlots);
+    setShowAdminScheduleModal(true);
+  }
+
+  async function handleSaveBrandSchedules(e) {
+    if (e) e.preventDefault();
+    if (!accountFilter || accountFilter === 'all') return;
+    setSavingSchedule(true);
+    try {
+      const res = await fetch('/api/v2/content-flow/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brandId: accountFilter,
+          slots: adminSlotsForm
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Skedul 5 Produk Aktif berhasil diperbarui! 📅✨');
+        setShowAdminScheduleModal(false);
+        fetchBrandSchedules(accountFilter);
+      } else {
+        showToast('Gagal simpan skedul: ' + data.error);
+      }
+    } catch (err) {
+      showToast('Error save schedule: ' + err.message);
+    } finally {
+      setSavingSchedule(false);
+    }
+  }
 
   async function handleTriggerRetroSync() {
     setSyncing(true);
@@ -488,6 +565,19 @@ function ContentFlowHubPageContent() {
             </div>
 
             <div style={{ display: 'flex', gap: '10px' }}>
+              {currentUser?.role === 'admin' && accountFilter !== 'all' && (
+                <button
+                  onClick={openAdminScheduleModal}
+                  style={{
+                    padding: '10px 18px', background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+                    color: '#fff', border: '1px solid #c084fc', borderRadius: '10px', fontWeight: 700, cursor: 'pointer',
+                    fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(168, 85, 247, 0.35)'
+                  }}
+                  title="Atur 5 Produk Aktif & Target Posting (Admin Only)"
+                >
+                  <span>📅 Skedul Controller (Admin)</span>
+                </button>
+              )}
               <button
                 onClick={handleTriggerRetroSync}
                 disabled={syncing}
@@ -537,6 +627,65 @@ function ContentFlowHubPageContent() {
               </div>
             </div>
           </div>
+
+          {/* Header Controller Card: 5 Active Products Progress */}
+          {accountFilter !== 'all' && (
+            <div style={{
+              padding: '18px 22px', borderRadius: '18px', background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.6) 100%)',
+              border: '1px solid rgba(16, 185, 129, 0.35)', boxShadow: '0 10px 30px rgba(0,0,0,0.35)', marginBottom: '24px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '16px' }}>📊</span>
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+                    Target Posting Hari Ini — <span style={{ color: '#34d399' }}>@{accountFilter}</span>
+                  </span>
+                </div>
+                {currentUser?.role === 'admin' && (
+                  <button
+                    onClick={openAdminScheduleModal}
+                    style={{ background: 'none', border: 'none', color: '#a855f7', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    ✏️ Edit Skedul (5 Produk)
+                  </button>
+                )}
+              </div>
+
+              {activeBrandSchedules.length === 0 ? (
+                <div style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', padding: '8px 0' }}>
+                  Belum ada skedul 5 produk yang diatur oleh Admin. {currentUser?.role === 'admin' && 'Klik "Edit Skedul" untuk memilih 5 produk aktif.'}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>
+                  {activeBrandSchedules.map((slot) => {
+                    const prodName = slot.product_name || 'Produk';
+                    const targetCount = slot.target_daily_posts || 1;
+                    const publishedToday = items.filter(i => (i.nama_produk || '').toLowerCase().includes(prodName.toLowerCase()) && (i.tiktok_status === 'Published' || i.facebook_status === 'Published' || i.instagram_status === 'Published')).length;
+
+                    return (
+                      <div
+                        key={slot.slot_index}
+                        style={{
+                          padding: '10px 14px', borderRadius: '12px', background: 'rgba(11, 15, 25, 0.7)',
+                          border: '1px solid rgba(255, 255, 255, 0.08)', minWidth: '170px', flexShrink: 0
+                        }}
+                      >
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '4px' }}>
+                          {prodName}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
+                          <span style={{ color: '#94a3b8', fontSize: '11px' }}>Progress Hari Ini:</span>
+                          <span style={{ fontWeight: 800, color: publishedToday >= targetCount ? '#34d399' : '#fbbf24', fontFamily: 'monospace' }}>
+                            {publishedToday}/{targetCount}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Quick-Switch Brand Account Tab Bar */}
           {availableAccounts.length > 0 && (
@@ -639,8 +788,8 @@ function ContentFlowHubPageContent() {
 
           {/* Multi-level Search & Filter Panel */}
           <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
-            {/* Row 1: Universal Search & Metadata Filters (4 Columns) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '14px' }}>
+            {/* Row 1: Universal Search & Metadata Filters (3 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '14px' }}>
               {/* Universal Search */}
               <div style={{ position: 'relative' }}>
                 <SearchIcon style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }} />
@@ -670,20 +819,6 @@ function ContentFlowHubPageContent() {
                   <option value="instant">⚡ Instant Factory</option>
                   <option value="recipe">🧪 Recipe Labs</option>
                   <option value="bridge">🔗 Bridge Injector</option>
-                </select>
-              </div>
-
-              {/* Account Filter */}
-              <div>
-                <select
-                  value={accountFilter}
-                  onChange={(e) => setAccountFilter(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
-                >
-                  <option value="all">Semua Akun Brand ({availableAccounts.length})</option>
-                  {availableAccounts.map(acc => (
-                    <option key={acc} value={acc}>@{acc}</option>
-                  ))}
                 </select>
               </div>
 
@@ -1644,6 +1779,127 @@ function ContentFlowHubPageContent() {
                   {deletingBrand ? 'Memusnahkan...' : '🔥 Hapus Permanen Akun Brand'}
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin Schedule Controller Modal (Admin Only) */}
+        {showAdminScheduleModal && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(5, 7, 13, 0.85)', backdropFilter: 'blur(12px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px'
+          }}>
+            <div style={{
+              width: '100%', maxWidth: '640px', background: '#0f172a', border: '1px solid rgba(168, 85, 247, 0.4)',
+              borderRadius: '20px', padding: '28px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    📅 Skedul Controller — <span style={{ color: '#c084fc' }}>@{accountFilter}</span>
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0' }}>
+                    Atur 5 Produk Aktif & Target Posting Harian (1 s/d 6 video/hari) untuk dikelola tim posting.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAdminScheduleModal(false)}
+                  style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '20px', cursor: 'pointer' }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveBrandSchedules}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
+                  {adminSlotsForm.map((slot, i) => (
+                    <div
+                      key={slot.slot_index}
+                      style={{
+                        display: 'grid', gridTemplateColumns: 'auto 1fr 140px', gap: '12px', alignItems: 'center',
+                        padding: '12px 14px', borderRadius: '12px', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)'
+                      }}
+                    >
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#c084fc', width: '60px' }}>
+                        Slot #{slot.slot_index}
+                      </span>
+
+                      {/* Product Name Selector */}
+                      <div>
+                        {availableProducts.length > 0 ? (
+                          <select
+                            value={slot.product_name}
+                            onChange={(e) => {
+                              const updated = [...adminSlotsForm];
+                              updated[i].product_name = e.target.value;
+                              updated[i].product_id = e.target.value;
+                              setAdminSlotsForm(updated);
+                            }}
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
+                          >
+                            <option value="">-- Pilih Produk Aktif --</option>
+                            {availableProducts.map(p => (
+                              <option key={p} value={p}>{p}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            value={slot.product_name}
+                            onChange={(e) => {
+                              const updated = [...adminSlotsForm];
+                              updated[i].product_name = e.target.value;
+                              updated[i].product_id = e.target.value;
+                              setAdminSlotsForm(updated);
+                            }}
+                            placeholder="Nama Produk..."
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Target Post Per Day Selector (1-6) */}
+                      <div>
+                        <select
+                          value={slot.target_daily_posts}
+                          onChange={(e) => {
+                            const updated = [...adminSlotsForm];
+                            updated[i].target_daily_posts = parseInt(e.target.value) || 1;
+                            setAdminSlotsForm(updated);
+                          }}
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #c084fc', color: '#e9d5ff', fontWeight: 700, fontSize: '12px', outline: 'none' }}
+                        >
+                          {[1, 2, 3, 4, 5, 6].map(num => (
+                            <option key={num} value={num}>{num} / Hari</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowAdminScheduleModal(false)}
+                    style={{ padding: '10px 18px', borderRadius: '10px', background: '#27272a', border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingSchedule}
+                    style={{
+                      padding: '10px 22px', borderRadius: '10px', background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+                      color: '#fff', border: 'none', cursor: savingSchedule ? 'not-allowed' : 'pointer', fontSize: '12px', fontWeight: 700,
+                      boxShadow: '0 4px 14px rgba(168, 85, 247, 0.4)'
+                    }}
+                  >
+                    {savingSchedule ? 'Menyimpan...' : '💾 Simpan Skedul 5 Produk'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

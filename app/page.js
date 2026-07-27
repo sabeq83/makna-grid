@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
+  const [brandOverview, setBrandOverview] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,10 @@ export default function Dashboard() {
       const res = await fetch('/api/stats');
       const data = await res.json();
       if (data.success) setStats(data.data);
+
+      const v2Res = await fetch('/api/v2/dashboard/stats');
+      const v2Data = await v2Res.json();
+      if (v2Data.success) setBrandOverview(v2Data.stats || []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -227,6 +232,81 @@ export default function Dashboard() {
               </Link>
 
             </div>
+          </div>
+
+          {/* BARIS BANNER: GLOBAL BRAND OVERVIEW */}
+          <div style={{ marginBottom: '28px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🏬 Global Brand Overview
+              </h2>
+              <span style={{ fontSize: '12px', color: '#94a3b8' }}>Status Posting & Stok Video Per Akun</span>
+            </div>
+
+            {loading ? (
+              <div style={{ padding: '24px', borderRadius: '16px', background: 'rgba(15, 23, 42, 0.6)', color: '#94a3b8', fontSize: '13px', textAlign: 'center' }}>
+                Memuat data ringkasan brand...
+              </div>
+            ) : brandOverview.length === 0 ? (
+              <div style={{ padding: '24px', borderRadius: '16px', background: 'rgba(15, 23, 42, 0.6)', color: '#94a3b8', fontSize: '13px', textAlign: 'center' }}>
+                Belum ada data brand terdaftar.
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                {brandOverview.map((b) => (
+                  <div
+                    key={b.account_name}
+                    style={{
+                      padding: '20px', borderRadius: '16px', background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.5) 100%)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', position: 'relative'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                      <span style={{
+                        fontSize: '12px', fontWeight: 800, padding: '4px 12px', borderRadius: '10px',
+                        ...getBrandBadgeStyle(b.account_name)
+                      }}>
+                        @{b.account_name}
+                      </span>
+                      <span style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                        Active Account
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px', background: 'rgba(11, 15, 25, 0.6)', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '10px', color: '#38bdf8', fontWeight: 700 }}>🎵 TikTok</div>
+                        <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>{b.tiktok_posted}</div>
+                      </div>
+                      <div style={{ textAlign: 'center', borderLeft: '1px solid rgba(255,255,255,0.08)', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ fontSize: '10px', color: '#60a5fa', fontWeight: 700 }}>📘 FB</div>
+                        <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>{b.facebook_posted}</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '10px', color: '#e879f9', fontWeight: 700 }}>📸 IG</div>
+                        <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>{b.instagram_posted}</div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>Stok Available:</div>
+                        <div style={{ fontSize: '14px', fontWeight: 800, color: '#34d399' }}>{b.available_stock} Video Completed</div>
+                      </div>
+                      <Link
+                        href={`/content-flow?brand=${encodeURIComponent(b.account_name)}`}
+                        style={{
+                          padding: '8px 14px', borderRadius: '10px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                          color: '#ffffff', textDecoration: 'none', fontSize: '12px', fontWeight: 700, boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                        }}
+                      >
+                        Kelola ➡️
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* BARIS 3: RECENT CONTENT (LEFT) & PLATFORM READINESS (RIGHT) */}

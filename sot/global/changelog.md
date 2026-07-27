@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.59 — ContentFlow Workflow Upgrade: Home Global Overview, Header Controller, and Admin Schedule Settings (27/07/2026)
+- Add Global Brand Overview Cards to Home Dashboard with TikTok/FB/IG posting stats & available completed video stock
+- Implement Header Controller Card in ContentFlow showing 5 Active Products with format Product: 3/8
+- Implement Admin-only Skedul Controller Modal for setting 5 active products and target post per day (1-6)
+- Remove Brand filter select from ContentFlow search filter bar while maintaining assigned sidebar brand tabs
+
 ## V2.2.58 — Fix SQLite initSchema Syntax and PostgreSQL Upsert Clause for Captions (27/07/2026)
 - Fix JS try catch block accidentally placed inside SQL template string in db.js initSchema
 - Fix PostgreSQL ON CONFLICT DO UPDATE clause in upsertContentFlowItem to preserve non-empty captions and update link_affiliate
