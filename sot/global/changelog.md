@@ -1,5 +1,15 @@
 # Changelog
 
+## V2.2.74 — Video ID Sequence Counter, Product Fallback Query, and ESM Require Fix (27/07/2026)
+- Konter urutan dinamis video_id
+- Fallback query produk dari source_product_url
+- Impor pgQuery tingkat atas untuk perbaikan ReferenceError
+
+## V2.2.74 — Video ID Sequence Counter, Product Fallback Query, and ESM Require Fix (27/07/2026)
+- Mengimplementasikan penghitung urutan (`seqNum`) dinamis per kampanye agar Video ID ContentFlow memiliki format terstandardisasi (misal: `01`, `02`, `03`...)
+- Menambahkan kueri fallback pencarian detail produk (`product_name` & `affiliate_link`) ke tabel `product_extractions` berbasis `source_product_url` jika target product metadata kosong/null
+- Memperbaiki `ReferenceError: require is not defined` pada environment ESM dengan memindahkan impor `pgQuery` dari require inline ke import tingkat atas pada `lib/db.js`
+
 ## V2.2.73 — Asynchronous Awaited ContentFlow Ingest & ON CONFLICT LENGTH Fix (27/07/2026)
 - Mengubah sync engine ke async/await agar PG sync ter-await sepenuhnya sebelum HTTP response
 - Mengganti != '' dengan LENGTH() > 0 pada ON CONFLICT DO UPDATE SQLite & PG
