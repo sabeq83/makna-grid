@@ -266,9 +266,7 @@ function ContentFlowHubPageContent() {
       const data = await res.json();
       if (data.success) {
         showToast('Data & status publishing berhasil diperbarui! ✨');
-        if (data.item) {
-          setActiveItem(data.item);
-        }
+        setActiveItem(null); // Auto-close modal on save!
         loadContent();
       } else {
         showToast('Gagal update: ' + data.error);
@@ -277,6 +275,60 @@ function ContentFlowHubPageContent() {
       showToast('Error update: ' + err.message);
     } finally {
       setSavingStatus(false);
+    }
+  }
+
+  // Admin Item Delete Handler
+  async function handleDeleteItem(itemId) {
+    if (!confirm('Apakah Anda yakin ingin menghapus video konten ini secara permanen dari ContentFlow?')) return;
+    try {
+      const res = await fetch(`/api/content-flow/${itemId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Konten berhasil dihapus! 🗑️');
+        if (activeItem && activeItem.id === itemId) {
+          setActiveItem(null);
+        }
+        loadContent();
+      } else {
+        showToast('Gagal menghapus: ' + data.error);
+      }
+    } catch (err) {
+      showToast('Error hapus: ' + err.message);
+    }
+  }
+
+  // Option 2 Brand Delete Safety Modal State & Handler
+  const [deleteBrandTarget, setDeleteBrandTarget] = useState(null);
+  const [deleteBrandConfirmInput, setDeleteBrandConfirmInput] = useState('');
+  const [deletingBrand, setDeletingBrand] = useState(false);
+
+  async function handleConfirmDeleteBrand() {
+    if (!deleteBrandTarget) return;
+    if (deleteBrandConfirmInput.trim().toLowerCase() !== deleteBrandTarget.trim().toLowerCase()) {
+      showToast('Nama brand yang diketik tidak cocok!');
+      return;
+    }
+    setDeletingBrand(true);
+    try {
+      const res = await fetch(`/api/content-flow/brands?account=${encodeURIComponent(deleteBrandTarget)}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Seluruh konten brand @${deleteBrandTarget} berhasil dihapus! 🗑️`);
+        setDeleteBrandTarget(null);
+        setDeleteBrandConfirmInput('');
+        setAccountFilter('all');
+        router.push('/content-flow?account=all');
+        loadContent();
+      } else {
+        showToast('Gagal menghapus brand: ' + data.error);
+      }
+    } catch (err) {
+      showToast('Error hapus brand: ' + err.message);
+    } finally {
+      setDeletingBrand(false);
     }
   }
 
@@ -526,6 +578,34 @@ function ContentFlowHubPageContent() {
                   </button>
                 );
               })}
+
+              {/* Admin-only Brand Deletion Button */}
+              {currentUser?.role === 'admin' && accountFilter !== 'all' && (
+                <button
+                  onClick={() => {
+                    setDeleteBrandTarget(accountFilter);
+                    setDeleteBrandConfirmInput('');
+                  }}
+                  style={{
+                    padding: '7px 14px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    background: 'rgba(239, 68, 68, 0.12)',
+                    color: '#f87171',
+                    marginLeft: 'auto',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  title="Hapus seluruh konten brand ini (Admin Only)"
+                >
+                  <span>🗑️</span> Hapus Akun @{accountFilter}
+                </button>
+              )}
             </div>
           )}
 
@@ -897,12 +977,28 @@ function ContentFlowHubPageContent() {
                     {activeItem.hook}
                   </h2>
                 </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {currentUser?.role === 'admin' && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteItem(activeItem.id)}
+                    style={{
+                      padding: '5px 10px', borderRadius: '6px', background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid rgba(239, 68, 68, 0.4)', color: '#f87171', fontSize: '11px',
+                      fontWeight: 600, cursor: 'pointer'
+                    }}
+                    title="Hapus item konten ini (Admin Only)"
+                  >
+                    🗑️ Hapus Konten
+                  </button>
+                )}
                 <button
                   onClick={() => setActiveItem(null)}
                   style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
                 >
                   <XIcon style={{ width: 22, height: 22 }} />
                 </button>
+              </div>
               </div>
 
               {/* 4 Action Buttons Row */}
@@ -1396,6 +1492,78 @@ function ContentFlowHubPageContent() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Option 2 Brand Delete Red Danger Safety Modal */}
+        {deleteBrandTarget && (
+          <div style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+          }}>
+            <div style={{
+              width: '100%', maxWidth: '480px', borderRadius: '16px',
+              background: '#18181b', border: '1px solid rgba(239, 68, 68, 0.5)',
+              boxShadow: '0 20px 50px rgba(239, 68, 68, 0.3)', padding: '24px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#ef4444', marginBottom: '16px' }}>
+                <span style={{ fontSize: '28px' }}>⚠️</span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#f87171' }}>Strict Brand Deletion Warning</h3>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#a1a1aa' }}>Tindakan ini permanen & tidak dapat dibatalkan</p>
+                </div>
+              </div>
+
+              <p style={{ fontSize: '13px', color: '#e4e4e7', lineHeight: '1.5', marginBottom: '16px' }}>
+                Anda akan menghapus <strong style={{ color: '#f87171' }}>SELURUH KONTEN VIDEO</strong> milik akun brand <strong style={{ color: '#f87171' }}>@{deleteBrandTarget}</strong> secara permanen dari SQLite Node 1 & PostgreSQL Node 3 Storage Database.
+              </p>
+
+              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '12px', borderRadius: '10px', marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#fca5a5', marginBottom: '6px' }}>
+                  Ketik ulang nama brand di bawah ini untuk mengonfirmasi: <span style={{ fontFamily: 'monospace', color: '#fff', background: '#000', padding: '2px 6px', borderRadius: '4px' }}>{deleteBrandTarget}</span>
+                </label>
+                <input
+                  type="text"
+                  value={deleteBrandConfirmInput}
+                  onChange={(e) => setDeleteBrandConfirmInput(e.target.value)}
+                  placeholder={`Ketik "${deleteBrandTarget}"...`}
+                  style={{
+                    width: '100%', padding: '10px 12px', borderRadius: '8px',
+                    background: '#09090b', border: '1px solid #71717a', color: '#fff', fontSize: '13px', outline: 'none'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => {
+                    setDeleteBrandTarget(null);
+                    setDeleteBrandConfirmInput('');
+                  }}
+                  style={{
+                    padding: '10px 18px', borderRadius: '10px', background: '#27272a',
+                    border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                  }}
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={handleConfirmDeleteBrand}
+                  disabled={deletingBrand || deleteBrandConfirmInput.trim().toLowerCase() !== deleteBrandTarget.trim().toLowerCase()}
+                  style={{
+                    padding: '10px 18px', borderRadius: '10px',
+                    background: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand)
+                      ? 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'
+                      : '#3f3f46',
+                    color: '#fff', border: 'none', cursor: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand) ? 'pointer' : 'not-allowed',
+                    fontSize: '12px', fontWeight: 700, boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)'
+                  }}
+                >
+                  {deletingBrand ? 'Memusnahkan...' : '🔥 Hapus Permanen Akun Brand'}
+                </button>
+              </div>
             </div>
           </div>
         )}

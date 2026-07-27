@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.49 — Integrate ContentFlow Option 2 Brand Safety Deletion, Item Deletion, Auto-Close Modal, & Oldest-First Sorting (27/07/2026)
+- Add Option 2 Red Danger Safety Confirmation Modal for Admin Brand Deletion (requiring typing brand name)
+- Add DELETE /api/content-flow/[id] and DELETE /api/content-flow/brands API endpoints
+- Auto-close Detail Modal after saving status changes
+- Update query sorting to ORDER BY created_at ASC (oldest first)
+
 ## V2.2.48 — Integrate ContentFlow Assigned Brand Sidebar & Quick Tabs (27/07/2026)
 - Add collapsible Brand Account sub-items under ContentFlow Hub in Sidebar.js
 - Add Header Quick-Switch Brand Tab Bar with URL query param sync in content-flow/page.js

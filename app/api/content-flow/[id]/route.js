@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { updateContentFlowPublishStatus, getContentFlowItemById } from '@/lib/db';
+import { updateContentFlowPublishStatus, getContentFlowItemById, deleteContentFlowItem } from '@/lib/db';
 import { pgQuery } from '@/lib/db-pg';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -64,6 +64,33 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ success: true, item: updatedItem });
   } catch (error) {
     console.error('[API /api/content-flow/[id] PATCH Error]', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request, { params }) {
+  try {
+    const currentUser = getCurrentUser(request);
+    if (!currentUser || currentUser.role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Akses ditolak: Hanya Admin yang dapat menghapus konten' }, { status: 403 });
+    }
+
+    const resolvedParams = await params;
+    const id = resolvedParams?.id || params?.id;
+
+    // 1. Delete from PostgreSQL Node 3 Storage DB
+    try {
+      await pgQuery('DELETE FROM content_flow_items WHERE id = $1;', [id]);
+    } catch (pgErr) {
+      console.warn('[API DELETE ContentFlow PG Error]', pgErr.message);
+    }
+
+    // 2. Delete from SQLite Node 1 local DB
+    deleteContentFlowItem(id);
+
+    return NextResponse.json({ success: true, message: `Konten ${id} berhasil dihapus` });
+  } catch (error) {
+    console.error('[API /api/content-flow/[id] DELETE Error]', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

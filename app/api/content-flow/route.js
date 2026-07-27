@@ -43,7 +43,7 @@ export async function GET(request) {
       const totalItems = parseInt(totalRes.rows[0].count, 10);
       const totalPages = Math.ceil(totalItems / parseInt(limit, 10)) || 1;
 
-      let sql = `SELECT * ${baseSql} ORDER BY created_at DESC`;
+      let sql = `SELECT * ${baseSql} ORDER BY created_at ASC`;
       const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10);
       params.push(parseInt(limit, 10), offset);
       sql += ` LIMIT $${params.length - 1} OFFSET $${params.length}`;
