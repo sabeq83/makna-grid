@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.65 — Sequential Wardrobe Injection & Engine Fallback (27/07/2026)
+- Penambahan otomatis fallback tag Wardrobe pada scheduler-processors applyReplacements
+- Injeksi 10 variasi warna wardrobe Syar'i sekuensial per-baris pada 18 item kampanye opc_260727_dnarsz di Node 1
+
 ## V2.2.64 — Precision Product Truth Prompt Injection for OPC (27/07/2026)
 - Update product_truth dan geometric_truth presisi pada product_extractions
 - Injeksi otomatis prompt T2I dan I2V Klip 3 presisi pada 18 item kampanye opc_260727_dnarsz
