@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.47 — Fix ContentFlow OPC Ingestion SQL Query (27/07/2026)
+- Fix SQL JOIN query for brand_profiles and product_extractions in lib/contentflow-ingest.js
+- Resync OPC completed video items including Item #106 to content_flow_items table
+
 ## V2.2.46 — Mandatory Product Reference Photo Filename Declaration Engine (27/07/2026)
 - Injeksi otomatis nama berkas foto referensi produk ke dalam buildProductTruthContractSection
 - Deklarasi explicit visual anchor binding dengan formula non-ambigu aman dari kecenderungan square ratio
