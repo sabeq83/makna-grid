@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.61 — Upgrade ContentFlow Video Item Card Layout to 3-Column and 3/3 Published Glowing Border (27/07/2026)
+- Implement 3-column video item card layout (Column 1: Thumbnail & Cloud Link, Column 2: Product Name -> Caption 10 Words -> Platform Status Bar, Column 3: Brand Tag, Hook, Detail & Status)
+- Add top badge banner 🎉 3/3 PUBLISHED (ALL PLATFORMS) and emerald glowing border highlight for completed videos
+- Set custom platform font colors in Detail Modal (TikTok: White, FB: Blue, IG: Red)
+
 ## V2.2.60 — Enhance Admin Skedul Controller Accessibility and Auto Brand Selection (27/07/2026)
 - Make Admin Skedul button always accessible in top header and controller card header
 - Add auto-brand selection logic when opening schedule modal from global overview

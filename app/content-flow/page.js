@@ -155,7 +155,7 @@ function ContentFlowHubPageContent() {
           setCurrentUser(data.user);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const canEditProductLink = currentUser && (currentUser.role === 'admin' || (Array.isArray(currentUser.menuPermissions) && currentUser.menuPermissions.includes('edit_link_product')));
@@ -451,7 +451,7 @@ function ContentFlowHubPageContent() {
       if (data.success) {
         showToast(`Berhasil memperbarui ${fieldKey.replace('_', ' ')}! ✏️`);
         const updatedItem = data.item || { ...activeItem, [fieldKey]: inlineValue };
-        
+
         // 1. Update activeItem state immediately
         setActiveItem(updatedItem);
         setEditStatusForm(prev => ({ ...prev, [fieldKey]: inlineValue }));
@@ -936,980 +936,987 @@ function ContentFlowHubPageContent() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  style={{
-                    background: '#0d1322', border: '1px solid #1e293b', borderRadius: '16px',
-                    padding: '16px 20px', display: 'grid', gridTemplateColumns: '220px 1fr 240px', gap: '20px',
-                    alignItems: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.3)', transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.45)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#1e293b'}
-                >
-                  {/* Column 1: Thumbnail & Cloud Links */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div style={{
-                      position: 'relative', width: '100%', height: '124px', borderRadius: '12px',
-                      background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid #334155',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
-                    }}>
-                      <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
-                        <FilmIcon style={{ width: 20, height: 20 }} />
+              {items.map((item) => {
+                const isTkPub = item.tiktok_status === 'Published' || item.tiktok_status === 'Skipped';
+                const isFbPub = item.facebook_status === 'Published' || item.facebook_status === 'Skipped';
+                const isIgPub = item.instagram_status === 'Published' || item.instagram_status === 'Skipped';
+                const publishedPlatformCount = [isTkPub, isFbPub, isIgPub].filter(Boolean).length;
+                const isAll3Published = publishedPlatformCount === 3;
+
+                return (
+                  <div
+                    key={item.id}
+                    style={{
+                      background: '#0d1322',
+                      border: isAll3Published ? '1px solid #10b981' : '1px solid #1e293b',
+                      borderRadius: '16px',
+                      padding: isAll3Published ? '22px 20px 16px' : '16px 20px',
+                      display: 'grid',
+                      gridTemplateColumns: '200px 1fr 240px',
+                      gap: '20px',
+                      alignItems: 'center',
+                      boxShadow: isAll3Published ? '0 0 20px rgba(16, 185, 129, 0.25)' : '0 4px 16px rgba(0,0,0,0.3)',
+                      transition: 'all 0.2s ease',
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = isAll3Published ? '#10b981' : 'rgba(59, 130, 246, 0.45)'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = isAll3Published ? '#10b981' : '#1e293b'}
+                  >
+                    {/* Top Status Badge Banner */}
+                    {isAll3Published ? (
+                      <div style={{
+                        position: 'absolute', top: '-11px', left: '24px',
+                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        color: '#ffffff', fontSize: '10px', fontWeight: 800,
+                        padding: '2px 12px', borderRadius: '12px',
+                        boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)',
+                        letterSpacing: '0.04em', border: '1px solid #34d399'
+                      }}>
+                        🎉 3/3 PUBLISHED (ALL PLATFORMS)
+                      </div>
+                    ) : publishedPlatformCount > 0 ? (
+                      <div style={{
+                        position: 'absolute', top: '-11px', left: '24px',
+                        background: 'rgba(245, 158, 11, 0.15)',
+                        border: '1px solid #f59e0b', color: '#fbbf24', fontSize: '10px', fontWeight: 800,
+                        padding: '2px 10px', borderRadius: '12px', letterSpacing: '0.04em'
+                      }}>
+                        ⏳ {publishedPlatformCount}/3 TERPUBLIKASI
+                      </div>
+                    ) : null}
+
+                    {/* KOLOM KIRI: Thumbnail Video, Video ID, & Link Asset */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{
+                        position: 'relative', width: '100%', height: '110px', borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid #334155',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
+                      }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
+                          <FilmIcon style={{ width: 20, height: 20 }} />
+                        </div>
+
+                        <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 2 }}>
+                          <span style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(15, 23, 42, 0.9)', border: '1px solid #3b82f6', color: '#60a5fa', fontSize: '10px', fontWeight: 700, fontFamily: 'monospace' }}>
+                            {item.video_id}
+                          </span>
+                        </div>
                       </div>
 
-                      <div style={{ position: 'absolute', top: '8px', left: '8px', zIndex: 2 }}>
-                        <span style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(15, 23, 42, 0.9)', border: '1px solid #3b82f6', color: '#60a5fa', fontSize: '10px', fontWeight: 700, fontFamily: 'monospace' }}>
-                          {item.video_id}
-                        </span>
-                      </div>
-                    </div>
+                      {/* Link Asset Button */}
+                      <div style={{ width: '100%' }}>
+                        {(() => {
+                          const allUrls = [item.nextcloud_url, item.drive_link, item.url_asset].filter(Boolean);
+                          const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
+                          const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
 
-                    {/* Single Priority Cloud Asset Link Button */}
-                    <div style={{ width: '100%' }}>
-                      {(() => {
-                        const allUrls = [item.nextcloud_url, item.drive_link, item.url_asset].filter(Boolean);
-                        const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
-                        const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
+                          const targetUrl = ncUrl || item.nextcloud_url || gdUrl || item.drive_link || item.url_asset;
+                          const isNextcloud = Boolean(ncUrl || (item.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
 
-                        const targetUrl = ncUrl || item.nextcloud_url || gdUrl || item.drive_link || item.url_asset;
-                        const isNextcloud = Boolean(ncUrl || (item.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
+                          if (!targetUrl) {
+                            return (
+                              <span style={{ display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px', borderRadius: '8px', background: 'rgba(30, 41, 59, 0.5)', color: '#64748b', fontSize: '11px', fontWeight: 600 }}>
+                                ⏳ Asset Belum Tersedia
+                              </span>
+                            );
+                          }
 
-                        if (!targetUrl) {
+                          if (isNextcloud) {
+                            return (
+                              <a href={targetUrl} target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px', borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)', color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)' }} title="Buka Link Nextcloud">
+                                ☁️ Nextcloud
+                              </a>
+                            );
+                          }
+
                           return (
-                            <span
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                                borderRadius: '8px', background: 'rgba(30, 41, 59, 0.5)',
-                                color: '#64748b', fontSize: '11px', fontWeight: 600
-                              }}
-                            >
-                              ⏳ Asset Belum Tersedia
-                            </span>
-                          );
-                        }
-
-                        if (isNextcloud) {
-                          return (
-                            <a
-                              href={targetUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                                borderRadius: '8px', background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
-                                color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
-                                boxShadow: '0 2px 8px rgba(56, 189, 248, 0.25)', transition: 'all 0.2s ease'
-                              }}
-                              title="Buka Link Nextcloud"
-                            >
-                              ☁️ Nextcloud
+                            <a href={targetUrl} target="_blank" rel="noreferrer" style={{ display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px', borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)' }} title="Buka Link Google Drive">
+                              📁 Google Drive
                             </a>
                           );
-                        }
+                        })()}
+                      </div>
+                    </div>
 
-                        return (
-                          <a
-                            href={targetUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            style={{
-                              display: 'block', width: '100%', textAlign: 'center', padding: '6px 10px',
-                              borderRadius: '8px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                              color: '#ffffff', fontSize: '11px', fontWeight: 700, textDecoration: 'none',
-                              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)', transition: 'all 0.2s ease'
-                            }}
-                            title="Buka Link Google Drive"
-                          >
-                            📁 Google Drive
+                    {/* KOLOM TENGAH: 1. Nama Produk ➡️ 2. Pratinjau Caption 10 Kata (11px) ➡️ 3. Platform Status Bar */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
+                      {/* 1. Nama Produk SKU */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 800, color: '#34d399', background: 'rgba(16, 185, 129, 0.12)', padding: '3px 10px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                          📦 {item.nama_produk || 'Umum'}
+                        </span>
+                        {item.link_produk && (
+                          <a href={item.link_produk} target="_blank" rel="noreferrer" style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(2, 132, 199, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #0284c7', textDecoration: 'none', fontWeight: 600 }}>
+                            🔗 Link Produk
                           </a>
-                        );
-                      })()}
-                    </div>
-                  </div>
+                        )}
+                        {item.link_affiliate && (
+                          <button type="button" onClick={(e) => { e.stopPropagation(); copyToClipboard(item.link_affiliate, 'Link Affiliate', `card_affiliate_${item.id}`); }} style={{ fontSize: '11px', color: '#c084fc', background: 'rgba(168, 85, 247, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #a855f7', cursor: 'pointer', fontWeight: 600 }}>
+                            {copiedKeys[`card_affiliate_${item.id}`] ? '✓ Copied!' : '🛒 Affiliate Link'}
+                          </button>
+                        )}
+                      </div>
 
-                  {/* Column 2: Content Details & Monospace Caption */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
-                    {/* Top Row: Prominent Brand Header & Metadata Badges */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      {item.account_name && (
-                        <span style={{
-                          fontSize: '12px', fontWeight: 800, padding: '3px 10px', borderRadius: '8px',
-                          display: 'inline-flex', alignItems: 'center', gap: '4px',
-                          ...getBrandBadgeStyle(item.account_name)
+                      {/* 2. Pratinjau Caption 10 Kata (Font Monospace 11px) + Tombol Copy */}
+                      <div style={{ position: 'relative', background: '#05070d', borderRadius: '8px', border: '1px solid #1e293b', padding: '8px 12px' }}>
+                        <p style={{ fontSize: '11px', fontFamily: 'monospace', color: '#cbd5e1', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingRight: '80px', lineHeight: '1.4' }}>
+                          {item.caption ? item.caption.split(' ').slice(0, 10).join(' ') + '...' : '(Tidak ada caption)'}
+                        </p>
+                        {item.caption && (
+                          <button
+                            onClick={() => copyToClipboard(item.caption, 'Caption', `card_caption_${item.id}`)}
+                            style={{
+                              position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+                              padding: '3px 8px', borderRadius: '6px',
+                              background: copiedKeys[`card_caption_${item.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : '#1e293b',
+                              border: `1px solid ${copiedKeys[`card_caption_${item.id}`] ? '#10b981' : '#334155'}`,
+                              color: '#ffffff', fontSize: '10px', cursor: 'pointer', fontWeight: 600
+                            }}
+                          >
+                            {copiedKeys[`card_caption_${item.id}`] ? '✓ Copied!' : '📋 Copy'}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* 3. Platform Status Chips Bar */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', paddingTop: '2px' }}>
+                        {/* TikTok Chip */}
+                        <div style={{
+                          padding: '3px 9px', borderRadius: '6px', fontSize: '11px', fontWeight: 700,
+                          background: isTkPub ? 'rgba(16, 185, 129, 0.15)' : 'rgba(15, 23, 42, 0.8)',
+                          border: isTkPub ? '1px solid #10b981' : '1px solid #334155',
+                          color: isTkPub ? '#34d399' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
                         }}>
-                          🏷️ @{item.account_name}
-                        </span>
-                      )}
-                      {getSourceBadge(item.source_type)}
-                      {item.pipeline_status === 'Skipped' ? (
-                        <span style={{ fontSize: '11px', color: '#e9d5ff', background: 'rgba(168, 85, 247, 0.2)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #a855f7', fontWeight: 700 }}>
-                          ⏭️ Skipped
-                        </span>
-                      ) : item.pipeline_status === 'In Production' ? (
-                        <span style={{ fontSize: '11px', color: '#fcd34d', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #f59e0b', fontWeight: 700 }}>
-                          ⏳ In Production
-                        </span>
-                      ) : null}
-                      {item.nama_produk && (
-                        <span style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.25)', fontWeight: 600 }}>
-                          📦 {item.nama_produk}
-                        </span>
-                      )}
-                      {item.link_produk && (
-                        <a
-                          href={item.link_produk}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(2, 132, 199, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #0284c7', textDecoration: 'none', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                          title="Buka Link Produk"
-                        >
-                          🔗 Link Produk
-                        </a>
-                      )}
-                      {item.link_affiliate && (
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); copyToClipboard(item.link_affiliate, 'Link Affiliate', `card_affiliate_${item.id}`); }}
-                          style={{ fontSize: '11px', color: '#c084fc', background: 'rgba(168, 85, 247, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #a855f7', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                          title="Salin Link Affiliate"
-                        >
-                          {copiedKeys[`card_affiliate_${item.id}`] ? '✓ Copied!' : '🛒 Affiliate Link'}
-                        </button>
-                      )}
-                      {item.production_date && (
-                        <span style={{ fontSize: '10px', color: '#9ca3af', marginLeft: 'auto', fontFamily: 'monospace' }}>
-                          📅 {new Date(item.production_date).toISOString().split('T')[0]}
-                        </span>
-                      )}
+                          <span>🎵 TikTok</span>
+                          <span>{item.tiktok_status === 'Published' ? '✓ Published' : item.tiktok_status === 'Skipped' ? '⏭️ Skipped' : item.tiktok_status}</span>
+                        </div>
+
+                        {/* FB Chip */}
+                        <div style={{
+                          padding: '3px 9px', borderRadius: '6px', fontSize: '11px', fontWeight: 700,
+                          background: isFbPub ? 'rgba(59, 130, 246, 0.15)' : 'rgba(15, 23, 42, 0.8)',
+                          border: isFbPub ? '1px solid #3b82f6' : '1px solid #334155',
+                          color: isFbPub ? '#60a5fa' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
+                        }}>
+                          <span>📘 FB</span>
+                          <span>{item.facebook_status === 'Published' ? '✓ Published' : item.facebook_status === 'Skipped' ? '⏭️ Skipped' : item.facebook_status}</span>
+                        </div>
+
+                        {/* IG Chip */}
+                        <div style={{
+                          padding: '3px 9px', borderRadius: '6px', fontSize: '11px', fontWeight: 700,
+                          background: isIgPub ? 'rgba(239, 68, 68, 0.15)' : 'rgba(15, 23, 42, 0.8)',
+                          border: isIgPub ? '1px solid #ef4444' : '1px solid #334155',
+                          color: isIgPub ? '#f87171' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
+                        }}>
+                          <span>📸 IG</span>
+                          <span>{item.instagram_status === 'Published' ? '✓ Published' : item.instagram_status === 'Skipped' ? '⏭️ Skipped' : item.instagram_status}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', margin: 0, lineHeight: 1.4 }}>
-                      {item.hook || 'Tanpa Hook'}
-                    </h3>
+                    {/* KOLOM KANAN: Brand Tag, Hook Title, & Tombol Detail & Status */}
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '10px', height: '100%', borderLeft: '1px solid #1e293b', paddingLeft: '16px' }}>
+                      <div>
+                        {item.account_name && (
+                          <div style={{ marginBottom: '6px' }}>
+                            <span style={{
+                              fontSize: '11px', fontWeight: 800, padding: '3px 8px', borderRadius: '6px',
+                              ...getBrandBadgeStyle(item.account_name)
+                            }}>
+                              🏷️ @{item.account_name}
+                            </span>
+                          </div>
+                        )}
+                        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', margin: 0, lineHeight: 1.4 }}>
+                          {item.hook || 'Tanpa Hook'}
+                        </h3>
+                      </div>
 
-                    {/* Monospace Caption Block with Copy Button */}
-                    <div style={{ position: 'relative', background: '#05070d', borderRadius: '8px', border: '1px solid #1e293b', padding: '8px 12px' }}>
-                      <p style={{ fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingRight: '90px' }}>
-                        {item.caption || '(Tidak ada caption)'}
-                      </p>
-                      {item.caption && (
-                        <button
-                          onClick={() => copyToClipboard(item.caption, 'Caption', `card_caption_${item.id}`)}
-                          style={{
-                            position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
-                            padding: '4px 10px', borderRadius: '6px',
-                            background: copiedKeys[`card_caption_${item.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : '#1e293b',
-                            border: `1px solid ${copiedKeys[`card_caption_${item.id}`] ? '#10b981' : '#334155'}`,
-                            color: '#ffffff', fontSize: '11px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s ease'
-                          }}
-                        >
-                          {copiedKeys[`card_caption_${item.id}`] ? '✓ Copied!' : '📋 Copy'}
-                        </button>
-                      )}
+                      <button
+                        onClick={() => openDetailModal(item)}
+                        style={{
+                          width: '100%', padding: '9px 14px', borderRadius: '10px',
+                          background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+                          color: '#ffffff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer',
+                          boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)', transition: 'all 0.2s ease'
+                        }}
+                      >
+                        Detail & Status
+                      </button>
                     </div>
                   </div>
-
-                  {/* Column 3: Platform Status & Action Button */}
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '12px', height: '100%', borderLeft: '1px solid #1e293b', paddingLeft: '16px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
-                        <span style={{ color: '#38bdf8', fontWeight: 700 }}>🎵 TikTok</span>
-                        {getStatusBadge(item.tiktok_status)}
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
-                        <span style={{ color: '#60a5fa', fontWeight: 700 }}>📘 Facebook</span>
-                        {getStatusBadge(item.facebook_status)}
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
-                        <span style={{ color: '#f472b6', fontWeight: 700 }}>📷 Instagram</span>
-                        {getStatusBadge(item.instagram_status)}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => openDetailModal(item)}
-                      style={{
-                        width: '100%', padding: '9px 14px', borderRadius: '10px',
-                        background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
-                        color: '#ffffff', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)', transition: 'all 0.2s ease'
-                      }}
-                    >
-                      Detail & Status
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
-        {/* Modal Detail & Update Status */}
-        {activeItem && (
-          <div style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '16px'
-          }}>
+          {/* Modal Detail & Update Status */}
+          {activeItem && (
             <div style={{
-              background: '#0d1322', border: '1px solid #1e293b', borderRadius: '16px',
-              width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '24px',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '16px'
             }}>
-              {/* Modal Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
-                  <span style={{
-                    padding: '5px 12px', borderRadius: '8px', background: '#1e293b', border: '1px solid #3b82f6',
-                    color: '#60a5fa', fontFamily: 'monospace', fontSize: '13px', fontWeight: 700, flexShrink: 0
-                  }}>
-                    {activeItem.video_id}
-                  </span>
-                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {activeItem.hook}
-                  </h2>
+              <div style={{
+                background: '#0d1322', border: '1px solid #1e293b', borderRadius: '16px',
+                width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '24px',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+              }}>
+                {/* Modal Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                    <span style={{
+                      padding: '5px 12px', borderRadius: '8px', background: '#1e293b', border: '1px solid #3b82f6',
+                      color: '#60a5fa', fontFamily: 'monospace', fontSize: '13px', fontWeight: 700, flexShrink: 0
+                    }}>
+                      {activeItem.video_id}
+                    </span>
+                    <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {activeItem.hook}
+                    </h2>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {currentUser?.role === 'admin' && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteItem(activeItem.id)}
+                        style={{
+                          padding: '5px 10px', borderRadius: '6px', background: 'rgba(239, 68, 68, 0.15)',
+                          border: '1px solid rgba(239, 68, 68, 0.4)', color: '#f87171', fontSize: '11px',
+                          fontWeight: 600, cursor: 'pointer'
+                        }}
+                        title="Hapus item konten ini (Admin Only)"
+                      >
+                        🗑️ Hapus Konten
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setActiveItem(null)}
+                      style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                    >
+                      <XIcon style={{ width: 22, height: 22 }} />
+                    </button>
+                  </div>
                 </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {currentUser?.role === 'admin' && (
+
+                {/* 4 Action Buttons Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '20px' }}>
                   <button
                     type="button"
-                    onClick={() => handleDeleteItem(activeItem.id)}
-                    style={{
-                      padding: '5px 10px', borderRadius: '6px', background: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.4)', color: '#f87171', fontSize: '11px',
-                      fontWeight: 600, cursor: 'pointer'
-                    }}
-                    title="Hapus item konten ini (Admin Only)"
-                  >
-                    🗑️ Hapus Konten
-                  </button>
-                )}
-                <button
-                  onClick={() => setActiveItem(null)}
-                  style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
-                >
-                  <XIcon style={{ width: 22, height: 22 }} />
-                </button>
-              </div>
-              </div>
-
-              {/* 4 Action Buttons Row */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '20px' }}>
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(activeItem.caption, 'Caption', `modal_caption_${activeItem.id}`)}
-                  disabled={!activeItem.caption}
-                  style={{
-                    padding: '10px 14px', borderRadius: '10px',
-                    background: copiedKeys[`modal_caption_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.caption ? '#1e293b' : 'rgba(30, 41, 59, 0.5)',
-                    border: copiedKeys[`modal_caption_${activeItem.id}`] ? '1px solid #10b981' : '1px solid #334155',
-                    color: activeItem.caption ? '#f1f5f9' : '#64748b', fontWeight: 600, fontSize: '13px',
-                    cursor: activeItem.caption ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {copiedKeys[`modal_caption_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Caption'}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate', `modal_affiliate_${activeItem.id}`)}
-                  disabled={!activeItem.link_affiliate}
-                  style={{
-                    padding: '10px 14px', borderRadius: '10px',
-                    background: copiedKeys[`modal_affiliate_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.link_affiliate ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'rgba(30, 41, 59, 0.5)',
-                    border: copiedKeys[`modal_affiliate_${activeItem.id}`] ? '1px solid #10b981' : activeItem.link_affiliate ? '1px solid #818cf8' : '1px solid #334155',
-                    color: activeItem.link_affiliate ? '#ffffff' : '#64748b', fontWeight: 700, fontSize: '13px',
-                    cursor: activeItem.link_affiliate ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                    boxShadow: activeItem.link_affiliate ? '0 4px 14px rgba(99, 102, 241, 0.35)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {copiedKeys[`modal_affiliate_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Affiliate Link'}
-                </button>
-
-                {activeItem.link_produk ? (
-                  <a
-                    href={activeItem.link_produk}
-                    target="_blank"
-                    rel="noreferrer"
+                    onClick={() => copyToClipboard(activeItem.caption, 'Caption', `modal_caption_${activeItem.id}`)}
+                    disabled={!activeItem.caption}
                     style={{
                       padding: '10px 14px', borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
-                      border: '1px solid #38bdf8', color: '#ffffff', fontWeight: 700, fontSize: '13px',
-                      textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                      boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)'
+                      background: copiedKeys[`modal_caption_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.caption ? '#1e293b' : 'rgba(30, 41, 59, 0.5)',
+                      border: copiedKeys[`modal_caption_${activeItem.id}`] ? '1px solid #10b981' : '1px solid #334155',
+                      color: activeItem.caption ? '#f1f5f9' : '#64748b', fontWeight: 600, fontSize: '13px',
+                      cursor: activeItem.caption ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      transition: 'all 0.2s ease'
                     }}
                   >
-                    🔗 Buka Link Produk
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    style={{
-                      padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
-                      border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
-                      cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-                    }}
-                  >
-                    🔗 Tanpa Link Produk
+                    {copiedKeys[`modal_caption_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Caption'}
                   </button>
-                )}
 
-                {(() => {
-                  const allUrls = [activeItem.nextcloud_url, activeItem.drive_link, activeItem.url_asset].filter(Boolean);
-                  const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
-                  const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate', `modal_affiliate_${activeItem.id}`)}
+                    disabled={!activeItem.link_affiliate}
+                    style={{
+                      padding: '10px 14px', borderRadius: '10px',
+                      background: copiedKeys[`modal_affiliate_${activeItem.id}`] ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : activeItem.link_affiliate ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'rgba(30, 41, 59, 0.5)',
+                      border: copiedKeys[`modal_affiliate_${activeItem.id}`] ? '1px solid #10b981' : activeItem.link_affiliate ? '1px solid #818cf8' : '1px solid #334155',
+                      color: activeItem.link_affiliate ? '#ffffff' : '#64748b', fontWeight: 700, fontSize: '13px',
+                      cursor: activeItem.link_affiliate ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      boxShadow: activeItem.link_affiliate ? '0 4px 14px rgba(99, 102, 241, 0.35)' : 'none',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {copiedKeys[`modal_affiliate_${activeItem.id}`] ? '✓ Copied!' : '📋 Copy Affiliate Link'}
+                  </button>
 
-                  const targetUrl = ncUrl || activeItem.nextcloud_url || gdUrl || activeItem.drive_link || activeItem.url_asset;
-                  const isNextcloud = Boolean(ncUrl || (activeItem.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
-
-                  if (!targetUrl) {
-                    return (
-                      <button
-                        disabled
-                        style={{
-                          padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
-                          border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
-                          cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-                        }}
-                      >
-                        📥 Asset Kosong
-                      </button>
-                    );
-                  }
-
-                  return (
+                  {activeItem.link_produk ? (
                     <a
-                      href={targetUrl}
+                      href={activeItem.link_produk}
                       target="_blank"
                       rel="noreferrer"
                       style={{
                         padding: '10px 14px', borderRadius: '10px',
-                        background: isNextcloud ? 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                        border: isNextcloud ? '1px solid #38bdf8' : '1px solid #10b981', color: '#ffffff', fontWeight: 700, fontSize: '13px',
+                        background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+                        border: '1px solid #38bdf8', color: '#ffffff', fontWeight: 700, fontSize: '13px',
                         textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        boxShadow: isNextcloud ? '0 4px 14px rgba(56, 189, 248, 0.3)' : '0 4px 14px rgba(16, 185, 129, 0.3)'
+                        boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)'
                       }}
                     >
-                      {isNextcloud ? '☁️ Nextcloud Asset' : '📁 Drive Asset'}
+                      🔗 Buka Link Produk
                     </a>
-                  );
-                })()}
-              </div>
+                  ) : (
+                    <button
+                      disabled
+                      style={{
+                        padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
+                        border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
+                        cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                      }}
+                    >
+                      🔗 Tanpa Link Produk
+                    </button>
+                  )}
 
-              {/* Field Catatan Konten (Paling Atas Sebelum Data Produk & Link) */}
-              <div style={{ background: '#090d16', padding: '16px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#60a5fa', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📝 CATATAN KONTEN
-                  </span>
-                  {activeItem.catatan && (
-                    <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>✓ Tersimpan</span>
+                  {(() => {
+                    const allUrls = [activeItem.nextcloud_url, activeItem.drive_link, activeItem.url_asset].filter(Boolean);
+                    const ncUrl = allUrls.find(u => typeof u === 'string' && (u.includes('100.78.186.123') || u.includes('index.php/s/') || u.toLowerCase().includes('nextcloud')));
+                    const gdUrl = allUrls.find(u => typeof u === 'string' && (u.includes('drive.google.com') || u.includes('docs.google.com')));
+
+                    const targetUrl = ncUrl || activeItem.nextcloud_url || gdUrl || activeItem.drive_link || activeItem.url_asset;
+                    const isNextcloud = Boolean(ncUrl || (activeItem.nextcloud_url && !gdUrl) || (targetUrl && (targetUrl.includes('100.78.186.123') || targetUrl.includes('index.php/s/'))));
+
+                    if (!targetUrl) {
+                      return (
+                        <button
+                          disabled
+                          style={{
+                            padding: '10px 14px', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.5)',
+                            border: '1px solid #334155', color: '#64748b', fontWeight: 600, fontSize: '13px',
+                            cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                          }}
+                        >
+                          📥 Asset Kosong
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <a
+                        href={targetUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          padding: '10px 14px', borderRadius: '10px',
+                          background: isNextcloud ? 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                          border: isNextcloud ? '1px solid #38bdf8' : '1px solid #10b981', color: '#ffffff', fontWeight: 700, fontSize: '13px',
+                          textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                          boxShadow: isNextcloud ? '0 4px 14px rgba(56, 189, 248, 0.3)' : '0 4px 14px rgba(16, 185, 129, 0.3)'
+                        }}
+                      >
+                        {isNextcloud ? '☁️ Nextcloud Asset' : '📁 Drive Asset'}
+                      </a>
+                    );
+                  })()}
+                </div>
+
+                {/* Field Catatan Konten (Paling Atas Sebelum Data Produk & Link) */}
+                <div style={{ background: '#090d16', padding: '16px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#60a5fa', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      📝 CATATAN KONTEN
+                    </span>
+                    {activeItem.catatan && (
+                      <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>✓ Tersimpan</span>
+                    )}
+                  </div>
+                  <textarea
+                    value={editStatusForm.catatan || ''}
+                    onChange={(e) => setEditStatusForm({ ...editStatusForm, catatan: e.target.value })}
+                    placeholder="Tambahkan catatan khusus untuk item konten ini (misal: Revisi caption, Jadwal tayang, dsb)..."
+                    style={{
+                      width: '100%', padding: '10px 12px', background: '#05070d', border: '1px solid #334155',
+                      borderRadius: '8px', color: '#e2e8f0', fontSize: '12px', outline: 'none', resize: 'vertical', minHeight: '65px',
+                      lineHeight: '1.5', fontFamily: 'inherit'
+                    }}
+                  />
+                </div>
+
+                {/* Metadata & Product Data Panel with Collapsible Accordion & Pencil Inline Edit */}
+                <div style={{ background: '#090d16', padding: '18px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div
+                    onClick={() => setIsProductSectionOpen(!isProductSectionOpen)}
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+                  >
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#c084fc', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      📦 DATA PRODUK & LINK
+                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>
+                        {isProductSectionOpen ? 'Tutup Panel 🔼' : 'Buka Panel 🔽'}
+                      </span>
+                      <button
+                        type="button"
+                        style={{ padding: '2px 8px', borderRadius: '6px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', fontSize: '10px', fontWeight: 700, cursor: 'pointer' }}
+                      >
+                        {isProductSectionOpen ? '▲' : '▼'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {isProductSectionOpen && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {/* 1. Nama Produk */}
+                      <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Nama Produk:</span>
+                          {editingInlineField === 'nama_produk' ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                              <input
+                                type="text"
+                                value={inlineValue}
+                                onChange={(e) => setInlineValue(e.target.value)}
+                                autoFocus
+                                placeholder="Masukkan nama produk..."
+                                style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSaveInlineField('nama_produk')}
+                                disabled={savingStatus}
+                                style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                              >
+                                ✔️ Simpan
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEditingInlineField(null)}
+                                style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                              >
+                                ❌
+                              </button>
+                            </div>
+                          ) : (
+                            <strong style={{ fontSize: '13px', color: activeItem.nama_produk ? '#ffffff' : '#64748b' }}>
+                              {activeItem.nama_produk || '(Belum diisi)'}
+                            </strong>
+                          )}
+                        </div>
+                        {editingInlineField !== 'nama_produk' && (
+                          canEditProductName ? (
+                            <button
+                              type="button"
+                              onClick={() => { setEditingInlineField('nama_produk'); setInlineValue(activeItem.nama_produk || ''); }}
+                              title="Edit Nama Produk"
+                              style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              ✏️ Edit
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Nama Product Permission)">🔒 Terkunci</span>
+                          )
+                        )}
+                      </div>
+
+                      {/* 2. Link Produk */}
+                      <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Produk:</span>
+                          {editingInlineField === 'link_produk' ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                              <input
+                                type="text"
+                                value={inlineValue}
+                                onChange={(e) => setInlineValue(e.target.value)}
+                                autoFocus
+                                placeholder="https://..."
+                                style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSaveInlineField('link_produk')}
+                                disabled={savingStatus}
+                                style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                              >
+                                ✔️ Simpan
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEditingInlineField(null)}
+                                style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                              >
+                                ❌
+                              </button>
+                            </div>
+                          ) : activeItem.link_produk ? (
+                            <a href={activeItem.link_produk} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', fontWeight: 600, textDecoration: 'none' }}>
+                              🔗 Buka Link Produk ↗
+                            </a>
+                          ) : (
+                            <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
+                          )}
+                        </div>
+                        {editingInlineField !== 'link_produk' && (
+                          canEditProductLink ? (
+                            <button
+                              type="button"
+                              onClick={() => { setEditingInlineField('link_produk'); setInlineValue(activeItem.link_produk || ''); }}
+                              title="Edit Link Produk"
+                              style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              ✏️ Edit
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Product Permission)">🔒 Terkunci</span>
+                          )
+                        )}
+                      </div>
+
+                      {/* 3. Link Affiliate */}
+                      <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Affiliate:</span>
+                          {editingInlineField === 'link_affiliate' ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                              <input
+                                type="text"
+                                value={inlineValue}
+                                onChange={(e) => setInlineValue(e.target.value)}
+                                autoFocus
+                                placeholder="https://..."
+                                style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSaveInlineField('link_affiliate')}
+                                disabled={savingStatus}
+                                style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                              >
+                                ✔️ Simpan
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEditingInlineField(null)}
+                                style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
+                              >
+                                ❌
+                              </button>
+                            </div>
+                          ) : activeItem.link_affiliate ? (
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate')}
+                              style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.4)', color: '#fbbf24', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                            >
+                              🛒 Copy Affiliate Link 📋
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
+                          )}
+                        </div>
+                        {editingInlineField !== 'link_affiliate' && (
+                          canEditAffiliateLink ? (
+                            <button
+                              type="button"
+                              onClick={() => { setEditingInlineField('link_affiliate'); setInlineValue(activeItem.link_affiliate || ''); }}
+                              title="Edit Link Affiliate"
+                              style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              ✏️ Edit
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Affiliate Permission)">🔒 Terkunci</span>
+                          )
+                        )}
+                      </div>
+
+                      {/* Caption Panel */}
+                      <div style={{ marginTop: '4px' }}>
+                        <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Caption:</span>
+                        <div style={{
+                          fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', background: '#05070d',
+                          padding: '12px', borderRadius: '8px', border: '1px solid #1e293b', whiteSpace: 'pre-wrap',
+                          maxHeight: '140px', overflowY: 'auto', lineHeight: '1.6'
+                        }}>
+                          {activeItem.caption || '(Tidak ada caption)'}
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
-                <textarea
-                  value={editStatusForm.catatan || ''}
-                  onChange={(e) => setEditStatusForm({ ...editStatusForm, catatan: e.target.value })}
-                  placeholder="Tambahkan catatan khusus untuk item konten ini (misal: Revisi caption, Jadwal tayang, dsb)..."
-                  style={{
-                    width: '100%', padding: '10px 12px', background: '#05070d', border: '1px solid #334155',
-                    borderRadius: '8px', color: '#e2e8f0', fontSize: '12px', outline: 'none', resize: 'vertical', minHeight: '65px',
-                    lineHeight: '1.5', fontFamily: 'inherit'
-                  }}
-                />
-              </div>
 
-              {/* Metadata & Product Data Panel with Collapsible Accordion & Pencil Inline Edit */}
-              <div style={{ background: '#090d16', padding: '18px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div
-                  onClick={() => setIsProductSectionOpen(!isProductSectionOpen)}
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
-                >
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#c084fc', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    📦 DATA PRODUK & LINK
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '11px', color: '#64748b' }}>
-                      {isProductSectionOpen ? 'Tutup Panel 🔼' : 'Buka Panel 🔽'}
+                {/* Sub-Header */}
+                <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 16px' }}>
+                  STATUS PUBLIKASI PER PLATFORM
+                </h3>
+
+                <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+                  {/* TikTok Controls */}
+                  <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      📱 TIKTOK
                     </span>
-                    <button
-                      type="button"
-                      style={{ padding: '2px 8px', borderRadius: '6px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', fontSize: '10px', fontWeight: 700, cursor: 'pointer' }}
-                    >
-                      {isProductSectionOpen ? '▲' : '▼'}
-                    </button>
-                  </div>
-                </div>
-
-                {isProductSectionOpen && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {/* 1. Nama Produk */}
-                    <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Nama Produk:</span>
-                        {editingInlineField === 'nama_produk' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                            <input
-                              type="text"
-                              value={inlineValue}
-                              onChange={(e) => setInlineValue(e.target.value)}
-                              autoFocus
-                              placeholder="Masukkan nama produk..."
-                              style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handleSaveInlineField('nama_produk')}
-                              disabled={savingStatus}
-                              style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
-                            >
-                              ✔️ Simpan
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setEditingInlineField(null)}
-                              style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
-                            >
-                              ❌
-                            </button>
-                          </div>
-                        ) : (
-                          <strong style={{ fontSize: '13px', color: activeItem.nama_produk ? '#ffffff' : '#64748b' }}>
-                            {activeItem.nama_produk || '(Belum diisi)'}
-                          </strong>
-                        )}
-                      </div>
-                      {editingInlineField !== 'nama_produk' && (
-                        canEditProductName ? (
-                          <button
-                            type="button"
-                            onClick={() => { setEditingInlineField('nama_produk'); setInlineValue(activeItem.nama_produk || ''); }}
-                            title="Edit Nama Produk"
-                            style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                          >
-                            ✏️ Edit
-                          </button>
-                        ) : (
-                          <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Nama Product Permission)">🔒 Terkunci</span>
-                        )
-                      )}
-                    </div>
-
-                    {/* 2. Link Produk */}
-                    <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Produk:</span>
-                        {editingInlineField === 'link_produk' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                            <input
-                              type="text"
-                              value={inlineValue}
-                              onChange={(e) => setInlineValue(e.target.value)}
-                              autoFocus
-                              placeholder="https://..."
-                              style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handleSaveInlineField('link_produk')}
-                              disabled={savingStatus}
-                              style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
-                            >
-                              ✔️ Simpan
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setEditingInlineField(null)}
-                              style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
-                            >
-                              ❌
-                            </button>
-                          </div>
-                        ) : activeItem.link_produk ? (
-                          <a href={activeItem.link_produk} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', fontWeight: 600, textDecoration: 'none' }}>
-                            🔗 Buka Link Produk ↗
-                          </a>
-                        ) : (
-                          <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
-                        )}
-                      </div>
-                      {editingInlineField !== 'link_produk' && (
-                        canEditProductLink ? (
-                          <button
-                            type="button"
-                            onClick={() => { setEditingInlineField('link_produk'); setInlineValue(activeItem.link_produk || ''); }}
-                            title="Edit Link Produk"
-                            style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                          >
-                            ✏️ Edit
-                          </button>
-                        ) : (
-                          <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Product Permission)">🔒 Terkunci</span>
-                        )
-                      )}
-                    </div>
-
-                    {/* 3. Link Affiliate */}
-                    <div style={{ background: '#05070d', padding: '12px 14px', borderRadius: '10px', border: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '2px' }}>Link Affiliate:</span>
-                        {editingInlineField === 'link_affiliate' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                            <input
-                              type="text"
-                              value={inlineValue}
-                              onChange={(e) => setInlineValue(e.target.value)}
-                              autoFocus
-                              placeholder="https://..."
-                              style={{ flex: 1, padding: '6px 10px', background: '#0f172a', border: '1px solid #38bdf8', borderRadius: '6px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handleSaveInlineField('link_affiliate')}
-                              disabled={savingStatus}
-                              style={{ padding: '6px 12px', borderRadius: '6px', background: '#10b981', border: 'none', color: '#fff', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
-                            >
-                              ✔️ Simpan
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setEditingInlineField(null)}
-                              style={{ padding: '6px 10px', borderRadius: '6px', background: '#334155', border: 'none', color: '#cbd5e1', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}
-                            >
-                              ❌
-                            </button>
-                          </div>
-                        ) : activeItem.link_affiliate ? (
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(activeItem.link_affiliate, 'Link Affiliate')}
-                            style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.4)', color: '#fbbf24', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
-                          >
-                            🛒 Copy Affiliate Link 📋
-                          </button>
-                        ) : (
-                          <span style={{ fontSize: '12px', color: '#64748b' }}>(Belum diisi)</span>
-                        )}
-                      </div>
-                      {editingInlineField !== 'link_affiliate' && (
-                        canEditAffiliateLink ? (
-                          <button
-                            type="button"
-                            onClick={() => { setEditingInlineField('link_affiliate'); setInlineValue(activeItem.link_affiliate || ''); }}
-                            title="Edit Link Affiliate"
-                            style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '11px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                          >
-                            ✏️ Edit
-                          </button>
-                        ) : (
-                          <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 600 }} title="Terkunci (Edit Link Affiliate Permission)">🔒 Terkunci</span>
-                        )
-                      )}
-                    </div>
-
-                    {/* Caption Panel */}
-                    <div style={{ marginTop: '4px' }}>
-                      <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Caption:</span>
-                      <div style={{
-                        fontSize: '12px', fontFamily: 'monospace', color: '#cbd5e1', background: '#05070d',
-                        padding: '12px', borderRadius: '8px', border: '1px solid #1e293b', whiteSpace: 'pre-wrap',
-                        maxHeight: '140px', overflowY: 'auto', lineHeight: '1.6'
-                      }}>
-                        {activeItem.caption || '(Tidak ada caption)'}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Sub-Header */}
-              <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 16px' }}>
-                STATUS PUBLIKASI PER PLATFORM
-              </h3>
-
-              <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-                {/* TikTok Controls */}
-                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📱 TIKTOK
-                  </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
-                      <select
-                        value={editStatusForm.tiktok_status}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.tiktok_status) }}
-                      >
-                        <option value="Not Published">Not Published</option>
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Published">Published</option>
-                        <option value="Skipped">Skipped</option>
-                      </select>
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
-                          Publish Date {editStatusForm.tiktok_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: new Date().toISOString().split('T')[0] })}
-                          style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
-                        >
-                          Hari Ini
-                        </button>
-                      </div>
-                      <input
-                        type="date"
-                        value={editStatusForm.tiktok_publish_date}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.tiktok_publish_date) }}
-                      />
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink TikTok</label>
-                      <input
-                        type="text"
-                        value={editStatusForm.permalink_tiktok}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_tiktok: e.target.value })}
-                        placeholder="https://tiktok.com/@..."
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Facebook Controls */}
-                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#60a5fa', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📘 FACEBOOK
-                  </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
-                      <select
-                        value={editStatusForm.facebook_status}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.facebook_status) }}
-                      >
-                        <option value="Not Published">Not Published</option>
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Published">Published</option>
-                        <option value="Skipped">Skipped</option>
-                      </select>
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
-                          Publish Date {editStatusForm.facebook_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => setEditStatusForm({ ...editStatusForm, facebook_publish_date: new Date().toISOString().split('T')[0] })}
-                          style={{ background: 'none', border: 'none', color: '#60a5fa', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
-                        >
-                          Hari Ini
-                        </button>
-                      </div>
-                      <input
-                        type="date"
-                        value={editStatusForm.facebook_publish_date}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.facebook_publish_date) }}
-                      />
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink FB</label>
-                      <input
-                        type="text"
-                        value={editStatusForm.permalink_facebook}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_facebook: e.target.value })}
-                        placeholder="https://facebook.com/..."
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Instagram Controls */}
-                <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#f472b6', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📷 INSTAGRAM
-                  </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
-                      <select
-                        value={editStatusForm.instagram_status}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.instagram_status) }}
-                      >
-                        <option value="Not Published">Not Published</option>
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Published">Published</option>
-                        <option value="Skipped">Skipped</option>
-                      </select>
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
-                          Publish Date {editStatusForm.instagram_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => setEditStatusForm({ ...editStatusForm, instagram_publish_date: new Date().toISOString().split('T')[0] })}
-                          style={{ background: 'none', border: 'none', color: '#f472b6', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
-                        >
-                          Hari Ini
-                        </button>
-                      </div>
-                      <input
-                        type="date"
-                        value={editStatusForm.instagram_publish_date}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.instagram_publish_date) }}
-                      />
-                    </div>
-
-                    <div style={{ gridColumn: 'span 4' }}>
-                      <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink Instagram</label>
-                      <input
-                        type="text"
-                        value={editStatusForm.permalink_instagram}
-                        onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_instagram: e.target.value })}
-                        placeholder="https://instagram.com/p/..."
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Modal Footer Submit Bar */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveItem(null)}
-                    style={{ padding: '10px 18px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={savingStatus}
-                    style={{
-                      padding: '10px 22px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
-                      border: 'none', color: '#ffffff', borderRadius: '10px', fontWeight: 700,
-                      cursor: savingStatus ? 'not-allowed' : 'pointer', fontSize: '13px',
-                      boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
-                    }}
-                  >
-                    {savingStatus ? 'Menyimpan...' : '💾 Simpan Perubahan Status'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Option 2 Brand Delete Red Danger Safety Modal */}
-        {deleteBrandTarget && (
-          <div style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
-            background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
-          }}>
-            <div style={{
-              width: '100%', maxWidth: '480px', borderRadius: '16px',
-              background: '#18181b', border: '1px solid rgba(239, 68, 68, 0.5)',
-              boxShadow: '0 20px 50px rgba(239, 68, 68, 0.3)', padding: '24px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#ef4444', marginBottom: '16px' }}>
-                <span style={{ fontSize: '28px' }}>⚠️</span>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#f87171' }}>Strict Brand Deletion Warning</h3>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#a1a1aa' }}>Tindakan ini permanen & tidak dapat dibatalkan</p>
-                </div>
-              </div>
-
-              <p style={{ fontSize: '13px', color: '#e4e4e7', lineHeight: '1.5', marginBottom: '16px' }}>
-                Anda akan menghapus <strong style={{ color: '#f87171' }}>SELURUH KONTEN VIDEO</strong> milik akun brand <strong style={{ color: '#f87171' }}>@{deleteBrandTarget}</strong> secara permanen dari SQLite Node 1 & PostgreSQL Node 3 Storage Database.
-              </p>
-
-              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '12px', borderRadius: '10px', marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#fca5a5', marginBottom: '6px' }}>
-                  Ketik ulang nama brand di bawah ini untuk mengonfirmasi: <span style={{ fontFamily: 'monospace', color: '#fff', background: '#000', padding: '2px 6px', borderRadius: '4px' }}>{deleteBrandTarget}</span>
-                </label>
-                <input
-                  type="text"
-                  value={deleteBrandConfirmInput}
-                  onChange={(e) => setDeleteBrandConfirmInput(e.target.value)}
-                  placeholder={`Ketik "${deleteBrandTarget}"...`}
-                  style={{
-                    width: '100%', padding: '10px 12px', borderRadius: '8px',
-                    background: '#09090b', border: '1px solid #71717a', color: '#fff', fontSize: '13px', outline: 'none'
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                <button
-                  onClick={() => {
-                    setDeleteBrandTarget(null);
-                    setDeleteBrandConfirmInput('');
-                  }}
-                  style={{
-                    padding: '10px 18px', borderRadius: '10px', background: '#27272a',
-                    border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600
-                  }}
-                >
-                  Batal
-                </button>
-                <button
-                  onClick={handleConfirmDeleteBrand}
-                  disabled={deletingBrand || deleteBrandConfirmInput.trim().toLowerCase() !== deleteBrandTarget.trim().toLowerCase()}
-                  style={{
-                    padding: '10px 18px', borderRadius: '10px',
-                    background: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand)
-                      ? 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'
-                      : '#3f3f46',
-                    color: '#fff', border: 'none', cursor: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand) ? 'pointer' : 'not-allowed',
-                    fontSize: '12px', fontWeight: 700, boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)'
-                  }}
-                >
-                  {deletingBrand ? 'Memusnahkan...' : '🔥 Hapus Permanen Akun Brand'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Admin Schedule Controller Modal (Admin Only) */}
-        {showAdminScheduleModal && (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(5, 7, 13, 0.85)', backdropFilter: 'blur(12px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px'
-          }}>
-            <div style={{
-              width: '100%', maxWidth: '640px', background: '#0f172a', border: '1px solid rgba(168, 85, 247, 0.4)',
-              borderRadius: '20px', padding: '28px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    📅 Skedul Controller — <span style={{ color: '#c084fc' }}>@{accountFilter}</span>
-                  </h3>
-                  <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0' }}>
-                    Atur 5 Produk Aktif & Target Posting Harian (1 s/d 6 video/hari) untuk dikelola tim posting.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setShowAdminScheduleModal(false)}
-                  style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '20px', cursor: 'pointer' }}
-                >
-                  ✕
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveBrandSchedules}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
-                  {adminSlotsForm.map((slot, i) => (
-                    <div
-                      key={slot.slot_index}
-                      style={{
-                        display: 'grid', gridTemplateColumns: 'auto 1fr 140px', gap: '12px', alignItems: 'center',
-                        padding: '12px 14px', borderRadius: '12px', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)'
-                      }}
-                    >
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#c084fc', width: '60px' }}>
-                        Slot #{slot.slot_index}
-                      </span>
-
-                      {/* Product Name Selector */}
-                      <div>
-                        {availableProducts.length > 0 ? (
-                          <select
-                            value={slot.product_name}
-                            onChange={(e) => {
-                              const updated = [...adminSlotsForm];
-                              updated[i].product_name = e.target.value;
-                              updated[i].product_id = e.target.value;
-                              setAdminSlotsForm(updated);
-                            }}
-                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
-                          >
-                            <option value="">-- Pilih Produk Aktif --</option>
-                            {availableProducts.map(p => (
-                              <option key={p} value={p}>{p}</option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input
-                            type="text"
-                            value={slot.product_name}
-                            onChange={(e) => {
-                              const updated = [...adminSlotsForm];
-                              updated[i].product_name = e.target.value;
-                              updated[i].product_id = e.target.value;
-                              setAdminSlotsForm(updated);
-                            }}
-                            placeholder="Nama Produk..."
-                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
-                          />
-                        )}
-                      </div>
-
-                      {/* Target Post Per Day Selector (1-6) */}
-                      <div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
                         <select
-                          value={slot.target_daily_posts}
-                          onChange={(e) => {
-                            const updated = [...adminSlotsForm];
-                            updated[i].target_daily_posts = parseInt(e.target.value) || 1;
-                            setAdminSlotsForm(updated);
-                          }}
-                          style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #c084fc', color: '#e9d5ff', fontWeight: 700, fontSize: '12px', outline: 'none' }}
+                          value={editStatusForm.tiktok_status}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_status: e.target.value })}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.tiktok_status) }}
                         >
-                          {[1, 2, 3, 4, 5, 6].map(num => (
-                            <option key={num} value={num}>{num} / Hari</option>
-                          ))}
+                          <option value="Not Published">Not Published</option>
+                          <option value="Scheduled">Scheduled</option>
+                          <option value="Published">Published</option>
+                          <option value="Skipped">Skipped</option>
                         </select>
                       </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                            Publish Date {editStatusForm.tiktok_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: new Date().toISOString().split('T')[0] })}
+                            style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                          >
+                            Hari Ini
+                          </button>
+                        </div>
+                        <input
+                          type="date"
+                          value={editStatusForm.tiktok_publish_date}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: e.target.value })}
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.tiktok_publish_date) }}
+                        />
+                      </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink TikTok</label>
+                        <input
+                          type="text"
+                          value={editStatusForm.permalink_tiktok}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_tiktok: e.target.value })}
+                          placeholder="https://tiktok.com/@..."
+                          style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                      </div>
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Facebook Controls */}
+                  <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#60a5fa', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      📘 FACEBOOK
+                    </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
+                        <select
+                          value={editStatusForm.facebook_status}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_status: e.target.value })}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.facebook_status) }}
+                        >
+                          <option value="Not Published">Not Published</option>
+                          <option value="Scheduled">Scheduled</option>
+                          <option value="Published">Published</option>
+                          <option value="Skipped">Skipped</option>
+                        </select>
+                      </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                            Publish Date {editStatusForm.facebook_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setEditStatusForm({ ...editStatusForm, facebook_publish_date: new Date().toISOString().split('T')[0] })}
+                            style={{ background: 'none', border: 'none', color: '#60a5fa', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                          >
+                            Hari Ini
+                          </button>
+                        </div>
+                        <input
+                          type="date"
+                          value={editStatusForm.facebook_publish_date}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_publish_date: e.target.value })}
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.facebook_publish_date) }}
+                        />
+                      </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink FB</label>
+                        <input
+                          type="text"
+                          value={editStatusForm.permalink_facebook}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_facebook: e.target.value })}
+                          placeholder="https://facebook.com/..."
+                          style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instagram Controls */}
+                  <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#f472b6', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      📷 INSTAGRAM
+                    </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '12px', alignItems: 'center' }}>
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Status</label>
+                        <select
+                          value={editStatusForm.instagram_status}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_status: e.target.value })}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.instagram_status) }}
+                        >
+                          <option value="Not Published">Not Published</option>
+                          <option value="Scheduled">Scheduled</option>
+                          <option value="Published">Published</option>
+                          <option value="Skipped">Skipped</option>
+                        </select>
+                      </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                            Publish Date {editStatusForm.instagram_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setEditStatusForm({ ...editStatusForm, instagram_publish_date: new Date().toISOString().split('T')[0] })}
+                            style={{ background: 'none', border: 'none', color: '#f472b6', fontSize: '10px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                          >
+                            Hari Ini
+                          </button>
+                        </div>
+                        <input
+                          type="date"
+                          value={editStatusForm.instagram_publish_date}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_publish_date: e.target.value })}
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.instagram_publish_date) }}
+                        />
+                      </div>
+
+                      <div style={{ gridColumn: 'span 4' }}>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', display: 'block', marginBottom: '4px', fontWeight: 600 }}>Permalink Instagram</label>
+                        <input
+                          type="text"
+                          value={editStatusForm.permalink_instagram}
+                          onChange={(e) => setEditStatusForm({ ...editStatusForm, permalink_instagram: e.target.value })}
+                          placeholder="https://instagram.com/p/..."
+                          style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Modal Footer Submit Bar */}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveItem(null)}
+                      style={{ padding: '10px 18px', background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1', borderRadius: '10px', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={savingStatus}
+                      style={{
+                        padding: '10px 22px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+                        border: 'none', color: '#ffffff', borderRadius: '10px', fontWeight: 700,
+                        cursor: savingStatus ? 'not-allowed' : 'pointer', fontSize: '13px',
+                        boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
+                      }}
+                    >
+                      {savingStatus ? 'Menyimpan...' : '💾 Simpan Perubahan Status'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Option 2 Brand Delete Red Danger Safety Modal */}
+          {deleteBrandTarget && (
+            <div style={{
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+            }}>
+              <div style={{
+                width: '100%', maxWidth: '480px', borderRadius: '16px',
+                background: '#18181b', border: '1px solid rgba(239, 68, 68, 0.5)',
+                boxShadow: '0 20px 50px rgba(239, 68, 68, 0.3)', padding: '24px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#ef4444', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '28px' }}>⚠️</span>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#f87171' }}>Strict Brand Deletion Warning</h3>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#a1a1aa' }}>Tindakan ini permanen & tidak dapat dibatalkan</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '13px', color: '#e4e4e7', lineHeight: '1.5', marginBottom: '16px' }}>
+                  Anda akan menghapus <strong style={{ color: '#f87171' }}>SELURUH KONTEN VIDEO</strong> milik akun brand <strong style={{ color: '#f87171' }}>@{deleteBrandTarget}</strong> secara permanen dari SQLite Node 1 & PostgreSQL Node 3 Storage Database.
+                </p>
+
+                <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '12px', borderRadius: '10px', marginBottom: '16px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#fca5a5', marginBottom: '6px' }}>
+                    Ketik ulang nama brand di bawah ini untuk mengonfirmasi: <span style={{ fontFamily: 'monospace', color: '#fff', background: '#000', padding: '2px 6px', borderRadius: '4px' }}>{deleteBrandTarget}</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={deleteBrandConfirmInput}
+                    onChange={(e) => setDeleteBrandConfirmInput(e.target.value)}
+                    placeholder={`Ketik "${deleteBrandTarget}"...`}
+                    style={{
+                      width: '100%', padding: '10px 12px', borderRadius: '8px',
+                      background: '#09090b', border: '1px solid #71717a', color: '#fff', fontSize: '13px', outline: 'none'
+                    }}
+                  />
                 </div>
 
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
                   <button
-                    type="button"
-                    onClick={() => setShowAdminScheduleModal(false)}
-                    style={{ padding: '10px 18px', borderRadius: '10px', background: '#27272a', border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
+                    onClick={() => {
+                      setDeleteBrandTarget(null);
+                      setDeleteBrandConfirmInput('');
+                    }}
+                    style={{
+                      padding: '10px 18px', borderRadius: '10px', background: '#27272a',
+                      border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600
+                    }}
                   >
                     Batal
                   </button>
                   <button
-                    type="submit"
-                    disabled={savingSchedule}
+                    onClick={handleConfirmDeleteBrand}
+                    disabled={deletingBrand || deleteBrandConfirmInput.trim().toLowerCase() !== deleteBrandTarget.trim().toLowerCase()}
                     style={{
-                      padding: '10px 22px', borderRadius: '10px', background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
-                      color: '#fff', border: 'none', cursor: savingSchedule ? 'not-allowed' : 'pointer', fontSize: '12px', fontWeight: 700,
-                      boxShadow: '0 4px 14px rgba(168, 85, 247, 0.4)'
+                      padding: '10px 18px', borderRadius: '10px',
+                      background: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand)
+                        ? 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'
+                        : '#3f3f46',
+                      color: '#fff', border: 'none', cursor: (deleteBrandConfirmInput.trim().toLowerCase() === deleteBrandTarget.trim().toLowerCase() && !deletingBrand) ? 'pointer' : 'not-allowed',
+                      fontSize: '12px', fontWeight: 700, boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)'
                     }}
                   >
-                    {savingSchedule ? 'Menyimpan...' : '💾 Simpan Skedul 5 Produk'}
+                    {deletingBrand ? 'Memusnahkan...' : '🔥 Hapus Permanen Akun Brand'}
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Admin Schedule Controller Modal (Admin Only) */}
+          {showAdminScheduleModal && (
+            <div style={{
+              position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(5, 7, 13, 0.85)', backdropFilter: 'blur(12px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px'
+            }}>
+              <div style={{
+                width: '100%', maxWidth: '640px', background: '#0f172a', border: '1px solid rgba(168, 85, 247, 0.4)',
+                borderRadius: '20px', padding: '28px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      📅 Skedul Controller — <span style={{ color: '#c084fc' }}>@{accountFilter}</span>
+                    </h3>
+                    <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0' }}>
+                      Atur 5 Produk Aktif & Target Posting Harian (1 s/d 6 video/hari) untuk dikelola tim posting.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowAdminScheduleModal(false)}
+                    style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '20px', cursor: 'pointer' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <form onSubmit={handleSaveBrandSchedules}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '24px' }}>
+                    {adminSlotsForm.map((slot, i) => (
+                      <div
+                        key={slot.slot_index}
+                        style={{
+                          display: 'grid', gridTemplateColumns: 'auto 1fr 140px', gap: '12px', alignItems: 'center',
+                          padding: '12px 14px', borderRadius: '12px', background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)'
+                        }}
+                      >
+                        <span style={{ fontSize: '12px', fontWeight: 800, color: '#c084fc', width: '60px' }}>
+                          Slot #{slot.slot_index}
+                        </span>
+
+                        {/* Product Name Selector */}
+                        <div>
+                          {availableProducts.length > 0 ? (
+                            <select
+                              value={slot.product_name}
+                              onChange={(e) => {
+                                const updated = [...adminSlotsForm];
+                                updated[i].product_name = e.target.value;
+                                updated[i].product_id = e.target.value;
+                                setAdminSlotsForm(updated);
+                              }}
+                              style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
+                            >
+                              <option value="">-- Pilih Produk Aktif --</option>
+                              {availableProducts.map(p => (
+                                <option key={p} value={p}>{p}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              value={slot.product_name}
+                              onChange={(e) => {
+                                const updated = [...adminSlotsForm];
+                                updated[i].product_name = e.target.value;
+                                updated[i].product_id = e.target.value;
+                                setAdminSlotsForm(updated);
+                              }}
+                              placeholder="Nama Produk..."
+                              style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #3f3f46', color: '#fff', fontSize: '12px', outline: 'none' }}
+                            />
+                          )}
+                        </div>
+
+                        {/* Target Post Per Day Selector (1-6) */}
+                        <div>
+                          <select
+                            value={slot.target_daily_posts}
+                            onChange={(e) => {
+                              const updated = [...adminSlotsForm];
+                              updated[i].target_daily_posts = parseInt(e.target.value) || 1;
+                              setAdminSlotsForm(updated);
+                            }}
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: '#09090b', border: '1px solid #c084fc', color: '#e9d5ff', fontWeight: 700, fontSize: '12px', outline: 'none' }}
+                          >
+                            {[1, 2, 3, 4, 5, 6].map(num => (
+                              <option key={num} value={num}>{num} / Hari</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminScheduleModal(false)}
+                      style={{ padding: '10px 18px', borderRadius: '10px', background: '#27272a', border: '1px solid #3f3f46', color: '#e4e4e7', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={savingSchedule}
+                      style={{
+                        padding: '10px 22px', borderRadius: '10px', background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+                        color: '#fff', border: 'none', cursor: savingSchedule ? 'not-allowed' : 'pointer', fontSize: '12px', fontWeight: 700,
+                        boxShadow: '0 4px 14px rgba(168, 85, 247, 0.4)'
+                      }}
+                    >
+                      {savingSchedule ? 'Menyimpan...' : '💾 Simpan Skedul 5 Produk'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
