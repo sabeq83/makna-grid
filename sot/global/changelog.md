@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.55 — Add ContentFlow Video Status Skipped and Catatan Field (27/07/2026)
+- Add Skipped video status option with purple glow badge in ContentFlow Modal and Video Cards
+- Add Catatan (Notes) textarea field placed at the top above Product Data & Links in ContentFlow Modal
+- Add catatan column migration and update allowedKeys in lib/db.js & API route
+
 ## V2.2.54 — Fix OPC Video Completion Auto-Ingest Sync Order in Scheduler (27/07/2026)
 - Reorder updatePillarCampaignItem to update workflow_status=completed and drive_link in DB before triggering ContentFlow sync in lib/scheduler-processors.js
 - Re-sync opc_130 and opc_131 live across SQLite Node 1 and PostgreSQL Node 3 DB

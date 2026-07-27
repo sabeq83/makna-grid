@@ -33,7 +33,7 @@ export async function PATCH(request, { params }) {
         'instagram_status', 'instagram_publish_date', 'permalink_instagram',
         'youtube_status', 'youtube_publish_date', 'permalink_youtube',
         'account_name', 'drive_link', 'nextcloud_url', 'url_asset',
-        'link_produk', 'link_affiliate', 'nama_produk'
+        'link_produk', 'link_affiliate', 'nama_produk', 'pipeline_status', 'catatan'
       ];
       const fields = [];
       const values = [];

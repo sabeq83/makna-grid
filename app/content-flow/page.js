@@ -897,6 +897,15 @@ function ContentFlowHubPageContent() {
                         </span>
                       )}
                       {getSourceBadge(item.source_type)}
+                      {item.pipeline_status === 'Skipped' ? (
+                        <span style={{ fontSize: '11px', color: '#e9d5ff', background: 'rgba(168, 85, 247, 0.2)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #a855f7', fontWeight: 700 }}>
+                          ⏭️ Skipped
+                        </span>
+                      ) : item.pipeline_status === 'In Production' ? (
+                        <span style={{ fontSize: '11px', color: '#fcd34d', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '6px', border: '1px solid #f59e0b', fontWeight: 700 }}>
+                          ⏳ In Production
+                        </span>
+                      ) : null}
                       {item.nama_produk && (
                         <span style={{ fontSize: '11px', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.25)', fontWeight: 600 }}>
                           📦 {item.nama_produk}
@@ -1143,6 +1152,28 @@ function ContentFlowHubPageContent() {
                 })()}
               </div>
 
+              {/* Field Catatan Konten (Paling Atas Sebelum Data Produk & Link) */}
+              <div style={{ background: '#090d16', padding: '16px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#60a5fa', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📝 CATATAN KONTEN
+                  </span>
+                  {activeItem.catatan && (
+                    <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>✓ Tersimpan</span>
+                  )}
+                </div>
+                <textarea
+                  value={editStatusForm.catatan || ''}
+                  onChange={(e) => setEditStatusForm({ ...editStatusForm, catatan: e.target.value })}
+                  placeholder="Tambahkan catatan khusus untuk item konten ini (misal: Revisi caption, Jadwal tayang, dsb)..."
+                  style={{
+                    width: '100%', padding: '10px 12px', background: '#05070d', border: '1px solid #334155',
+                    borderRadius: '8px', color: '#e2e8f0', fontSize: '12px', outline: 'none', resize: 'vertical', minHeight: '65px',
+                    lineHeight: '1.5', fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
               {/* Metadata & Product Data Panel with Collapsible Accordion & Pencil Inline Edit */}
               <div style={{ background: '#090d16', padding: '18px', borderRadius: '14px', border: '1px solid #1e293b', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div
@@ -1346,10 +1377,27 @@ function ContentFlowHubPageContent() {
                 )}
               </div>
 
-              {/* Sub-Header */}
-              <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 16px' }}>
-                STATUS PUBLIKASI PER PLATFORM
-              </h3>
+              {/* Sub-Header with Video Status Dropdown */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+                  STATUS PUBLIKASI PER PLATFORM
+                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Status Video:</label>
+                  <select
+                    value={editStatusForm.pipeline_status || 'Completed'}
+                    onChange={(e) => setEditStatusForm({ ...editStatusForm, pipeline_status: e.target.value })}
+                    style={{
+                      padding: '6px 12px', borderRadius: '8px', outline: 'none', fontSize: '12px', cursor: 'pointer',
+                      ...getStatusSelectStyle(editStatusForm.pipeline_status)
+                    }}
+                  >
+                    <option value="Completed">Completed</option>
+                    <option value="In Production">In Production</option>
+                    <option value="Skipped">Skipped</option>
+                  </select>
+                </div>
+              </div>
 
               <form onSubmit={handleSaveStatus} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
