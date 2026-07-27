@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.2.70 — Fix OPC ContentFlow Ingest SQL Compile Quote Issue (27/07/2026)
+- Mengganti != '' dengan LENGTH() > 0 untuk bypass SWC quote bug
+- Sinkronisasi campaign opc_260727_dnarsz ke PG
+
+## V2.2.70 — Fix OPC ContentFlow Ingest SQL Compile Quote Issue (27/07/2026)
+- Mengganti pembandingan string kosong `!= ''` dengan `LENGTH(cp.affiliate_url) > 0` untuk menghindari penulisan ulang tanda kutip oleh Next.js SWC minifier yang memicu error SQLite
+- Sinkronisasi ulang data campaign outstanding `opc_260727_dnarsz` secara sukses ke PostgreSQL Node 3
+
 ## V2.2.69 — Fix OPC Auto-Ingest Workflow and Dynamic Tab 5 Cloud Storage (27/07/2026)
 - Dinamisasi tampilan Tab 5 Cloud Storage pada Detail OPC dan RE merespons active storage_provider
 - Perbaikan query JOIN brand_profiles di contentflow-ingest agar account_name OPC presisi
