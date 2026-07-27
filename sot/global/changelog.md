@@ -1,7 +1,12 @@
 # Changelog
 
-## V2.2.72 — Clean Extra Closing Brackets in ImportPlannerModal (27/07/2026)
-- Menghapus tanda kurung penutup ganda di line 390
+## V2.2.73 — Asynchronous Awaited ContentFlow Ingest & ON CONFLICT LENGTH Fix (27/07/2026)
+- Mengubah sync engine ke async/await agar PG sync ter-await sepenuhnya sebelum HTTP response
+- Mengganti != '' dengan LENGTH() > 0 pada ON CONFLICT DO UPDATE SQLite & PG
+
+## V2.2.73 — Asynchronous Awaited ContentFlow Ingest & ON CONFLICT LENGTH Fix (27/07/2026)
+- Mengubah fungsi `scanAndSyncExistingCampaigns` menjadi `async` dan meng-`await` seluruh promise sync PostgreSQL via `Promise.all` sebelum mengirim respon API
+- Memperbarui perbandingan `!= ''` pada klausa `ON CONFLICT` SQLite & PostgreSQL di `lib/db.js` dengan `LENGTH() > 0` untuk menghindari bug penulisan kutip oleh SWC compiler
 
 ## V2.2.72 — Clean Extra Closing Brackets in ImportPlannerModal (27/07/2026)
 - Menghapus tanda kurung penutup ganda `)}` di line 390 pada `ImportPlannerModal.js` setelah restrukturisasi block kondisional

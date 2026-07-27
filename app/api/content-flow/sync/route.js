@@ -3,7 +3,7 @@ import { scanAndSyncExistingCampaigns } from '@/lib/contentflow-ingest';
 
 export async function POST() {
   try {
-    const totalSynced = scanAndSyncExistingCampaigns();
+    const totalSynced = await scanAndSyncExistingCampaigns();
     return NextResponse.json({
       success: true,
       message: `Berhasil memindai dan menyinkronkan ${totalSynced} aset video dari seluruh kampanye database.`,

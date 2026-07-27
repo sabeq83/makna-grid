@@ -5,7 +5,7 @@ export async function POST(request, { params }) {
   try {
     const resolvedParams = await params;
     const id = resolvedParams?.id || params?.id;
-    const syncedCount = scanAndSyncExistingCampaigns(id);
+    const syncedCount = await scanAndSyncExistingCampaigns(id);
     return NextResponse.json({ success: true, synced_count: syncedCount });
   } catch (error) {
     console.error('[API /v2/pillar-campaigns/[id]/sync-contentflow POST Error]', error);
