@@ -1,5 +1,15 @@
 # Changelog
 
+## V2.2.75 — Premium 3:4 Product Schedule Cards & SVG Circular Progress (27/07/2026)
+- Desain ulang kartu skedul ke rasio 3:4 dan progress ring SVG
+- Tambahan hover translate & shadow glow untuk look premium
+- Custom scrollbar transparan untuk slider di layar kecil
+
+## V2.2.75 — Premium 3:4 Product Schedule Cards & SVG Circular Progress (27/07/2026)
+- Desain ulang kartu pelacak skedul produk harian menjadi rasio 3:4 modern dengan efek glassmorphism dan border glowing
+- Menggunakan visualisasi progres berbentuk lingkaran ring SVG dinamis dengan persentase dan hover animation
+- Menambahkan kustomisasi scrollbar tipis transparan (`.custom-schedule-scroll`) agar estetika slider mulus di layar tablet/mobile
+
 ## V2.2.74 — Video ID Sequence Counter, Product Fallback Query, and ESM Require Fix (27/07/2026)
 - Konter urutan dinamis video_id
 - Fallback query produk dari source_product_url

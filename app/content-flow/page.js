@@ -669,32 +669,111 @@ function ContentFlowHubPageContent() {
                 }
 
                 return (
-                  <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>
+                  <div className="custom-schedule-scroll" style={{ display: 'flex', gap: '16px', overflowX: 'auto', padding: '8px 4px 16px 4px' }}>
+                    <style dangerouslySetInnerHTML={{ __html: `
+                      .product-schedule-card:hover {
+                        transform: translateY(-4px);
+                        border-color: rgba(16, 185, 129, 0.5) !important;
+                        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(16, 185, 129, 0.25) !important;
+                      }
+                      .product-schedule-card-pending:hover {
+                        transform: translateY(-4px);
+                        border-color: rgba(245, 158, 11, 0.5) !important;
+                        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.25) !important;
+                      }
+                      .custom-schedule-scroll::-webkit-scrollbar {
+                        height: 6px;
+                      }
+                      .custom-schedule-scroll::-webkit-scrollbar-track {
+                        background: rgba(255, 255, 255, 0.02);
+                        border-radius: 10px;
+                      }
+                      .custom-schedule-scroll::-webkit-scrollbar-thumb {
+                        background: rgba(255, 255, 255, 0.08);
+                        border-radius: 10px;
+                      }
+                      .custom-schedule-scroll::-webkit-scrollbar-thumb:hover {
+                        background: rgba(255, 255, 255, 0.18);
+                      }
+                    `}} />
                     {filledSlots.map((slot) => {
                       const prodName = slot.product_name;
                       const targetCount = slot.target_daily_posts || 1;
                       const publishedToday = items.filter(i => (i.nama_produk || '').toLowerCase().includes(prodName.toLowerCase()) && (i.tiktok_status === 'Published' || i.facebook_status === 'Published' || i.instagram_status === 'Published')).length;
 
-                    return (
-                      <div
-                        key={slot.slot_index}
-                        style={{
-                          padding: '10px 14px', borderRadius: '12px', background: 'rgba(11, 15, 25, 0.7)',
-                          border: '1px solid rgba(255, 255, 255, 0.08)', minWidth: '170px', flexShrink: 0
-                        }}
-                      >
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#f8fafc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '4px' }}>
-                          {prodName}
+                      const radius = 28;
+                      const circumference = 2 * Math.PI * radius;
+                      const percent = Math.min(100, Math.max(0, (publishedToday / targetCount) * 100));
+                      const strokeDashoffset = circumference - (percent / 100) * circumference;
+                      const isCompleted = publishedToday >= targetCount;
+
+                      const accentColor = isCompleted ? '#10b981' : '#f59e0b';
+                      const glowShadow = isCompleted ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)';
+
+                      return (
+                        <div
+                          key={slot.slot_index}
+                          className={isCompleted ? "product-schedule-card" : "product-schedule-card-pending"}
+                          style={{
+                            display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
+                            width: '144px', height: '192px', padding: '14px 10px', borderRadius: '16px',
+                            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)',
+                            border: `1px solid ${isCompleted ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                            boxShadow: `0 4px 16px rgba(0,0,0,0.2), 0 0 10px ${glowShadow}`,
+                            flexShrink: 0, transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'default'
+                          }}
+                        >
+                          {/* Product Name (Top) */}
+                          <div style={{
+                            fontSize: '11px', fontWeight: 700, color: '#f8fafc', textAlign: 'center',
+                            display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden', textOverflow: 'ellipsis', height: '32px', lineHeight: '16px'
+                          }}>
+                            {prodName}
+                          </div>
+
+                          {/* Circular Progress (Center) */}
+                          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '70px', height: '70px' }}>
+                            <svg width="68" height="68" style={{ transform: 'rotate(-90deg)' }}>
+                              <circle
+                                cx="34"
+                                cy="34"
+                                r={radius}
+                                fill="transparent"
+                                stroke="rgba(255, 255, 255, 0.04)"
+                                strokeWidth="5"
+                              />
+                              <circle
+                                cx="34"
+                                cy="34"
+                                r={radius}
+                                fill="transparent"
+                                stroke={accentColor}
+                                strokeWidth="5"
+                                strokeDasharray={circumference}
+                                strokeDashoffset={strokeDashoffset}
+                                strokeLinecap="round"
+                                style={{ transition: 'stroke-dashoffset 0.4s ease' }}
+                              />
+                            </svg>
+                            <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                              <span style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', fontFamily: 'monospace' }}>
+                                {publishedToday}/{targetCount}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Status Badge (Bottom) */}
+                          <div style={{
+                            fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em',
+                            color: accentColor, background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
+                            padding: '4px 10px', borderRadius: '20px', border: `1px solid ${accentColor}25`
+                          }}>
+                            {isCompleted ? 'Completed' : 'In Progress'}
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
-                          <span style={{ color: '#94a3b8', fontSize: '11px' }}>Progress Hari Ini:</span>
-                          <span style={{ fontWeight: 800, color: publishedToday >= targetCount ? '#34d399' : '#fbbf24', fontFamily: 'monospace' }}>
-                            {publishedToday}/{targetCount}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                   </div>
                 );
               })()}
