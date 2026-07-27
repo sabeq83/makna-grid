@@ -387,7 +387,7 @@ export default function ImportPlannerModal({
                         </div>
                       </div>
                     </div>
-                  )}                )}
+                  )}
 
                   <div>
                     <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>

@@ -1,7 +1,10 @@
 # Changelog
 
-## V2.2.71 — Fix ImportPlannerModal Syntax Compile Error (27/07/2026)
-- Memperbaiki penutupan tag kondisional !initialPlannerId pada ImportPlannerModal.js
+## V2.2.72 — Clean Extra Closing Brackets in ImportPlannerModal (27/07/2026)
+- Menghapus tanda kurung penutup ganda di line 390
+
+## V2.2.72 — Clean Extra Closing Brackets in ImportPlannerModal (27/07/2026)
+- Menghapus tanda kurung penutup ganda `)}` di line 390 pada `ImportPlannerModal.js` setelah restrukturisasi block kondisional
 
 ## V2.2.71 — Fix ImportPlannerModal Syntax Compile Error (27/07/2026)
 - Memperbaiki penutupan tag kondisional `{!initialPlannerId}` pada `ImportPlannerModal.js` untuk mengatasi kegagalan kompilasi produksi Next.js
