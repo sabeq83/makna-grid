@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.69 — Fix OPC Auto-Ingest Workflow and Dynamic Tab 5 Cloud Storage (27/07/2026)
+- Dinamisasi tampilan Tab 5 Cloud Storage pada Detail OPC dan RE merespons active storage_provider
+- Perbaikan query JOIN brand_profiles di contentflow-ingest agar account_name OPC presisi
+- Penambahan pemfilteran otomatis untuk menghapus item failed dan error pada OPC dan Strategic Campaign
+- Melengkapi link_affiliate RE dan link_produk Strategic Campaign
+
 ## V2.2.68 — Purge All Dummy Data and Dummybrand References (27/07/2026)
 - Pembersihan total data dummy seed dan dummybrand dari SQLite dan PostgreSQL Node 3
 - Penghapusan hardcoded option dummybrand01 dan dummybrand02 dari UI seluruh modul

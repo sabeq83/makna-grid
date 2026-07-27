@@ -1415,15 +1415,34 @@ export default function PillarCampaignDetailPage() {
               <tr style={{ borderBottom: '1px solid var(--border-color)' }}><td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>Voiceover Provider</td><td style={{ padding: '6px 0' }}>{campaign?.voice_provider} ({campaign?.voice_persona})</td></tr>
               <tr style={{ borderBottom: '1px solid var(--border-color)' }}><td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>Visual Mode</td><td style={{ padding: '6px 0' }}>{campaign?.visual_mode}</td></tr>
               <tr style={{ borderBottom: '1px solid var(--border-color)' }}><td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>Retry Count</td><td style={{ padding: '6px 0' }}>{item.retry_count || 0} kali</td></tr>
-              <tr style={{ borderBottom: '1px solid var(--border-color)' }}><td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>Cloud Upload Status</td><td style={{ padding: '6px 0' }}><span className={`badge ${getStageBadgeClass(item.upload_status)}`}>{item.upload_status}</span></td></tr>
-              <tr>
-                <td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>Google Drive Folder</td>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>
+                  {storageProvider === 'nextcloud' ? 'Nextcloud Upload Status' : 'Google Drive Upload Status'}
+                </td>
                 <td style={{ padding: '6px 0' }}>
-                  {item.drive_link ? (
-                    <a href={item.drive_link} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-color)', textDecoration: 'underline' }}>
-                      Buka Google Drive ➔
-                    </a>
-                  ) : '(Belum diunggah)'}
+                  <span className={`badge ${getStageBadgeClass(item.upload_status)}`}>
+                    {item.upload_status || 'pending'}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style={{ padding: '6px 0', color: 'var(--text-muted)' }}>
+                  {storageProvider === 'nextcloud' ? 'Nextcloud Storage Link' : 'Google Drive Folder'}
+                </td>
+                <td style={{ padding: '6px 0' }}>
+                  {storageProvider === 'nextcloud' ? (
+                    (item.nextcloud_url || (item.drive_link && (item.drive_link.includes('100.78.186.123') || item.drive_link.includes('index.php/s/')))) ? (
+                      <a href={item.nextcloud_url || item.drive_link} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-color)', textDecoration: 'underline' }}>
+                        Buka Nextcloud ➔
+                      </a>
+                    ) : '(Belum diunggah)'
+                  ) : (
+                    (item.drive_link && !item.drive_link.includes('100.78.186.123')) ? (
+                      <a href={item.drive_link} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-color)', textDecoration: 'underline' }}>
+                        Buka Google Drive ➔
+                      </a>
+                    ) : '(Belum diunggah)'
+                  )}
                 </td>
               </tr>
             </tbody>
