@@ -10,7 +10,14 @@ export async function GET(request) {
     }
 
     const db = getDb();
-    const rows = db.prepare('SELECT * FROM brand_schedules WHERE brand_id = ? ORDER BY slot_index ASC').all(brandId);
+    const rows = db.prepare(`
+      SELECT bs.*, 
+             pe.cleaned_photo_url, pe.clean_photo_url, pe.generated_photo_url, pe.active_photo
+      FROM brand_schedules bs
+      LEFT JOIN product_extractions pe ON bs.product_id = pe.id
+      WHERE bs.brand_id = ? 
+      ORDER BY bs.slot_index ASC
+    `).all(brandId);
     return NextResponse.json({ success: true, schedules: rows });
   } catch (error) {
     console.error('[API /v2/content-flow/schedules GET Error]', error);

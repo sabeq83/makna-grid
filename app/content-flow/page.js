@@ -707,29 +707,67 @@ function ContentFlowHubPageContent() {
                       const strokeDashoffset = circumference - (percent / 100) * circumference;
                       const isCompleted = publishedToday >= targetCount;
 
+                      const isActive = productFilter.toLowerCase() === prodName.toLowerCase();
+
                       const accentColor = isCompleted ? '#10b981' : '#f59e0b';
-                      const glowShadow = isCompleted ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)';
+                      const glowShadow = isActive 
+                        ? 'rgba(16, 185, 129, 0.55)' 
+                        : (isCompleted ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)');
+
+                      // Get active product image path
+                      const activeField = slot.active_photo || 'cleaned_photo_url';
+                      const prodImageUrl = slot[activeField] || slot.cleaned_photo_url || slot.clean_photo_url || slot.generated_photo_url || '';
 
                       return (
                         <div
                           key={slot.slot_index}
                           className={isCompleted ? "product-schedule-card" : "product-schedule-card-pending"}
+                          onClick={() => {
+                            if (isActive) {
+                              setProductFilter('all');
+                            } else {
+                              setProductFilter(prodName);
+                            }
+                          }}
                           style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
-                            width: '144px', height: '192px', padding: '14px 10px', borderRadius: '16px',
-                            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)',
-                            border: `1px solid ${isCompleted ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
-                            boxShadow: `0 4px 16px rgba(0,0,0,0.2), 0 0 10px ${glowShadow}`,
-                            flexShrink: 0, transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'default'
+                            width: '144px', height: '210px', padding: '12px 10px', borderRadius: '16px',
+                            background: isActive
+                              ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%)'
+                              : 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)',
+                            border: isActive 
+                              ? '2px solid #10b981' 
+                              : `1px solid ${isCompleted ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                            boxShadow: isActive
+                              ? '0 8px 32px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.35)'
+                              : `0 4px 16px rgba(0,0,0,0.2), 0 0 10px ${glowShadow}`,
+                            transform: isActive ? 'translateY(-6px)' : 'none',
+                            flexShrink: 0, transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer'
                           }}
                         >
-                          {/* Product Name (Top) */}
-                          <div style={{
-                            fontSize: '11px', fontWeight: 700, color: '#f8fafc', textAlign: 'center',
-                            display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden', textOverflow: 'ellipsis', height: '32px', lineHeight: '16px'
-                          }}>
-                            {prodName}
+                          {/* Product Thumbnail & Name (Top) */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+                            {prodImageUrl ? (
+                              <img
+                                src={prodImageUrl}
+                                alt={prodName}
+                                style={{ width: '28px', height: '28px', borderRadius: '6px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.1)' }}
+                              />
+                            ) : (
+                              <div style={{
+                                width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(255,255,255,0.05)',
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '14px', border: '1px solid rgba(255,255,255,0.06)'
+                              }}>
+                                📦
+                              </div>
+                            )}
+                            <div style={{
+                              fontSize: '10px', fontWeight: 700, color: '#f8fafc', textAlign: 'left',
+                              display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden', textOverflow: 'ellipsis', height: '26px', lineHeight: '13px', flex: 1
+                            }}>
+                              {prodName}
+                            </div>
                           </div>
 
                           {/* Circular Progress (Center) */}

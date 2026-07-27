@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.2.76 — Interactive Product Card Filter, Neon Glow & Photo Thumbnails (27/07/2026)
+- Integrasi filter klik pada kartu produk ke tabel posting
+- Efek neon glow border 2px dan elevasi kartu aktif
+- Menampilkan foto cleaned thumbnail produk di atas kartu
+
+## V2.2.76 — Interactive Product Card Filter, Neon Glow & Photo Thumbnails (27/07/2026)
+- Menghubungkan kartu skedul produk dengan fungsi saringan produk (`productFilter`) untuk langsung menyaring daftar posting secara dinamis saat diklik
+- Menghias kartu aktif yang terpilih dengan border neon hijau emerald 2px, pendaran cahaya intens, dan elevasi vertikal tambahan (`translateY(-6px)`)
+- Menampilkan thumbnail foto produk (`28px x 28px`) pada bagian atas kartu yang bersumber dari data `cleaned_photo_url` atau `active_photo` produk di database
+- Memperbarui API schedules GET handler untuk memuat relasi tabel `product_extractions` guna mengambil path file foto produk
+
 ## V2.2.75 — Premium 3:4 Product Schedule Cards & SVG Circular Progress (27/07/2026)
 - Desain ulang kartu skedul ke rasio 3:4 dan progress ring SVG
 - Tambahan hover translate & shadow glow untuk look premium
