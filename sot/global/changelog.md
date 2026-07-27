@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.54 — Fix OPC Video Completion Auto-Ingest Sync Order in Scheduler (27/07/2026)
+- Reorder updatePillarCampaignItem to update workflow_status=completed and drive_link in DB before triggering ContentFlow sync in lib/scheduler-processors.js
+- Re-sync opc_130 and opc_131 live across SQLite Node 1 and PostgreSQL Node 3 DB
+
 ## V2.2.53 — Implement 5 ContentFlow UI/UX Refinements with High Contrast Sidebar Active State (27/07/2026)
 - Add high-contrast Slate Gray vs Pure White Emerald Glow 3px Bar active state to Brand Sub-Menu in app/components/Sidebar.js
 - Sync Header Quick Bar active tab and filter by user assigned brand names in app/content-flow/page.js
