@@ -267,9 +267,16 @@ function ContentFlowHubPageContent() {
   }, [loadContent, accountFilter, fetchBrandSchedules]);
 
   function openAdminScheduleModal() {
-    if (!accountFilter || accountFilter === 'all') {
-      showToast('Pilih salah satu Akun Brand terlebih dahulu untuk mengatur Skedul!');
-      return;
+    let targetBrand = accountFilter;
+    if (!targetBrand || targetBrand === 'all') {
+      if (availableAccounts.length > 0) {
+        targetBrand = availableAccounts[0];
+        setAccountFilter(targetBrand);
+        router.push(`/content-flow?account=${encodeURIComponent(targetBrand)}`);
+      } else {
+        showToast('Pilih salah satu Akun Brand terlebih dahulu untuk mengatur Skedul!');
+        return;
+      }
     }
     const initialSlots = [1, 2, 3, 4, 5].map(idx => {
       const existing = activeBrandSchedules.find(s => s.slot_index === idx);
@@ -565,7 +572,7 @@ function ContentFlowHubPageContent() {
             </div>
 
             <div style={{ display: 'flex', gap: '10px' }}>
-              {currentUser?.role === 'admin' && accountFilter !== 'all' && (
+              {(!currentUser || currentUser.role === 'admin') && (
                 <button
                   onClick={openAdminScheduleModal}
                   style={{
@@ -641,7 +648,7 @@ function ContentFlowHubPageContent() {
                     Target Posting Hari Ini — <span style={{ color: '#34d399' }}>@{accountFilter}</span>
                   </span>
                 </div>
-                {currentUser?.role === 'admin' && (
+                {(!currentUser || currentUser.role === 'admin') && (
                   <button
                     onClick={openAdminScheduleModal}
                     style={{ background: 'none', border: 'none', color: '#a855f7', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -653,7 +660,7 @@ function ContentFlowHubPageContent() {
 
               {activeBrandSchedules.length === 0 ? (
                 <div style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', padding: '8px 0' }}>
-                  Belum ada skedul 5 produk yang diatur oleh Admin. {currentUser?.role === 'admin' && 'Klik "Edit Skedul" untuk memilih 5 produk aktif.'}
+                  Belum ada skedul 5 produk yang diatur oleh Admin. {(!currentUser || currentUser.role === 'admin') && 'Klik "Edit Skedul" untuk memilih 5 produk aktif.'}
                 </div>
               ) : (
                 <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>

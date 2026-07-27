@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.60 — Enhance Admin Skedul Controller Accessibility and Auto Brand Selection (27/07/2026)
+- Make Admin Skedul button always accessible in top header and controller card header
+- Add auto-brand selection logic when opening schedule modal from global overview
+- Ensure seamless transition when editing 5 active products and target posting
+
 ## V2.2.59 — ContentFlow Workflow Upgrade: Home Global Overview, Header Controller, and Admin Schedule Settings (27/07/2026)
 - Add Global Brand Overview Cards to Home Dashboard with TikTok/FB/IG posting stats & available completed video stock
 - Implement Header Controller Card in ContentFlow showing 5 Active Products with format Product: 3/8
