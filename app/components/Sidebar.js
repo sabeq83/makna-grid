@@ -1,8 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 
 const menuKeyMap = {
   '/content-flow': 'content_planner',
@@ -56,9 +56,11 @@ const navItems = [
   { label: 'Settings', href: '/settings', icon: '⚙' },
 ];
 
-export default function Sidebar() {
+function SidebarContent() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentAccount = searchParams ? (searchParams.get('account') || 'all') : 'all';
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -211,38 +213,48 @@ export default function Sidebar() {
                     href="/content-flow?account=all"
                     style={{
                       fontSize: '11px',
-                      color: '#a1a1aa',
-                      padding: '4px 8px',
+                      color: currentAccount === 'all' ? '#ffffff' : '#a1a1aa',
+                      fontWeight: currentAccount === 'all' ? 700 : 500,
+                      padding: '5px 10px',
                       borderRadius: '6px',
                       textDecoration: 'none',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '6px',
-                      background: 'rgba(255,255,255,0.03)'
+                      background: currentAccount === 'all' ? 'linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.2) 100%)' : 'rgba(255,255,255,0.02)',
+                      borderLeft: currentAccount === 'all' ? '3px solid #10b981' : '3px solid transparent',
+                      boxShadow: currentAccount === 'all' ? '0 0 12px rgba(16,185,129,0.25)' : 'none',
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <span>🌐</span> Semua Akun
                   </Link>
-                  {userBrandAccounts.map(acc => (
-                    <Link
-                      key={acc}
-                      href={`/content-flow?account=${encodeURIComponent(acc)}`}
-                      style={{
-                        fontSize: '11px',
-                        color: '#34d399',
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        textDecoration: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        background: 'rgba(16,185,129,0.08)',
-                        borderLeft: '2px solid #10b981'
-                      }}
-                    >
-                      <span>🏷️</span> @{acc}
-                    </Link>
-                  ))}
+                  {userBrandAccounts.map(acc => {
+                    const isSubActive = currentAccount.toLowerCase() === acc.toLowerCase();
+                    return (
+                      <Link
+                        key={acc}
+                        href={`/content-flow?account=${encodeURIComponent(acc)}`}
+                        style={{
+                          fontSize: '11px',
+                          color: isSubActive ? '#ffffff' : '#a1a1aa',
+                          fontWeight: isSubActive ? 700 : 500,
+                          padding: '5px 10px',
+                          borderRadius: '6px',
+                          textDecoration: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          background: isSubActive ? 'linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.2) 100%)' : 'rgba(255,255,255,0.02)',
+                          borderLeft: isSubActive ? '3px solid #10b981' : '3px solid transparent',
+                          boxShadow: isSubActive ? '0 0 12px rgba(16,185,129,0.25)' : 'none',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span>🏷️</span> @{acc}
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -274,5 +286,13 @@ export default function Sidebar() {
         </div>
       )}
     </aside>
+  );
+}
+
+export default function Sidebar() {
+  return (
+    <Suspense fallback={<aside className="sidebar"><div style={{ padding: '1rem', color: '#a1a1aa' }}>Loading...</div></aside>}>
+      <SidebarContent />
+    </Suspense>
   );
 }

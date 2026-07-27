@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.53 — Implement 5 ContentFlow UI/UX Refinements with High Contrast Sidebar Active State (27/07/2026)
+- Add high-contrast Slate Gray vs Pure White Emerald Glow 3px Bar active state to Brand Sub-Menu in app/components/Sidebar.js
+- Sync Header Quick Bar active tab and filter by user assigned brand names in app/content-flow/page.js
+- Add inline Product Search Box to SKU filter in app/content-flow/page.js
+- Add dynamic status (Published=Emerald, Scheduled=Amber) and publish date colors in detail modal
+
 ## V2.2.52 — Auto-Sync ContentFlow Affiliate Links via Multi-Level Fallback (27/07/2026)
 - Add multi-level fallback for link_affiliate in lib/contentflow-ingest.js
 - Populate affiliate_link for Omura product across Node 1 SQLite and PostgreSQL Node 3 DB

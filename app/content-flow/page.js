@@ -110,9 +110,27 @@ function ContentFlowHubPageContent() {
 
   const [availableAccounts, setAvailableAccounts] = useState([]);
   const [availableProducts, setAvailableProducts] = useState([]);
+  const [productSearchTerm, setProductSearchTerm] = useState('');
 
   // User Session & RBAC Permissions State
   const [currentUser, setCurrentUser] = useState(null);
+
+  const getStatusSelectStyle = (statusVal) => {
+    if (statusVal === 'Published') {
+      return { background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#34d399', fontWeight: 700 };
+    }
+    if (statusVal === 'Scheduled') {
+      return { background: 'rgba(245, 158, 11, 0.2)', border: '1px solid #fbbf24', color: '#fcd34d', fontWeight: 700 };
+    }
+    return { background: '#05070d', border: '1px solid #334155', color: '#a1a1aa' };
+  };
+
+  const getDateInputStyle = (dateVal) => {
+    if (dateVal && dateVal.trim() !== '') {
+      return { background: 'rgba(59, 130, 246, 0.18)', border: '1px solid #60a5fa', color: '#93c5fd', fontWeight: 700 };
+    }
+    return { background: '#05070d', border: '1px solid #334155', color: '#71717a' };
+  };
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -540,7 +558,6 @@ function ContentFlowHubPageContent() {
                   cursor: 'pointer',
                   border: accountFilter === 'all' ? '1px solid #10b981' : '1px solid #27272a',
                   background: accountFilter === 'all' ? 'rgba(16, 185, 129, 0.15)' : '#121318',
-                  color: accountFilter === 'all' ? '#34d399' : '#a1a1aa',
                   transition: 'all 0.2s ease',
                   display: 'flex',
                   alignItems: 'center',
@@ -549,35 +566,43 @@ function ContentFlowHubPageContent() {
               >
                 <span>🌐</span> Semua Akun ({totalItems})
               </button>
-              {availableAccounts.map((acc) => {
-                const isSelected = accountFilter.toLowerCase() === acc.toLowerCase();
-                return (
-                  <button
-                    key={acc}
-                    onClick={() => {
-                      setAccountFilter(acc);
-                      router.push(`/content-flow?account=${encodeURIComponent(acc)}`);
-                    }}
-                    style={{
-                      padding: '7px 16px',
-                      borderRadius: '20px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      border: isSelected ? '1px solid #10b981' : '1px solid #27272a',
-                      background: isSelected ? 'rgba(16, 185, 129, 0.15)' : '#121318',
-                      color: isSelected ? '#34d399' : '#e4e4e7',
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    <span>🏷️</span> @{acc}
-                  </button>
-                );
-              })}
+              {(() => {
+                const userAssigned = (currentUser && Array.isArray(currentUser.assignedBrandNames) && currentUser.assignedBrandNames.length > 0)
+                  ? currentUser.assignedBrandNames
+                  : [];
+                const displayAccs = (currentUser && currentUser.role === 'admin')
+                  ? availableAccounts
+                  : availableAccounts.filter(acc => userAssigned.map(b => b.toLowerCase()).includes(acc.toLowerCase()));
+                return displayAccs.map((acc) => {
+                  const isSelected = accountFilter.toLowerCase() === acc.toLowerCase();
+                  return (
+                    <button
+                      key={acc}
+                      onClick={() => {
+                        setAccountFilter(acc);
+                        router.push(`/content-flow?account=${encodeURIComponent(acc)}`);
+                      }}
+                      style={{
+                        padding: '7px 16px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        border: isSelected ? '1px solid #10b981' : '1px solid #27272a',
+                        background: isSelected ? 'rgba(16, 185, 129, 0.15)' : '#121318',
+                        color: isSelected ? '#34d399' : '#e4e4e7',
+                        transition: 'all 0.2s ease',
+                        whiteSpace: 'nowrap',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <span>🏷️</span> @{acc}
+                    </button>
+                  );
+                });
+              })()}
 
               {/* Admin-only Brand Deletion Button */}
               {currentUser?.role === 'admin' && accountFilter !== 'all' && (
@@ -603,7 +628,7 @@ function ContentFlowHubPageContent() {
                   }}
                   title="Hapus seluruh konten brand ini (Admin Only)"
                 >
-                  <span>🗑️</span> Hapus Akun @{accountFilter}
+                  <span>🗑️</span> Hapus Brand "{accountFilter}"
                 </button>
               )}
             </div>
@@ -659,17 +684,29 @@ function ContentFlowHubPageContent() {
                 </select>
               </div>
 
-              {/* Product Filter */}
-              <div>
+              {/* Product Filter with Search Box */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <input
+                  type="text"
+                  value={productSearchTerm}
+                  onChange={(e) => setProductSearchTerm(e.target.value)}
+                  placeholder="🔎 Filter SKU Produk..."
+                  style={{
+                    width: '100%', padding: '5px 9px', borderRadius: '6px', background: '#09090b',
+                    border: '1px solid #3f3f46', color: '#34d399', fontSize: '11px', outline: 'none'
+                  }}
+                />
                 <select
                   value={productFilter}
                   onChange={(e) => setProductFilter(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                  style={{ width: '100%', padding: '6px 9px', borderRadius: '6px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '11px', outline: 'none' }}
                 >
                   <option value="all">Semua Produk ({availableProducts.length})</option>
-                  {availableProducts.map(prod => (
-                    <option key={prod} value={prod}>{prod}</option>
-                  ))}
+                  {availableProducts
+                    .filter(prod => prod.toLowerCase().includes(productSearchTerm.toLowerCase()))
+                    .map(prod => (
+                      <option key={prod} value={prod}>{prod}</option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -1327,7 +1364,7 @@ function ContentFlowHubPageContent() {
                       <select
                         value={editStatusForm.tiktok_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.tiktok_status) }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
@@ -1337,7 +1374,9 @@ function ContentFlowHubPageContent() {
 
                     <div style={{ gridColumn: 'span 4' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                          Publish Date {editStatusForm.tiktok_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                        </label>
                         <button
                           type="button"
                           onClick={() => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: new Date().toISOString().split('T')[0] })}
@@ -1350,7 +1389,7 @@ function ContentFlowHubPageContent() {
                         type="date"
                         value={editStatusForm.tiktok_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, tiktok_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
+                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.tiktok_publish_date) }}
                       />
                     </div>
 
@@ -1378,7 +1417,7 @@ function ContentFlowHubPageContent() {
                       <select
                         value={editStatusForm.facebook_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.facebook_status) }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
@@ -1388,7 +1427,9 @@ function ContentFlowHubPageContent() {
 
                     <div style={{ gridColumn: 'span 4' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                          Publish Date {editStatusForm.facebook_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                        </label>
                         <button
                           type="button"
                           onClick={() => setEditStatusForm({ ...editStatusForm, facebook_publish_date: new Date().toISOString().split('T')[0] })}
@@ -1401,7 +1442,7 @@ function ContentFlowHubPageContent() {
                         type="date"
                         value={editStatusForm.facebook_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, facebook_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
+                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.facebook_publish_date) }}
                       />
                     </div>
 
@@ -1429,7 +1470,7 @@ function ContentFlowHubPageContent() {
                       <select
                         value={editStatusForm.instagram_status}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_status: e.target.value })}
-                        style={{ width: '100%', padding: '9px 12px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none' }}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', outline: 'none', transition: 'all 0.2s ease', ...getStatusSelectStyle(editStatusForm.instagram_status) }}
                       >
                         <option value="Not Published">Not Published</option>
                         <option value="Scheduled">Scheduled</option>
@@ -1439,7 +1480,9 @@ function ContentFlowHubPageContent() {
 
                     <div style={{ gridColumn: 'span 4' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>Publish Date</label>
+                        <label style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 600 }}>
+                          Publish Date {editStatusForm.instagram_publish_date ? <span style={{ color: '#60a5fa', fontWeight: 700 }}>✓ Terisi</span> : null}
+                        </label>
                         <button
                           type="button"
                           onClick={() => setEditStatusForm({ ...editStatusForm, instagram_publish_date: new Date().toISOString().split('T')[0] })}
@@ -1452,7 +1495,7 @@ function ContentFlowHubPageContent() {
                         type="date"
                         value={editStatusForm.instagram_publish_date}
                         onChange={(e) => setEditStatusForm({ ...editStatusForm, instagram_publish_date: e.target.value })}
-                        style={{ width: '100%', padding: '8px 10px', background: '#05070d', border: '1px solid #334155', borderRadius: '8px', color: '#fff', fontSize: '12px', outline: 'none', colorScheme: 'dark' }}
+                        style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', outline: 'none', colorScheme: 'dark', transition: 'all 0.2s ease', ...getDateInputStyle(editStatusForm.instagram_publish_date) }}
                       />
                     </div>
 
