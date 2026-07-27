@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.52 — Auto-Sync ContentFlow Affiliate Links via Multi-Level Fallback (27/07/2026)
+- Add multi-level fallback for link_affiliate in lib/contentflow-ingest.js
+- Populate affiliate_link for Omura product across Node 1 SQLite and PostgreSQL Node 3 DB
+
 ## V2.2.51 — Fix Nextcloud URL Classification and PostgreSQL Dual DB Ingest (27/07/2026)
 - Add nextcloud_url = EXCLUDED.nextcloud_url to PostgreSQL ON CONFLICT clause in lib/db.js
 - Auto-classify Nextcloud share links stored in drive_link column in lib/contentflow-ingest.js
