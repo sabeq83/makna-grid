@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.66 — Double-Shield Architecture for Wardrobe & Demographic Presets (27/07/2026)
+- Penerapan Double-Shield Architecture pada DEMOGRAPHIC_PRESETS dan WARDROBE_PRESETS di lib/prompts.js
+- Penambahan mandat penulisan tag Anchor dan Wardrobe terpisah di vsoSection system prompt OPC
+
 ## V2.2.65 — Sequential Wardrobe Injection & Engine Fallback (27/07/2026)
 - Penambahan otomatis fallback tag Wardrobe pada scheduler-processors applyReplacements
 - Injeksi 10 variasi warna wardrobe Syar'i sekuensial per-baris pada 18 item kampanye opc_260727_dnarsz di Node 1
