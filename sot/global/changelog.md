@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.58 — Fix SQLite initSchema Syntax and PostgreSQL Upsert Clause for Captions (27/07/2026)
+- Fix JS try catch block accidentally placed inside SQL template string in db.js initSchema
+- Fix PostgreSQL ON CONFLICT DO UPDATE clause in upsertContentFlowItem to preserve non-empty captions and update link_affiliate
+- Resync captions for all items in campaign opc_260726_1xk9de across SQLite Node 1 and PostgreSQL Node 3 DB
+
 ## V2.2.57 — Upgrade Push to Content Flow Engine for OPC Campaigns (27/07/2026)
 - Upgrade POST /api/v2/pillar-campaigns/[id]/sync-contentflow handler to use scanAndSyncExistingCampaigns with target campaign ID
 - Support targetCampaignId parameter and scalar subquery in lib/contentflow-ingest.js to guarantee zero data duplication
