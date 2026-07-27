@@ -669,7 +669,7 @@ function ContentFlowHubPageContent() {
                 }
 
                 return (
-                  <div className="custom-schedule-scroll" style={{ display: 'flex', gap: '16px', overflowX: 'auto', padding: '8px 4px 16px 4px' }}>
+                  <div className="custom-schedule-scroll" style={{ display: 'flex', justifyContent: 'center', gap: '16px', overflowX: 'auto', padding: '8px 4px 16px 4px', width: '100%' }}>
                     <style dangerouslySetInnerHTML={{ __html: `
                       .product-schedule-card:hover {
                         transform: translateY(-4px);
@@ -731,7 +731,8 @@ function ContentFlowHubPageContent() {
                           }}
                           style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
-                            width: '144px', height: '210px', padding: '12px 10px', borderRadius: '16px',
+                            flexGrow: 1, flexShrink: 1, minWidth: '144px', maxWidth: '200px',
+                            height: '215px', padding: '12px 10px', borderRadius: '16px',
                             background: isActive
                               ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%)'
                               : 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)',
@@ -742,70 +743,70 @@ function ContentFlowHubPageContent() {
                               ? '0 8px 32px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.35)'
                               : `0 4px 16px rgba(0,0,0,0.2), 0 0 10px ${glowShadow}`,
                             transform: isActive ? 'translateY(-6px)' : 'none',
-                            flexShrink: 0, transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer'
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer'
                           }}
                         >
-                          {/* Product Thumbnail & Name (Top) */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+                          {/* Product Name (Top) */}
+                          <div style={{
+                            fontSize: '11px', fontWeight: 800, color: '#f8fafc', textAlign: 'center',
+                            display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden', textOverflow: 'ellipsis', height: '28px', lineHeight: '14px', width: '100%'
+                          }}>
+                            {prodName}
+                          </div>
+
+                          {/* Large Product Image (Middle) */}
+                          <div style={{
+                            width: '100%', height: '80px', position: 'relative', borderRadius: '8px',
+                            overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', margin: '8px 0'
+                          }}>
                             {prodImageUrl ? (
                               <img
                                 src={prodImageUrl}
                                 alt={prodName}
-                                style={{ width: '28px', height: '28px', borderRadius: '6px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.1)' }}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => {
+                                  // Fallback to placeholder emoji if image fails to load
+                                  e.target.style.display = 'none';
+                                  const parent = e.target.parentNode;
+                                  const fb = document.createElement('div');
+                                  fb.style.width = '100%';
+                                  fb.style.height = '100%';
+                                  fb.style.background = 'rgba(255,255,255,0.03)';
+                                  fb.style.display = 'flex';
+                                  fb.style.justifyContent = 'center';
+                                  fb.style.alignItems = 'center';
+                                  fb.style.fontSize = '24px';
+                                  fb.innerText = '📦';
+                                  parent.appendChild(fb);
+                                }}
                               />
                             ) : (
                               <div style={{
-                                width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(255,255,255,0.05)',
-                                display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '14px', border: '1px solid rgba(255,255,255,0.06)'
+                                width: '100%', height: '100%', background: 'rgba(255,255,255,0.03)',
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px'
                               }}>
                                 📦
                               </div>
                             )}
-                            <div style={{
-                              fontSize: '10px', fontWeight: 700, color: '#f8fafc', textAlign: 'left',
-                              display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden', textOverflow: 'ellipsis', height: '26px', lineHeight: '13px', flex: 1
-                            }}>
-                              {prodName}
+                          </div>
+
+                          {/* Sleek Progress Bar (Bottom) */}
+                          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px', color: '#94a3b8' }}>
+                              <span>Progress:</span>
+                              <span style={{ fontWeight: 800, color: accentColor }}>{publishedToday}/{targetCount}</span>
+                            </div>
+                            <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', overflow: 'hidden' }}>
+                              <div style={{ width: `${percent}%`, height: '100%', background: accentColor, borderRadius: '2px', transition: 'width 0.4s ease' }} />
                             </div>
                           </div>
 
-                          {/* Circular Progress (Center) */}
-                          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '70px', height: '70px' }}>
-                            <svg width="68" height="68" style={{ transform: 'rotate(-90deg)' }}>
-                              <circle
-                                cx="34"
-                                cy="34"
-                                r={radius}
-                                fill="transparent"
-                                stroke="rgba(255, 255, 255, 0.04)"
-                                strokeWidth="5"
-                              />
-                              <circle
-                                cx="34"
-                                cy="34"
-                                r={radius}
-                                fill="transparent"
-                                stroke={accentColor}
-                                strokeWidth="5"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={strokeDashoffset}
-                                strokeLinecap="round"
-                                style={{ transition: 'stroke-dashoffset 0.4s ease' }}
-                              />
-                            </svg>
-                            <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                              <span style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', fontFamily: 'monospace' }}>
-                                {publishedToday}/{targetCount}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Status Badge (Bottom) */}
+                          {/* Status Badge */}
                           <div style={{
-                            fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em',
+                            fontSize: '8px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em',
                             color: accentColor, background: isCompleted ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
-                            padding: '4px 10px', borderRadius: '20px', border: `1px solid ${accentColor}25`
+                            padding: '2px 8px', borderRadius: '20px', border: `1px solid ${accentColor}25`, marginTop: '6px'
                           }}>
                             {isCompleted ? 'Completed' : 'In Progress'}
                           </div>

@@ -1,5 +1,17 @@
 # Changelog
 
+## V2.2.77 — Centered Proportional Layout & Large Product Photo Heroes (27/07/2026)
+- Tata letak kartu rata tengah dan lebar flex grow proporsional
+- Foto produk diposisikan di tengah sebagai hero utama
+- Progress bar horizontal ramping setinggi 4px
+- Penanganan onError untuk fallback otomatis foto produk
+
+## V2.2.77 — Centered Proportional Layout & Large Product Photo Heroes (27/07/2026)
+- Menyeimbangkan posisi kartu skedul produk menjadi rata tengah (`justifyContent: 'center'`) dengan lebar responsif dinamis (`flexGrow: 1`, `maxWidth: '200px'`)
+- Memposisikan foto produk berukuran besar di bagian tengah kartu sebagai *hero element* utama di bawah nama produk
+- Mengganti visualisasi lingkaran dengan batang progres horizontal setinggi `4px` yang ramping di bagian bawah kartu
+- Menambahkan fallback dinamis di frontend menggunakan penanganan event `onError` gambar untuk merender ikon placeholder 📦 jika file foto tidak termuat
+
 ## V2.2.76 — Interactive Product Card Filter, Neon Glow & Photo Thumbnails (27/07/2026)
 - Integrasi filter klik pada kartu produk ke tabel posting
 - Efek neon glow border 2px dan elevasi kartu aktif
