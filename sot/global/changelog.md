@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.51 — Fix Nextcloud URL Classification and PostgreSQL Dual DB Ingest (27/07/2026)
+- Add nextcloud_url = EXCLUDED.nextcloud_url to PostgreSQL ON CONFLICT clause in lib/db.js
+- Auto-classify Nextcloud share links stored in drive_link column in lib/contentflow-ingest.js
+
 ## V2.2.50 — Enhance ContentFlow Ingestion Caption Fallbacks (27/07/2026)
 - Add result_json.social_media_package.caption and result_json.tiktok_caption fallbacks to lib/contentflow-ingest.js
 
