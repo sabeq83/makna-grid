@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.63 — Product Clean Verification & OPC Repair (27/07/2026)
+- Penambahan Kartu Verifikasi Visual Produk pada Modal Content Planner & Import Modal
+- Fallback Sync Engine product_ref_image_path ke foto clean aktif
+- Pembaruan rujukan foto clean kampanye opc_260727_dnarsz di Node 1
+
 ## V2.2.62 — Make Admin Skedul Controller Flexible (Allow Empty Slots) (27/07/2026)
 - Allow Admin to select -- (Kosong / Tidak Digunakan) -- on any slot in Skedul Controller modal
 - Filter out empty schedule slots from Header Controller Card rendering

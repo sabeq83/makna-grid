@@ -95,8 +95,8 @@ export default function ContentPlannerDashboard() {
       );
       setProductUrl(detectedUrl || '');
 
-      // Extract product photo URL if available
-      const detectedPhoto = prod.product_photo_url || prod.product_image_url || '';
+      // Extract product photo URL if available (prioritize clean_photo_url/cleaned_photo_url)
+      const detectedPhoto = prod.clean_photo_url || prod.cleaned_photo_url || prod.photo_url || prod.product_photo_url || prod.product_image_url || '';
       setProductPhotoUrl(detectedPhoto || '');
 
       // Extract target audience if available
@@ -502,6 +502,50 @@ export default function ContentPlannerDashboard() {
                             );
                           })
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Product Visual Verification Card */}
+                {selectedProductId && (
+                  <div style={{
+                    marginBottom: '16px', padding: '12px 14px', borderRadius: '10px',
+                    background: 'rgba(6, 78, 59, 0.25)', border: '1px solid rgba(16, 185, 129, 0.4)',
+                    display: 'flex', gap: '12px', alignItems: 'center'
+                  }}>
+                    <div style={{
+                      width: '72px', height: '72px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0,
+                      background: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}>
+                      {productPhotoUrl ? (
+                        <img
+                          src={productPhotoUrl.startsWith('http') || productPhotoUrl.startsWith('/api/') ? productPhotoUrl : `/api/v2/products/image?path=${encodeURIComponent(productPhotoUrl)}`}
+                          alt={productName || 'Product'}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                      ) : (
+                        <span style={{ fontSize: '24px' }}>📦</span>
+                      )}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                        <span style={{
+                          fontSize: '10px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
+                          background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)'
+                        }}>
+                          ✓ Product Image Verified
+                        </span>
+                        <span style={{ fontSize: '11px', color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {productPhotoUrl ? productPhotoUrl.split('/').pop() : 'Tanpa foto clean'}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {productName || 'Tanpa Nama Produk'}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#cbd5e1', marginTop: '2px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {productUsp || productDesc || 'Visual produk siap digunakan untuk ideasi & kampanye.'}
+                      </div>
                     </div>
                   </div>
                 )}

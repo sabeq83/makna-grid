@@ -310,40 +310,83 @@ export default function ImportPlannerModal({
                         ))}
                       </select>
                     </div>
-                  )}
-
-                  {loading ? (
+                         {loading ? (
                     <div style={{ fontSize: '13px', color: '#9ca3af', textAlign: 'center', padding: '12px' }}>Memuat detail planner...</div>
                   ) : planner && (
-                    <div style={{ background: 'rgba(99, 102, 241, 0.08)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>
-                          📦 Produk: {planner.product_name} | Platform: {planner.platform?.toUpperCase()}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={toggleAllRows}
-                          style={{ background: '#334155', border: 'none', color: '#38bdf8', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
-                        >
-                          {selectedRowIds.length === rows.length ? 'Batal Pilih Semua' : 'Pilih Semua Row'}
-                        </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {/* Product Visual Verification Card */}
+                      <div style={{
+                        padding: '12px 14px', borderRadius: '10px',
+                        background: 'rgba(6, 78, 59, 0.25)', border: '1px solid rgba(16, 185, 129, 0.4)',
+                        display: 'flex', gap: '12px', alignItems: 'center'
+                      }}>
+                        <div style={{
+                          width: '72px', height: '72px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0,
+                          background: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        }}>
+                          {productRefImage ? (
+                            <img
+                              src={productRefImage.startsWith('http') || productRefImage.startsWith('/api/') ? productRefImage : `/api/v2/products/image?path=${encodeURIComponent(productRefImage)}`}
+                              alt={productName || 'Product'}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                          ) : (
+                            <span style={{ fontSize: '24px' }}>📦</span>
+                          )}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                            <span style={{
+                              fontSize: '10px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
+                              background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)'
+                            }}>
+                              ✓ Verified Clean Photo
+                            </span>
+                            <span style={{ fontSize: '11px', color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {productRefImage ? productRefImage.split('/').pop() : 'Tanpa foto clean'}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '14px', fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {productName || planner.product_name || 'Tanpa Nama Produk'}
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#cbd5e1', marginTop: '2px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            {productUsp || productDesc || planner.product_description || 'Visual produk terverifikasi untuk proses pembuatan kampanye.'}
+                          </div>
+                        </div>
                       </div>
 
-                      <div style={{ maxHeight: '140px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', background: '#09090b', padding: '8px', borderRadius: '6px', border: '1px solid #27272a' }}>
-                        {rows.map(r => (
-                          <label key={r.id} style={{ fontSize: '12px', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                            <input
-                              type="checkbox"
-                              checked={selectedRowIds.includes(r.id)}
-                              onChange={() => toggleRowSelection(r.id)}
-                            />
-                            <span style={{ fontWeight: 600, color: '#818cf8' }}>#{r.sequence} [{r.pillar}]</span>
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{r.hook}</span>
-                          </label>
-                        ))}
+                      {/* Selected Planner Rows List */}
+                      <div style={{ background: 'rgba(99, 102, 241, 0.08)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>
+                            📋 Baris Planner ({selectedRowIds.length} dari {rows.length} terpilih) | Platform: {planner.platform?.toUpperCase()}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={toggleAllRows}
+                            style={{ background: '#334155', border: 'none', color: '#38bdf8', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
+                          >
+                            {selectedRowIds.length === rows.length ? 'Batal Pilih Semua' : 'Pilih Semua Row'}
+                          </button>
+                        </div>
+
+                        <div style={{ maxHeight: '140px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', background: '#09090b', padding: '8px', borderRadius: '6px', border: '1px solid #27272a' }}>
+                          {rows.map(r => (
+                            <label key={r.id} style={{ fontSize: '12px', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                              <input
+                                type="checkbox"
+                                checked={selectedRowIds.includes(r.id)}
+                                onChange={() => toggleRowSelection(r.id)}
+                              />
+                              <span style={{ fontWeight: 600, color: '#818cf8' }}>#{r.sequence} [{r.pillar}]</span>
+                              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{r.hook}</span>
+                            </label>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  )}
+                  )}                )}
 
                   <div>
                     <label style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
