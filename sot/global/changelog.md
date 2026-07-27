@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.57 — Upgrade Push to Content Flow Engine for OPC Campaigns (27/07/2026)
+- Upgrade POST /api/v2/pillar-campaigns/[id]/sync-contentflow handler to use scanAndSyncExistingCampaigns with target campaign ID
+- Support targetCampaignId parameter and scalar subquery in lib/contentflow-ingest.js to guarantee zero data duplication
+
 ## V2.2.56 — Move Skipped Status to Platform Publishing Dropdowns & Clean UI (27/07/2026)
 - Remove Skipped status from pipeline_status video card badges
 - Remove Video Status control UI from ContentFlow Modal Header

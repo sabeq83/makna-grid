@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { syncStrategicCampaignToContentFlow } from '@/lib/strategic-campaign-engine';
+import { scanAndSyncExistingCampaigns } from '@/lib/contentflow-ingest';
 
 export async function POST(request, { params }) {
   try {
-    const { id } = await params;
-    const result = await syncStrategicCampaignToContentFlow(id);
-    return NextResponse.json({ success: true, ...result });
+    const resolvedParams = await params;
+    const id = resolvedParams?.id || params?.id;
+    const syncedCount = scanAndSyncExistingCampaigns(id);
+    return NextResponse.json({ success: true, synced_count: syncedCount });
   } catch (error) {
     console.error('[API /v2/pillar-campaigns/[id]/sync-contentflow POST Error]', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
