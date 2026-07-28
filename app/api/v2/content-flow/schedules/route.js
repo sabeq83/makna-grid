@@ -22,6 +22,49 @@ export async function GET(request) {
       WHERE bs.brand_id = ? 
       ORDER BY bs.slot_index ASC
     `).all(brandId);
+
+    const { pgQuery } = await import('@/lib/db-pg');
+    const todayStr = new Date().toLocaleDateString('sv-SE'); // 'YYYY-MM-DD'
+
+    for (const row of rows) {
+      row.published_today = 0;
+      if (!row.product_name || row.product_name.trim() === '') continue;
+
+      try {
+        const pgRes = await pgQuery(`
+          SELECT COUNT(*) as count FROM content_flow_items
+          WHERE LOWER(account_name) = LOWER($1)
+            AND (LOWER($2) LIKE '%' || LOWER(nama_produk) || '%' OR LOWER(nama_produk) LIKE '%' || LOWER($2) || '%')
+            AND (
+              (LOWER(tiktok_status) = 'published' AND tiktok_publish_date = $3) OR
+              (LOWER(facebook_status) = 'published' AND facebook_publish_date = $3) OR
+              (LOWER(instagram_status) = 'published' AND instagram_publish_date = $3) OR
+              (LOWER(youtube_status) = 'published' AND youtube_publish_date = $3)
+            )
+        `, [brandId, row.product_name, todayStr]);
+        row.published_today = parseInt(pgRes.rows[0].count, 10) || 0;
+      } catch (pgErr) {
+        console.warn('[API schedules GET] PG count query failed, falling back to SQLite:', pgErr.message);
+        try {
+          const sqliteDb = getDb();
+          const litRes = sqliteDb.prepare(`
+            SELECT COUNT(*) as count FROM content_flow_items
+            WHERE LOWER(account_name) = LOWER(?)
+              AND (? LIKE '%' || LOWER(nama_produk) || '%' OR LOWER(nama_produk) LIKE '%' || ?)
+              AND (
+                (LOWER(tiktok_status) = 'published' AND tiktok_publish_date = ?) OR
+                (LOWER(facebook_status) = 'published' AND facebook_publish_date = ?) OR
+                (LOWER(instagram_status) = 'published' AND instagram_publish_date = ?) OR
+                (LOWER(youtube_status) = 'published' AND youtube_publish_date = ?)
+              )
+          `).get(brandId, row.product_name, row.product_name, todayStr, todayStr, todayStr, todayStr);
+          row.published_today = litRes?.count || 0;
+        } catch (sqliteErr) {
+          console.error('[API schedules GET] SQLite fallback count query failed:', sqliteErr.message);
+        }
+      }
+    }
+
     return NextResponse.json({ success: true, schedules: rows });
   } catch (error) {
     console.error('[API /v2/content-flow/schedules GET Error]', error);

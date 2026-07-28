@@ -418,6 +418,9 @@ function ContentFlowHubPageContent() {
 
         setActiveItem(null); // Auto-close modal on save!
         loadContent();
+        if (accountFilter && accountFilter !== 'all') {
+          fetchBrandSchedules(accountFilter);
+        }
       } else {
         showToast('Gagal update: ' + data.error);
       }
@@ -744,7 +747,7 @@ function ContentFlowHubPageContent() {
                     {filledSlots.map((slot) => {
                       const prodName = slot.product_name;
                       const targetCount = slot.target_daily_posts || 1;
-                      const publishedToday = items.filter(i => (i.nama_produk || '').toLowerCase().includes(prodName.toLowerCase()) && (i.tiktok_status === 'Published' || i.facebook_status === 'Published' || i.instagram_status === 'Published')).length;
+                      const publishedToday = slot.published_today || 0;
 
                       const radius = 28;
                       const circumference = 2 * Math.PI * radius;

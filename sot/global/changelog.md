@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.81 — Fix schedules progress count calculation (28/07/2026)
+- Hitung progress harian di backend API dan hapus ketergantungan filter pagination
+
 ## V2.2.80 — Perbaikan Content Flow dan Standardisasi Nextcloud (28/07/2026)
 - Perbaikan tombol copy clipboard fallback
 - Sinkronisasi catatan & status platform ke DB pg
