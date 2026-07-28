@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.83 — Make Ws Matrix dynamic and inject product details in Call 2 (28/07/2026)
+- Hapus wsMatrices statis dan letakkan Ws Matrix dinamis langsung oleh AI di Call 1
+- Suntikkan deskripsi produk dan USP ke creativeSystemInstruction Call 2
+- Dinamiskan hashtags acuan di prompts.js
+
 ## V2.2.82 — Fix status filtering and make webhook host resolution dynamic (28/07/2026)
 - Tambahkan status platform ke PG query
 - Prioritaskan setting DB di atas env vars di webhook client
