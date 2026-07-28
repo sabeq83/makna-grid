@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.85 — Standardisasi Penamaan Folder & Berkas Cloud Storage (28/07/2026)
+- Standarisasi prefix nama berkas cloud storage
+- Penambahan brand slug pada folder kampanye
+- Modularisasi naming helpers
+
 ## V2.2.84 — Integrasi Parent Folder & Webhook ke Brand Profile (28/07/2026)
 - Migrasi setelan folder Nextcloud/GDrive ke Brand Profile
 - Implementasi dynamic routing task G-Labs
