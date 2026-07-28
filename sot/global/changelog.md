@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.82 — Fix status filtering and make webhook host resolution dynamic (28/07/2026)
+- Tambahkan status platform ke PG query
+- Prioritaskan setting DB di atas env vars di webhook client
+
 ## V2.2.81 — Fix schedules progress count calculation (28/07/2026)
 - Hitung progress harian di backend API dan hapus ketergantungan filter pagination
 

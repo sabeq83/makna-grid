@@ -33,6 +33,18 @@ export async function GET(request) {
         params.push(productName);
         baseSql += ` AND nama_produk = $${params.length}`;
       }
+      if (tiktokStatus && tiktokStatus !== 'Semua') {
+        params.push(tiktokStatus);
+        baseSql += ` AND tiktok_status = $${params.length}`;
+      }
+      if (facebookStatus && facebookStatus !== 'Semua') {
+        params.push(facebookStatus);
+        baseSql += ` AND facebook_status = $${params.length}`;
+      }
+      if (instagramStatus && instagramStatus !== 'Semua') {
+        params.push(instagramStatus);
+        baseSql += ` AND instagram_status = $${params.length}`;
+      }
       if (q && q.trim()) {
         params.push(`%${q.trim()}%`);
         baseSql += ` AND (video_id ILIKE $${params.length} OR hook ILIKE $${params.length} OR nama_produk ILIKE $${params.length} OR caption ILIKE $${params.length})`;
