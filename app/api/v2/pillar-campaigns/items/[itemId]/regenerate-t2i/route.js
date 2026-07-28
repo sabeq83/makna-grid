@@ -96,11 +96,18 @@ export async function POST(req, { params }) {
 
     console.log(`[OPC Single SF Regen] productBase64: ${!!productBase64}, model: ${imageModel}, isBridge: ${isBridge}`);
     console.log(`[OPC Single SF Regen] Submitting T2I task for clip ${clipIndex} (isBridge: ${isBridge})...`);
+
+    // [Fix v2.2.87] Lookup brand profile via brand_profile_id untuk webhookOverride
+    const brandProfile = campaign.brand_profile_id
+      ? db.prepare('SELECT * FROM brand_profiles WHERE id = ?').get(campaign.brand_profile_id)
+      : null;
+
     const t2iResult = await generateImage({
       prompt: t2i_prompt,
       model: imageModel,
       aspect_ratio: campaign.aspect_ratio || '9:16',
-      reference_images: (isBridge && productBase64) ? [productBase64] : undefined
+      reference_images: (isBridge && productBase64) ? [productBase64] : undefined,
+      webhookOverride: brandProfile
     });
 
     if (!t2iResult?.task_id) {

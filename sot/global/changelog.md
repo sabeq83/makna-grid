@@ -1,5 +1,14 @@
 # Changelog
 
+## V2.2.87 — Fix webhook brand profile di semua modul T2I/I2V (28/07/2026)
+- Fix OPC scheduler: gunakan brand_profile_id bukan account_name yang tidak ada di tabel
+- Fix IFC scheduler: set brandProfile null karena tidak ada kolom brand
+- Fix Strategic scheduler (T2I & I2V): prioritaskan brand_profile_id
+- Fix Recipe G-Labs: gunakan brand_profile_id
+- Fix UI Regen OPC T2I/Start-Frames: tambah webhookOverride
+- Fix UI Regen RE T2I/Start-Frames: tambah webhookOverride
+- Fix UI Regen Strategic T2I: tambah webhookOverride
+
 ## V2.2.86 — Filter Completed Items on Content Flow Feed (28/07/2026)
 - Implementasi filter status produksi di backend dan frontend
 - Default feed ke Completed status

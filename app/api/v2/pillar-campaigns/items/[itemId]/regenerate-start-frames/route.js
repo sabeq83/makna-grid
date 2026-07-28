@@ -117,11 +117,17 @@ async function runItemRegenerateStartFramesBackground(itemId, campaign, item, ne
       });
       
       // 1. Submit T2I task to Webhook
+      // [Fix v2.2.87] Lookup brand profile via brand_profile_id untuk webhookOverride
+      const brandProfile = campaign.brand_profile_id
+        ? db.prepare('SELECT * FROM brand_profiles WHERE id = ?').get(campaign.brand_profile_id)
+        : null;
+
       const t2iResult = await generateImage({
         prompt: clip.t2i_prompt,
         model: imageModel,
         aspect_ratio: campaign.aspect_ratio || '9:16',
-        reference_images: (isBridge && productBase64) ? [productBase64] : undefined
+        reference_images: (isBridge && productBase64) ? [productBase64] : undefined,
+        webhookOverride: brandProfile
       });
       
       if (!t2iResult?.task_id) {

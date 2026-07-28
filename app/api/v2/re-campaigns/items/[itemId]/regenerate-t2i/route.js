@@ -80,6 +80,12 @@ export async function POST(req, { params }) {
     const productBase64 = resolveProductBase64(campaign, productData);
 
     console.log(`[RE UI Regenerate] Submitting T2I task for clip ${clipIndex}...`);
+
+    // [Fix v2.2.87] Lookup brand profile via account_name untuk webhookOverride
+    const brandProfile = campaign.account_name
+      ? db.prepare('SELECT * FROM brand_profiles WHERE LOWER(brand_name) = LOWER(?)').get(campaign.account_name)
+      : null;
+
     const t2iResult = await generateImage({
       prompt: t2i_prompt,
       model: imageModel,
@@ -88,7 +94,8 @@ export async function POST(req, { params }) {
         (imageModel.startsWith('nano_') || imageModel.includes('banana'))
           ? [productBase64]
           : [{ data: productBase64, category: 'subject' }]
-      ) : undefined
+      ) : undefined,
+      webhookOverride: brandProfile
     });
 
     if (!t2iResult?.task_id) {

@@ -65,11 +65,19 @@ export async function POST(req, { params }) {
     const imageModel = getSetting('webhook_image_model') || 'nano_banana_pro';
     console.log(`[SC Single T2I Regen] Submitting T2I task for Item #${itemId} Scene #${sceneNumber}...`);
 
+    // [Fix v2.2.87] Lookup brand profile via brand_profile_id (dengan fallback ke account_name)
+    const brandProfile = campaign
+      ? (campaign.brand_profile_id
+          ? db.prepare('SELECT * FROM brand_profiles WHERE id = ?').get(campaign.brand_profile_id)
+          : db.prepare('SELECT * FROM brand_profiles WHERE LOWER(brand_name) = LOWER(?)').get(campaign.account_name || ''))
+      : null;
+
     const t2iRes = await generateImage({
       prompt: scene.t2i_prompt,
       model: imageModel,
       aspect_ratio: '9:16',
-      reference_images: (isBridge && productBase64) ? [productBase64] : undefined
+      reference_images: (isBridge && productBase64) ? [productBase64] : undefined,
+      webhookOverride: brandProfile
     });
 
     if (!t2iRes?.task_id) {
