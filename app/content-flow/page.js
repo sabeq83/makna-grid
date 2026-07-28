@@ -98,6 +98,7 @@ function ContentFlowHubPageContent() {
   const [sourceFilter, setSourceFilter] = useState('all');
   const [accountFilter, setAccountFilter] = useState(accountQuery);
   const [productFilter, setProductFilter] = useState('all');
+  const [pipelineFilter, setPipelineFilter] = useState('Completed');
   const [tiktokFilter, setTiktokFilter] = useState('Semua');
   const [fbFilter, setFbFilter] = useState('Semua');
   const [igFilter, setIgFilter] = useState('Semua');
@@ -246,6 +247,7 @@ function ContentFlowHubPageContent() {
     setSourceFilter('all');
     setAccountFilter('all');
     setProductFilter('all');
+    setPipelineFilter('Completed');
     setTiktokFilter('Semua');
     setFbFilter('Semua');
     setIgFilter('Semua');
@@ -275,6 +277,7 @@ function ContentFlowHubPageContent() {
       if (sourceFilter !== 'all') url += `source_type=${encodeURIComponent(sourceFilter)}&`;
       if (accountFilter !== 'all') url += `account=${encodeURIComponent(accountFilter)}&`;
       if (productFilter !== 'all') url += `product=${encodeURIComponent(productFilter)}&`;
+      if (pipelineFilter !== 'all') url += `pipeline_status=${encodeURIComponent(pipelineFilter)}&`;
       if (tiktokFilter !== 'Semua') url += `tiktok_status=${encodeURIComponent(tiktokFilter)}&`;
       if (fbFilter !== 'Semua') url += `facebook_status=${encodeURIComponent(fbFilter)}&`;
       if (igFilter !== 'Semua') url += `instagram_status=${encodeURIComponent(igFilter)}&`;
@@ -293,7 +296,7 @@ function ContentFlowHubPageContent() {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, sourceFilter, accountFilter, productFilter, tiktokFilter, fbFilter, igFilter, showToast]);
+  }, [searchTerm, sourceFilter, accountFilter, productFilter, pipelineFilter, tiktokFilter, fbFilter, igFilter, showToast]);
 
   useEffect(() => {
     loadContent();
@@ -970,8 +973,8 @@ function ContentFlowHubPageContent() {
 
           {/* Multi-level Search & Filter Panel */}
           <div style={{ padding: '20px', borderRadius: '16px', background: '#121318', border: '1px solid #27272a', marginBottom: '24px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)' }}>
-            {/* Row 1: Universal Search & Metadata Filters (3 Columns) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '14px' }}>
+            {/* Row 1: Universal Search & Metadata Filters (4 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: '12px', marginBottom: '14px' }}>
               {/* Universal Search */}
               <div style={{ position: 'relative' }}>
                 <SearchIcon style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }} />
@@ -1001,6 +1004,19 @@ function ContentFlowHubPageContent() {
                   <option value="instant">⚡ Instant Factory</option>
                   <option value="recipe">🧪 Recipe Labs</option>
                   <option value="bridge">🔗 Bridge Injector</option>
+                </select>
+              </div>
+
+              {/* Pipeline Status Filter */}
+              <div>
+                <select
+                  value={pipelineFilter}
+                  onChange={(e) => setPipelineFilter(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#09090b', border: '1px solid #3f3f46', color: '#e4e4e7', fontSize: '12px', outline: 'none' }}
+                >
+                  <option value="all">Semua Status Produksi (All)</option>
+                  <option value="Completed">🎬 Completed (Siap Publish)</option>
+                  <option value="In Production">⚙️ In Production (Diproses)</option>
                 </select>
               </div>
 

@@ -33,6 +33,10 @@ export async function GET(request) {
         params.push(productName);
         baseSql += ` AND nama_produk = $${params.length}`;
       }
+      if (pipelineStatus && pipelineStatus !== 'all') {
+        params.push(pipelineStatus);
+        baseSql += ` AND pipeline_status = $${params.length}`;
+      }
       if (tiktokStatus && tiktokStatus !== 'Semua') {
         params.push(tiktokStatus);
         baseSql += ` AND tiktok_status = $${params.length}`;

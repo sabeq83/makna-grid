@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.86 — Filter Completed Items on Content Flow Feed (28/07/2026)
+- Implementasi filter status produksi di backend dan frontend
+- Default feed ke Completed status
+
 ## V2.2.85 — Standardisasi Penamaan Folder & Berkas Cloud Storage (28/07/2026)
 - Standarisasi prefix nama berkas cloud storage
 - Penambahan brand slug pada folder kampanye
