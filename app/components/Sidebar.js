@@ -50,7 +50,7 @@ const navItems = [
   { label: 'Video Library', href: '/scraper', icon: '📼' },
   { label: 'MAKNA Hub Sync', href: '/sync', icon: '☁️' },
   { section: 'SYSTEM' },
-  { label: 'Brand DNA', href: '/settings/brand-profiles', icon: '🧬' },
+  { label: 'Brand Profile Manager', href: '/settings/brand-profiles', icon: '🧬' },
   { label: 'User Management', href: '/settings/users', icon: '👥', adminOnly: true },
   { label: 'System Health', href: '/system-health', icon: '🩺' },
   { label: 'Settings', href: '/settings', icon: '⚙' },

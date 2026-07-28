@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.84 — Integrasi Parent Folder & Webhook ke Brand Profile (28/07/2026)
+- Migrasi setelan folder Nextcloud/GDrive ke Brand Profile
+- Implementasi dynamic routing task G-Labs
+- Sederhanisasi UI Brand Profile Manager
+
 ## V2.2.83 — Make Ws Matrix dynamic and inject product details in Call 2 (28/07/2026)
 - Hapus wsMatrices statis dan letakkan Ws Matrix dinamis langsung oleh AI di Call 1
 - Suntikkan deskripsi produk dan USP ke creativeSystemInstruction Call 2

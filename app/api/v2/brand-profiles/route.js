@@ -28,11 +28,15 @@ export async function POST(req) {
       brand_name: body.brand_name,
       tone_of_voice: body.tone_of_voice,
       visual_signature: body.visual_signature,
-      color_palette: body.color_palette,
-      forbidden_elements: body.forbidden_elements,
-      brand_slogan_or_cta: body.brand_slogan_or_cta,
       raw_guideline_text: body.raw_guideline_text,
       guideline_filename: body.guideline_filename,
+      storage_provider: body.storage_provider,
+      nextcloud_target_folder: body.nextcloud_target_folder,
+      drive_target_folder: body.drive_target_folder,
+      drive_glabs_folder_id: body.drive_glabs_folder_id,
+      webhook_host: body.webhook_host,
+      webhook_port: body.webhook_port,
+      webhook_api_key: body.webhook_api_key,
     });
 
     return NextResponse.json({ success: true, id });

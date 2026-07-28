@@ -14,11 +14,15 @@ const emptyForm = {
   brand_name: '',
   tone_of_voice: 'Kasual/Gaul',
   visual_signature: '',
-  color_palette: '',
-  forbidden_elements: '',
-  brand_slogan_or_cta: '',
   raw_guideline_text: '',
   guideline_filename: '',
+  storage_provider: '',
+  nextcloud_target_folder: '',
+  drive_target_folder: '',
+  drive_glabs_folder_id: '',
+  webhook_host: '',
+  webhook_port: '',
+  webhook_api_key: '',
 };
 
 export default function BrandProfilesPage() {
@@ -68,9 +72,6 @@ export default function BrandProfilesPage() {
           brand_name: data.data.brand_name || prev.brand_name,
           tone_of_voice: data.data.tone_of_voice || prev.tone_of_voice,
           visual_signature: data.data.visual_signature || prev.visual_signature,
-          color_palette: data.data.color_palette || prev.color_palette,
-          forbidden_elements: data.data.forbidden_elements || prev.forbidden_elements,
-          brand_slogan_or_cta: data.data.brand_slogan_or_cta || prev.brand_slogan_or_cta,
           raw_guideline_text: data.data.raw_guideline_text || '',
           guideline_filename: data.data.guideline_filename || '',
         }));
@@ -131,11 +132,15 @@ export default function BrandProfilesPage() {
           brand_name: data.data.brand_name || '',
           tone_of_voice: data.data.tone_of_voice || 'Kasual/Gaul',
           visual_signature: data.data.visual_signature || '',
-          color_palette: data.data.color_palette || '',
-          forbidden_elements: data.data.forbidden_elements || '',
-          brand_slogan_or_cta: data.data.brand_slogan_or_cta || '',
           raw_guideline_text: data.data.raw_guideline_text || '',
           guideline_filename: data.data.guideline_filename || '',
+          storage_provider: data.data.storage_provider || '',
+          nextcloud_target_folder: data.data.nextcloud_target_folder || '',
+          drive_target_folder: data.data.drive_target_folder || '',
+          drive_glabs_folder_id: data.data.drive_glabs_folder_id || '',
+          webhook_host: data.data.webhook_host || '',
+          webhook_port: data.data.webhook_port || '',
+          webhook_api_key: data.data.webhook_api_key || '',
         });
         setEditingId(id);
         setShowForm(true);
@@ -160,8 +165,8 @@ export default function BrandProfilesPage() {
       <main className="main-content">
         <div className="page-header">
           <div>
-            <h1 className="page-title">🧬 Brand DNA Manager</h1>
-            <p className="page-subtitle">Kelola identitas merek Anda — setiap konten AI akan diselaraskan dengan DNA brand yang dipilih.</p>
+            <h1 className="page-title">🧬 Brand Profile Manager</h1>
+            <p className="page-subtitle">Kelola identitas merek Anda — setiap konten AI akan diselaraskan dengan Brand Profile yang dipilih.</p>
           </div>
           <button className="btn btn-primary" onClick={() => { setShowForm(v => !v); if (showForm) { setEditingId(null); setFormData({ ...emptyForm }); setInputMode('manual'); } }}>
             {showForm ? '✕ Tutup Form' : '+ New Brand Profile'}
@@ -218,32 +223,81 @@ export default function BrandProfilesPage() {
 
             {/* Structured Form Fields */}
             <form onSubmit={handleSave}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div className="form-group">
-                  <label className="form-label">Brand Name *</label>
-                  <input className="form-input" name="brand_name" value={formData.brand_name} onChange={handleChange} required placeholder="Contoh: Glow Naturals" />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div className="form-group">
+                    <label className="form-label">Brand Name *</label>
+                    <input className="form-input" name="brand_name" value={formData.brand_name} onChange={handleChange} required placeholder="Contoh: Glow Naturals" />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Tone of Voice</label>
+                    <select className="form-select" name="tone_of_voice" value={formData.tone_of_voice} onChange={handleChange}>
+                      {TONE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Tone of Voice</label>
-                  <select className="form-select" name="tone_of_voice" value={formData.tone_of_voice} onChange={handleChange}>
-                    {TONE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
+
                 <div className="form-group">
                   <label className="form-label">Visual Signature *</label>
                   <textarea className="form-textarea" name="visual_signature" value={formData.visual_signature} onChange={handleChange} required placeholder='Contoh: pencahayaan golden hour, macro shots, clean aesthetic minimalis' style={{ minHeight: '80px' }} />
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Color Palette</label>
-                  <input className="form-input" name="color_palette" value={formData.color_palette} onChange={handleChange} placeholder="Contoh: Warm beige, sage green, soft white" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Forbidden Elements (Elemen Terlarang)</label>
-                  <textarea className="form-textarea" name="forbidden_elements" value={formData.forbidden_elements} onChange={handleChange} placeholder='Contoh: Jangan ada transisi kilatan cahaya, hindari shot wajah close-up, dilarang teks neon' style={{ minHeight: '60px' }} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Slogan / CTA Penutup</label>
-                  <input className="form-input" name="brand_slogan_or_cta" value={formData.brand_slogan_or_cta} onChange={handleChange} placeholder="Contoh: Klik link di bio sekarang juga!" />
+
+                {/* AI WEBHOOK & STORAGE DESTINATIONS SECTION */}
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '8px' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--accent-light)', marginBottom: '16px' }}>🌐 AI Webhook & Storage Destinations</h3>
+                  
+                  {/* AI Webhook Config */}
+                  <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '16px' }}>
+                    <h4 style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '12px' }}>AI Webhook Config (G-Labs GPU Override)</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr', gap: '12px' }}>
+                      <div className="form-group">
+                        <label className="form-label" style={{ fontSize: '0.75rem' }}>Webhook Host IP</label>
+                        <input className="form-input" name="webhook_host" value={formData.webhook_host} onChange={handleChange} placeholder="Contoh: 100.117.59.92" style={{ padding: '8px' }} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label" style={{ fontSize: '0.75rem' }}>Port</label>
+                        <input className="form-input" name="webhook_port" value={formData.webhook_port} onChange={handleChange} placeholder="8765" style={{ padding: '8px' }} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label" style={{ fontSize: '0.75rem' }}>API Key Override</label>
+                        <input className="form-input" type="password" name="webhook_api_key" value={formData.webhook_api_key} onChange={handleChange} placeholder="Optional G-Labs API Key" style={{ padding: '8px' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Storage Destination Config */}
+                  <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                    <h4 style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '12px' }}>Cloud Storage Destination Override</h4>
+                    
+                    <div className="form-group" style={{ marginBottom: '12px' }}>
+                      <label className="form-label" style={{ fontSize: '0.75rem' }}>Storage Provider</label>
+                      <select className="form-select" name="storage_provider" value={formData.storage_provider} onChange={handleChange} style={{ padding: '8px' }}>
+                        <option value="">-- Gunakan Setelan Global --</option>
+                        <option value="nextcloud">Nextcloud</option>
+                        <option value="gdrive">Google Drive</option>
+                      </select>
+                    </div>
+
+                    {formData.storage_provider === 'nextcloud' && (
+                      <div className="form-group animate-fade-in">
+                        <label className="form-label" style={{ fontSize: '0.75rem' }}>Nextcloud Target Folder (Parent Path)</label>
+                        <input className="form-input" name="nextcloud_target_folder" value={formData.nextcloud_target_folder} onChange={handleChange} placeholder="Contoh: MAKNA_Assets/Nutribake" style={{ padding: '8px' }} />
+                      </div>
+                    )}
+
+                    {formData.storage_provider === 'gdrive' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }} className="animate-fade-in">
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontSize: '0.75rem' }}>Google Drive Folder Name</label>
+                          <input className="form-input" name="drive_target_folder" value={formData.drive_target_folder} onChange={handleChange} placeholder="Contoh: Nutribake Drive Folder" style={{ padding: '8px' }} />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontSize: '0.75rem' }}>Google Drive Folder ID (Direct Parent)</label>
+                          <input className="form-input" name="drive_glabs_folder_id" value={formData.drive_glabs_folder_id} onChange={handleChange} placeholder="Contoh: 1abc123xyz_ID" style={{ padding: '8px' }} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -275,6 +329,8 @@ export default function BrandProfilesPage() {
                   <th>Brand Name</th>
                   <th>Tone of Voice</th>
                   <th>Visual Signature</th>
+                  <th>Storage Destination</th>
+                  <th>G-Labs Host</th>
                   <th>Source</th>
                   <th>Date</th>
                   <th style={{ textAlign: 'right' }}>Actions</th>
@@ -289,8 +345,14 @@ export default function BrandProfilesPage() {
                         {p.tone_of_voice}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {p.visual_signature}
+                    </td>
+                    <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                      {p.storage_provider === 'nextcloud' ? '☁️ Nextcloud' : p.storage_provider === 'gdrive' ? '📁 Google Drive' : '⚙️ Global Settings'}
+                    </td>
+                    <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                      {p.webhook_host ? `🖥️ ${p.webhook_host}` : '⚙️ Global Webhook'}
                     </td>
                     <td style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {p.guideline_filename ? `📄 ${p.guideline_filename}` : '📝 Manual'}
