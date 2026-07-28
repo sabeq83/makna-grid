@@ -192,18 +192,54 @@ function ContentFlowHubPageContent() {
     setTimeout(() => setToastMsg(''), 3200);
   }, []);
 
-  const copyToClipboard = useCallback((text, label, key = null) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
-    showToast(`${label || 'Teks'} berhasil disalin ke clipboard! 📋`);
-
-    if (key) {
-      setCopiedKeys(prev => ({ ...prev, [key]: true }));
-      setTimeout(() => {
-        setCopiedKeys(prev => ({ ...prev, [key]: false }));
-      }, 2000);
+  const fallbackCopyToClipboard = useCallback((text, label, key = null) => {
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed"; // hindari scroll halaman
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      if (successful) {
+        showToast(`${label || 'Teks'} berhasil disalin ke clipboard! 📋`);
+        if (key) {
+          setCopiedKeys(prev => ({ ...prev, [key]: true }));
+          setTimeout(() => {
+            setCopiedKeys(prev => ({ ...prev, [key]: false }));
+          }, 2000);
+        }
+      } else {
+        showToast(`Gagal menyalin ${label || 'Teks'} ❌`);
+      }
+    } catch (err) {
+      console.error('Fallback copy failed:', err);
+      showToast(`Gagal menyalin ${label || 'Teks'} ❌`);
     }
   }, [showToast]);
+
+  const copyToClipboard = useCallback((text, label, key = null) => {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showToast(`${label || 'Teks'} berhasil disalin ke clipboard! 📋`);
+          if (key) {
+            setCopiedKeys(prev => ({ ...prev, [key]: true }));
+            setTimeout(() => {
+              setCopiedKeys(prev => ({ ...prev, [key]: false }));
+            }, 2000);
+          }
+        })
+        .catch(err => {
+          console.warn('Navigator clipboard copy failed, falling back...', err);
+          fallbackCopyToClipboard(text, label, key);
+        });
+    } else {
+      fallbackCopyToClipboard(text, label, key);
+    }
+  }, [showToast, fallbackCopyToClipboard]);
 
   const resetFilters = useCallback(() => {
     setSearchTerm('');
@@ -354,7 +390,8 @@ function ContentFlowHubPageContent() {
       nextcloud_url: item.nextcloud_url || '',
       nama_produk: item.nama_produk || '',
       link_produk: item.link_produk || '',
-      link_affiliate: item.link_affiliate || ''
+      link_affiliate: item.link_affiliate || '',
+      catatan: item.catatan || ''
     });
   }
 
@@ -371,6 +408,14 @@ function ContentFlowHubPageContent() {
       const data = await res.json();
       if (data.success) {
         showToast('Data & status publishing berhasil diperbarui! ✨');
+        
+        // Update local items state secara instan
+        setItems(prevItems => prevItems.map(it => 
+          String(it.id) === String(activeItem.id) 
+            ? { ...it, ...editStatusForm } 
+            : it
+        ));
+
         setActiveItem(null); // Auto-close modal on save!
         loadContent();
       } else {
@@ -706,13 +751,12 @@ function ContentFlowHubPageContent() {
                       const percent = Math.min(100, Math.max(0, (publishedToday / targetCount) * 100));
                       const strokeDashoffset = circumference - (percent / 100) * circumference;
                       const isCompleted = publishedToday >= targetCount;
-
                       const isActive = productFilter.toLowerCase() === prodName.toLowerCase();
 
                       const accentColor = isCompleted ? '#10b981' : '#f59e0b';
                       const glowShadow = isActive 
                         ? 'rgba(16, 185, 129, 0.55)' 
-                        : (isCompleted ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)');
+                        : (isCompleted ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.2)');
 
                       // Get active product image path
                       const activeField = slot.active_photo || 'cleaned_photo_url';
@@ -735,13 +779,15 @@ function ContentFlowHubPageContent() {
                             height: '215px', padding: '12px 10px', borderRadius: '16px',
                             background: isActive
                               ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%)'
-                              : 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)',
+                              : (isCompleted
+                                  ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(15, 23, 42, 0.9) 100%)'
+                                  : 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%)'),
                             border: isActive 
                               ? '2px solid #10b981' 
-                              : `1px solid ${isCompleted ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                              : `1px solid ${isCompleted ? '#10b981' : 'rgba(255, 255, 255, 0.08)'}`,
                             boxShadow: isActive
                               ? '0 8px 32px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.35)'
-                              : `0 4px 16px rgba(0,0,0,0.2), 0 0 10px ${glowShadow}`,
+                              : `0 4px 16px rgba(0,0,0,0.2), 0 0 12px ${glowShadow}`,
                             transform: isActive ? 'translateY(-6px)' : 'none',
                             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer'
                           }}

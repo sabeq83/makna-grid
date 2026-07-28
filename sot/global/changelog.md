@@ -1,5 +1,12 @@
 # Changelog
 
+## V2.2.80 — Perbaikan Content Flow dan Standardisasi Nextcloud (28/07/2026)
+- Perbaikan tombol copy clipboard fallback
+- Sinkronisasi catatan & status platform ke DB pg
+- Standardisasi penamaan folder/file video id + produk
+- Unggah file naskah.md ke Nextcloud & Drive (Strategic & IFC)
+- Tampilan visual completed scheduler card permanen di header
+
 ## V2.2.79 — Square 1:1 Product Photo Layout (27/07/2026)
 - Mengubah foto produk menjadi square 1:1 berukuran 90px
 - Mencegah foto produk meregang secara horizontal
