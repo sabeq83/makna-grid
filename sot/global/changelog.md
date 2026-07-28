@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.88 — Fix OPC product truth & geometric truth contract (29/07/2026)
+- Add DB fallback untuk product_truth/geometric_truth di OPC MassProd path
+- Fix ref image salah di kampanye Jahe Merah (8 items pakai gambar Chia Organik)
+- Isi product_truth & geometric_truth Kayu Manis di DB
+- Reset 20 item bermasalah ke pending untuk regenerasi prompt ulang
+
 ## V2.2.87 — Fix webhook brand profile di semua modul T2I/I2V (28/07/2026)
 - Fix OPC scheduler: gunakan brand_profile_id bukan account_name yang tidak ada di tabel
 - Fix IFC scheduler: set brandProfile null karena tidak ada kolom brand
