@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.93 — Fix folder Nextcloud OPC per-produk & per-brand (Dapur Botani) (29/07/2026)
+- Fix 1: getProductSlug strip prefix OPC campaign_name agar slug unik per produk (nutrifarm_jahe bukan opc_20260728)
+- Fix 2a: getCampaignParentFolderName self-heal account_name dari brand_profile_id agar folder dimulai dapurbotani bukan umum
+- Fix 2b: syncOpcCampaignAssetsToNextcloud inject account_name dari brand_profile_id
+- Fix 2c: 5 call site getCampaignParentFolderName OPC kini meneruskan db untuk self-heal
+
 ## V2.2.92 — Product Reference File anchor di T2I prompt OPC & RE (29/07/2026)
 - Fix 1: Inject product_filename_declare & clean_photo_url ke productData OPC MassProd path
 - Fix 2: Tambah opcRefFilenameTag ke template T2I buildOrganicPillarPrompt agar AI meniru format Product Reference File secara konkret
