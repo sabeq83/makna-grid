@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.89 — Fix ref image reliability — clean_photo_url priority & DB cross-check (29/07/2026)
+- Fix 1: Prioritaskan clean_photo_url atas photo_url di database cache check (OPC Sourcing)
+- Fix 2: JIT Sourcing kini menyimpan clean_photo_url product_truth geometric_truth ke DB
+- Fix 3: Fallback lookup by product_name jika cache by URL tidak ditemukan
+- Fix 4: MassProd generator cross-check clean_photo_url dari DB untuk mencegah cross-contamination image antar-produk
+
 ## V2.2.88 — Fix OPC product truth & geometric truth contract (29/07/2026)
 - Add DB fallback untuk product_truth/geometric_truth di OPC MassProd path
 - Fix ref image salah di kampanye Jahe Merah (8 items pakai gambar Chia Organik)
