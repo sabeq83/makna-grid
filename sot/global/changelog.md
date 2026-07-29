@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.98 — Fix product-bridge-inject page missing function (29/07/2026)
+- Fix ReferenceError in product-bridge-inject page by adding missing fetchBrandProfiles function definition
+
 ## V2.2.97 — Fix migration search_path and sync staging tables (29/07/2026)
 - Fix scripts/migrate-sqlite-to-postgres.js client connection search_path
 - Sync all tables to PostgreSQL staging schema on Node 3
