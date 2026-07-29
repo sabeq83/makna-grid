@@ -1,6 +1,6 @@
 {
   "name": "makna-grid",
-  "version": "2.2.91",
+  "version": "2.2.92",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 3005",

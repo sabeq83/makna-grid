@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.92 — Product Reference File anchor di T2I prompt OPC & RE (29/07/2026)
+- Fix 1: Inject product_filename_declare & clean_photo_url ke productData OPC MassProd path
+- Fix 2: Tambah opcRefFilenameTag ke template T2I buildOrganicPillarPrompt agar AI meniru format Product Reference File secara konkret
+- Fix 3: resolveProductData kini return product_filename_declare product_truth geometric_truth di 3 mode (select_existing url_extract)
+
 ## V2.2.91 — Upgrade Gemini model ke 3.6-flash & fix 429 free tier detection (29/07/2026)
 - Fix isDailyLimit: tambah keyword free_tier generate_content_free_tier agar key langsung di-exhaust bukan cooldown 45s
 - Upgrade model default gemini-3.5-flash ke gemini-3.6-flash di 8 lokasi (model current lebih stabil)
