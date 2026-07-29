@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.90 — Fix naskah.md 409 Conflict di Nextcloud Sync (29/07/2026)
+- Tambah pengecekan exists() untuk backup naskah.md sebelum upload di semua 4 fungsi sync (OPC RE-Variant RE-Item IFC)
+- File naskah.md backup tidak lagi di-upload jika sudah ada di Nextcloud sehingga error 409 Conflict tidak terjadi lagi
+
 ## V2.2.89 — Fix ref image reliability — clean_photo_url priority & DB cross-check (29/07/2026)
 - Fix 1: Prioritaskan clean_photo_url atas photo_url di database cache check (OPC Sourcing)
 - Fix 2: JIT Sourcing kini menyimpan clean_photo_url product_truth geometric_truth ke DB
