@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.96 — Add Staging Deployment Support (29/07/2026)
+- Add scripts/deploy-staging.js for automated staging deploy
+- Add scripts/init-staging-db.js for PostgreSQL schema isolation
+- Update lib/db-pg.js to support dynamic search_path
+- Add npm script deploy:staging
+
 ## V2.2.95 — Perbaikan visual truth & geometry lock di menu RE dan Bridge Injector (29/07/2026)
 - Menyisipkan placeholder Product Truth dan parameter nama file pada t2i_prompt RE Campaign
 - Menambahkan logika ekstraksi nama file dan tag referensi gambar pada Bridge Injector
