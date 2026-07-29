@@ -66,7 +66,8 @@ export async function POST(request) {
       target_product_id,
       ephemeral_product_data,
       custom_instruction,
-      account_name
+      account_name,
+      status
     } = body;
 
     if (campaign_type === 'bulk') {
@@ -78,17 +79,18 @@ export async function POST(request) {
       logToBridgeInjector(`[NEW BULK CAMPAIGN] Memulai inisiasi kampanye bulk baru "${campaign_name}" (ID: ${campaignId}) dengan ${items.length} baris...`);
 
       const db = getDb();
+      const initialStatus = status === 'draft' ? 'draft' : 'running';
 
-      // 1. Simpan kampanye ke database
+      // 1. Simpan kampanye ke database dengan default Minimax
       db.prepare(`
-        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction, account_name)
-        VALUES (?, ?, '[CSV Bulk Campaign]', 'running', 'bulk', ?, ?)
-      `).run(campaignId, campaign_name, custom_instruction || null, account_name || null);
+        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction, account_name, voice_provider, voice_persona)
+        VALUES (?, ?, '[CSV Bulk Campaign]', ?, 'bulk', ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2')
+      `).run(campaignId, campaign_name, initialStatus, custom_instruction || null, account_name || null);
 
       // 2. Simpan items ke database
       const insertItem = db.prepare(`
-        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status, account_name)
-        VALUES (?, ?, ?, ?, ?, 'pending', ?)
+        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status, account_name, voice_provider, voice_persona)
+        VALUES (?, ?, ?, ?, ?, 'pending', ?, 'minimax', 'Indonesian_casual_reporter_vv2')
       `);
 
       const insertMany = db.transaction((campaignId, itemsList, globalAccount) => {
@@ -106,11 +108,11 @@ export async function POST(request) {
 
       insertMany(campaignId, items, account_name);
 
-      logToBridgeInjector(`[${campaignId}] Sukses mengimpor ${items.length} baris ke bridge_injector_items. Status kampanye diatur ke running.`);
+      logToBridgeInjector(`[${campaignId}] Sukses mengimpor ${items.length} baris ke bridge_injector_items. Status kampanye diatur ke ${initialStatus}.`);
 
       return NextResponse.json({
         success: true,
-        message: 'Kampanye bulk berhasil dibuat dan antrean mulai diproses!',
+        message: 'Kampanye bulk berhasil dibuat!',
         data: {
           campaign_id: campaignId
         }
@@ -125,11 +127,12 @@ export async function POST(request) {
     logToBridgeInjector(`[NEW CAMPAIGN] Memulai inisiasi kampanye baru "${campaign_name}" (ID: ${campaignId})...`);
 
     const db = getDb();
+    const initialStatus = status === 'draft' ? 'draft' : 'pending_storyboard';
 
-    // 1. Simpan kampanye ke database
+    // 1. Simpan kampanye ke database dengan default Minimax
     db.prepare(`
-      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status, account_name)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending_storyboard', ?)
+      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status, account_name, voice_provider, voice_persona)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2')
     `).run(
       campaignId,
       campaign_name,
@@ -138,6 +141,7 @@ export async function POST(request) {
       target_product_id || null,
       ephemeral_product_data ? (typeof ephemeral_product_data === 'object' ? JSON.stringify(ephemeral_product_data) : ephemeral_product_data) : null,
       custom_instruction || null,
+      initialStatus,
       account_name || null
     );
 

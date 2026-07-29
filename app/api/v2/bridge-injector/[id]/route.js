@@ -149,9 +149,40 @@ export async function PATCH(request, { params }) {
     const body = await request.json().catch(() => ({}));
     const db = getDb();
 
-    const campaign = db.prepare('SELECT id FROM bridge_injector_campaigns WHERE id = ?').get(id);
+    const campaign = db.prepare('SELECT status, paused_previous_status, campaign_type FROM bridge_injector_campaigns WHERE id = ?').get(id);
     if (!campaign) {
       return NextResponse.json({ success: false, error: 'Kampanye tidak ditemukan.' }, { status: 404 });
+    }
+
+    // Jika request mengganti status (Play/Pause/Run)
+    if (body.status !== undefined) {
+      let nextStatus = body.status;
+      if (nextStatus === 'paused') {
+        // Simpan status aktif saat ini sebelum di-pause
+        db.prepare('UPDATE bridge_injector_campaigns SET status = ?, paused_previous_status = ? WHERE id = ?')
+          .run('paused', campaign.status, id);
+      } else if (nextStatus === 'running' && campaign.status === 'paused') {
+        // Melanjutkan kembali (Resume) status sebelumnya
+        const resumeStatus = campaign.paused_previous_status || (campaign.campaign_type === 'bulk' ? 'running' : 'pending_storyboard');
+        db.prepare('UPDATE bridge_injector_campaigns SET status = ?, paused_previous_status = NULL WHERE id = ?')
+          .run(resumeStatus, id);
+        nextStatus = resumeStatus;
+      } else if (nextStatus === 'running' && campaign.status === 'draft') {
+        // Menjalankan kampanye dari status draft pertama kali
+        const startStatus = campaign.campaign_type === 'bulk' ? 'running' : 'pending_storyboard';
+        db.prepare('UPDATE bridge_injector_campaigns SET status = ?, paused_previous_status = NULL WHERE id = ?')
+          .run(startStatus, id);
+        nextStatus = startStatus;
+      } else {
+        db.prepare('UPDATE bridge_injector_campaigns SET status = ? WHERE id = ?').run(nextStatus, id);
+      }
+
+      logToBridgeInjector(`[${id}] Status kampanye diubah menjadi: ${nextStatus}`);
+      return NextResponse.json({
+        success: true,
+        message: `Status kampanye berhasil diubah ke ${nextStatus}!`,
+        data: { status: nextStatus }
+      });
     }
 
     const allowedFields = ['enable_tts', 'enable_ffmpeg', 'voice_provider', 'voice_persona', 'voice_speed', 'voice_volume'];

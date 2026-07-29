@@ -13,6 +13,7 @@ export default function ProductBridgeInjectPage() {
   
   // Accordion form visibility
   const [showConfigForm, setShowConfigForm] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('active'); // 'active' or 'draft'
 
   // Form input states
   const [accountName, setAccountName] = useState('');
@@ -165,7 +166,8 @@ export default function ProductBridgeInjectPage() {
           items: parsedRows,
           custom_instruction: customInstruction,
           enable_vo_audit: enableVoAudit,
-          account_name: accountName
+          account_name: accountName,
+          status: submitStatus === 'draft' ? 'draft' : 'active'
         })
       });
 
@@ -373,7 +375,8 @@ export default function ProductBridgeInjectPage() {
           target_product_id: finalTargetProductId,
           ephemeral_product_data: ephemeralData,
           custom_instruction: customInstruction,
-          enable_vo_audit: enableVoAudit
+          enable_vo_audit: enableVoAudit,
+          status: submitStatus === 'draft' ? 'draft' : 'active'
         })
       });
 
@@ -512,6 +515,33 @@ export default function ProductBridgeInjectPage() {
     }
   }
 
+  async function handleToggleCampaignStatus(campaign) {
+    let nextStatus;
+    if (campaign.status === 'draft') {
+      nextStatus = 'running'; // Akan berlanjut ke status aktif bulk/single di backend
+    } else {
+      nextStatus = campaign.status === 'paused' ? 'running' : 'paused';
+    }
+
+    showToast(`Mengubah status kampanye ke ${nextStatus === 'running' ? 'aktif' : 'jeda'}...`, 'info');
+    try {
+      const res = await fetch(`/api/v2/bridge-injector/${campaign.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(campaign.status === 'draft' ? 'Kampanye berhasil dijalankan!' : `Kampanye berhasil ${nextStatus === 'running' ? 'dilanjutkan' : 'dijeda'}.`);
+        await fetchCampaigns();
+      } else {
+        showToast(data.error || 'Gagal mengubah status kampanye', 'error');
+      }
+    } catch (err) {
+      showToast('Gagal mengubah status kampanye', 'error');
+    }
+  }
+
   function updateLocalCampaignStatus(campaignId, status) {
     setCampaigns(prev => prev.map(c => c.id === campaignId ? { ...c, status } : c));
     handleToggleExpand(campaignId); // Refresh output detail status
@@ -519,6 +549,8 @@ export default function ProductBridgeInjectPage() {
 
   function getStatusBadgeStyle(status) {
     const styles = {
+      draft: { color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)' },
+      paused: { color: '#fdcb6e', bg: 'rgba(253, 203, 110, 0.12)' },
       pending_storyboard: { color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.06)' },
       waiting_t2i: { color: '#fdcb6e', bg: 'rgba(253, 203, 110, 0.12)' },
       polling_t2i: { color: '#0984e3', bg: 'rgba(9, 132, 227, 0.12)' },
@@ -566,14 +598,24 @@ export default function ProductBridgeInjectPage() {
                 Sisipkan klip promosi produk baru ke dalam naskah lama (3 klip) secara otonom dan otomatis.
               </p>
             </div>
-            <button 
-              type="button" 
-              onClick={() => fetchCampaigns()} 
-              className="btn btn-secondary"
-              style={{ fontSize: '0.78rem', padding: '8px 14px' }}
-            >
-              🔄 Refresh Antrean
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                type="button" 
+                onClick={() => fetchCampaigns()} 
+                className="btn btn-secondary"
+                style={{ fontSize: '0.78rem', padding: '8px 14px' }}
+              >
+                🔄 Refresh Antrean
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setShowConfigForm(v => !v)} 
+                className="btn btn-primary"
+                style={{ fontSize: '0.78rem', padding: '8px 14px', background: showConfigForm ? '#e74c3c' : 'var(--accent)', border: 'none' }}
+              >
+                {showConfigForm ? '✕ Tutup Form' : '➕ New Bridging Campaign'}
+              </button>
+            </div>
           </div>
 
           {/* 2. Global Scheduler Control Card */}
@@ -660,46 +702,10 @@ export default function ProductBridgeInjectPage() {
             </pre>
           </div>
 
-          {/* 4. Action Button to Toggle Create Campaign Form */}
-          {!showConfigForm ? (
-            <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '24px' }}>
-              <button
-                type="button"
-                onClick={() => setShowConfigForm(true)}
-                className="btn btn-primary"
-                style={{
-                  fontSize: '0.85rem',
-                  padding: '10px 20px',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  boxShadow: '0 0 15px var(--accent-glow)'
-                }}
-              >
-                ➕ New Bridging Campaign / Buat Kampanye Baru
-              </button>
-            </div>
-          ) : (
+          {showConfigForm && (
             <div className="card" style={{ marginBottom: '24px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '14px', marginBottom: '18px' }}>
                 <strong style={{ fontSize: '0.95rem', color: '#fff' }}>⚙️ Form Konfigurasi Bridging Baru</strong>
-                <button
-                  type="button"
-                  onClick={() => setShowConfigForm(false)}
-                  style={{
-                    border: 'none',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.75rem',
-                    padding: '5px 10px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    border: '1px solid var(--border)'
-                  }}
-                >
-                  ❌ Tutup Form
-                </button>
               </div>
 
               {/* Form Mode Tabs */}
@@ -964,7 +970,22 @@ export default function ProductBridgeInjectPage() {
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                    <button type="submit" className="btn btn-primary" disabled={loadingSetup} style={{ padding: '10px 24px' }}>
+                    <button 
+                      type="submit" 
+                      onClick={() => setSubmitStatus('draft')} 
+                      className="btn" 
+                      style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '10px 24px' }} 
+                      disabled={loadingSetup}
+                    >
+                      💾 Save as Draft
+                    </button>
+                    <button 
+                      type="submit" 
+                      onClick={() => setSubmitStatus('active')} 
+                      className="btn btn-primary" 
+                      style={{ padding: '10px 24px' }} 
+                      disabled={loadingSetup}
+                    >
                       {loadingSetup ? '⏳ Sedang Merajut Naskah...' : '⚡ Proses Injeksi Awal'}
                     </button>
                   </div>
@@ -1083,8 +1104,23 @@ export default function ProductBridgeInjectPage() {
                     />
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button type="submit" className="btn btn-primary" disabled={loadingSetup} style={{ padding: '10px 24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                    <button 
+                      type="submit" 
+                      onClick={() => setSubmitStatus('draft')} 
+                      className="btn" 
+                      style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '10px 24px' }} 
+                      disabled={loadingSetup}
+                    >
+                      💾 Save as Draft
+                    </button>
+                    <button 
+                      type="submit" 
+                      onClick={() => setSubmitStatus('active')} 
+                      className="btn btn-primary" 
+                      style={{ padding: '10px 24px' }} 
+                      disabled={loadingSetup}
+                    >
                       {loadingSetup ? '⏳ Sedang Mengimpor...' : '⚡ Luncurkan Kampanye Massal'}
                     </button>
                   </div>
@@ -1167,6 +1203,42 @@ export default function ProductBridgeInjectPage() {
                       </div>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        {c.status === 'draft' ? (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleToggleCampaignStatus(c); }}
+                            className="btn btn-success"
+                            style={{
+                              fontSize: '0.7rem',
+                              padding: '4px 10px',
+                              borderRadius: '4px',
+                              fontWeight: 700,
+                              background: '#2ecc71',
+                              border: 'none',
+                              color: '#fff',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            ▶️ Run
+                          </button>
+                        ) : (c.status !== 'completed' && c.status !== 'failed' && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleToggleCampaignStatus(c); }}
+                            className="btn"
+                            style={{
+                              fontSize: '0.7rem',
+                              padding: '4px 10px',
+                              borderRadius: '4px',
+                              fontWeight: 700,
+                              background: c.status === 'paused' ? '#2ecc71' : '#f1c40f',
+                              border: 'none',
+                              color: '#000',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {c.status === 'paused' ? '▶️ Resume' : '⏸️ Pause'}
+                          </button>
+                        ))}
+
                         <span style={{
                           fontSize: '0.72rem',
                           fontWeight: 700,

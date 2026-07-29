@@ -669,7 +669,7 @@ export default function BridgeBulkCampaignDetailPage() {
                         <div style={{ flex: 1 }}>
                           <label style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>TTS Provider</label>
                           <select
-                            value={item.voice_provider || 'gemini'}
+                            value={item.voice_provider || 'minimax'}
                             onChange={(e) => updateItemSettings(item.id, { voice_provider: e.target.value })}
                             disabled={['pending', 'processing'].includes(item.workflow_status)}
                             style={{ width: '100%', background: '#000', border: '1px solid var(--border)', borderRadius: '4px', padding: '6px', color: '#fff', fontSize: '0.78rem', outline: 'none' }}
@@ -681,12 +681,12 @@ export default function BridgeBulkCampaignDetailPage() {
                         <div style={{ flex: 1 }}>
                           <label style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Voice Persona</label>
                           <select
-                            value={item.voice_persona || 'Kore'}
+                            value={item.voice_persona || 'Indonesian_casual_reporter_vv2'}
                             onChange={(e) => updateItemSettings(item.id, { voice_persona: e.target.value })}
                             disabled={['pending', 'processing'].includes(item.workflow_status)}
                             style={{ width: '100%', background: '#000', border: '1px solid var(--border)', borderRadius: '4px', padding: '6px', color: '#fff', fontSize: '0.78rem', outline: 'none' }}
                           >
-                            {(item.voice_provider === 'minimax' ? MINIMAX_VOICES : GEMINI_VOICES).map(voice => (
+                            {((item.voice_provider || 'minimax') === 'minimax' ? MINIMAX_VOICES : GEMINI_VOICES).map(voice => (
                               <option key={voice.id} value={voice.id}>
                                 {voice.name}
                               </option>
