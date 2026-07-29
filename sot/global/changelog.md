@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.91 — Upgrade Gemini model ke 3.6-flash & fix 429 free tier detection (29/07/2026)
+- Fix isDailyLimit: tambah keyword free_tier generate_content_free_tier agar key langsung di-exhaust bukan cooldown 45s
+- Upgrade model default gemini-3.5-flash ke gemini-3.6-flash di 8 lokasi (model current lebih stabil)
+- Update fallback chain: 3.6-flash to 3.5-flash to flash-latest
+
 ## V2.2.90 — Fix naskah.md 409 Conflict di Nextcloud Sync (29/07/2026)
 - Tambah pengecekan exists() untuk backup naskah.md sebelum upload di semua 4 fungsi sync (OPC RE-Variant RE-Item IFC)
 - File naskah.md backup tidak lagi di-upload jika sudah ada di Nextcloud sehingga error 409 Conflict tidak terjadi lagi
