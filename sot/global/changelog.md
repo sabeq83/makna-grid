@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.100 — Add play/pause/run controls, save as draft, and minimax default for bridging injector (30/07/2026)
+- Add Play/Pause/Resume action buttons to campaign cards
+- Add Save as Draft button to campaign forms
+- Bypass uploads folder in auth middleware to show Start Frame
+- Change default TTS settings to Minimax
+
 ## V2.2.99 — Add account_name support and ContentFlow sync to Bridge Injector (29/07/2026)
 - Add brand account_name support to bulk bridging
 - Auto sync bridging outputs to ContentFlow after Nextcloud upload
