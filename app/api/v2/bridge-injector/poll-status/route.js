@@ -119,6 +119,15 @@ export async function GET(request) {
           newStatus = 'completed';
           updated = true;
           logToBridgeInjector(`[${campaignId}] Berkas Video Clip sukses disimpan ke lokal: ${localRelPath}`);
+
+          // Auto Sync ke Content Flow untuk single mode
+          try {
+            const { syncBridgeCampaignToContentFlow } = await import('@/lib/contentflow-ingest');
+            await syncBridgeCampaignToContentFlow(campaignId);
+            logToBridgeInjector(`[${campaignId}] Auto-synced single campaign to ContentFlow.`);
+          } catch (cfErr) {
+            logToBridgeInjector(`[${campaignId}] [WARNING] Auto-sync to ContentFlow failed: ${cfErr.message}`);
+          }
         }
       } else if (taskStatus === 'failed') {
         db.prepare("UPDATE bridge_injector_campaigns SET status = 'failed' WHERE id = ?").run(campaignId);

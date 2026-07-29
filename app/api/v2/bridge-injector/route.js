@@ -65,7 +65,8 @@ export async function POST(request) {
       bridging_mode,
       target_product_id,
       ephemeral_product_data,
-      custom_instruction
+      custom_instruction,
+      account_name
     } = body;
 
     if (campaign_type === 'bulk') {
@@ -80,29 +81,30 @@ export async function POST(request) {
 
       // 1. Simpan kampanye ke database
       db.prepare(`
-        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction)
-        VALUES (?, ?, '[CSV Bulk Campaign]', 'running', 'bulk', ?)
-      `).run(campaignId, campaign_name, custom_instruction || null);
+        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction, account_name)
+        VALUES (?, ?, '[CSV Bulk Campaign]', 'running', 'bulk', ?, ?)
+      `).run(campaignId, campaign_name, custom_instruction || null, account_name || null);
 
       // 2. Simpan items ke database
       const insertItem = db.prepare(`
-        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status)
-        VALUES (?, ?, ?, ?, ?, 'pending')
+        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status, account_name)
+        VALUES (?, ?, ?, ?, ?, 'pending', ?)
       `);
 
-      const insertMany = db.transaction((campaignId, itemsList) => {
+      const insertMany = db.transaction((campaignId, itemsList, globalAccount) => {
         for (const item of itemsList) {
           const scriptUrl = (item.original_script_url || '').trim();
           const prodUrl = (item.product_url || '').trim();
           const ncFolder = (item.nextcloud_folder || '').trim();
           const rowInstruction = item.custom_instruction ? String(item.custom_instruction).trim() : null;
+          const rowAccount = item.account_name ? String(item.account_name).trim() : globalAccount;
           if (scriptUrl && prodUrl) {
-            insertItem.run(campaignId, scriptUrl, prodUrl, ncFolder, rowInstruction);
+            insertItem.run(campaignId, scriptUrl, prodUrl, ncFolder, rowInstruction, rowAccount || null);
           }
         }
       });
 
-      insertMany(campaignId, items);
+      insertMany(campaignId, items, account_name);
 
       logToBridgeInjector(`[${campaignId}] Sukses mengimpor ${items.length} baris ke bridge_injector_items. Status kampanye diatur ke running.`);
 
@@ -126,8 +128,8 @@ export async function POST(request) {
 
     // 1. Simpan kampanye ke database
     db.prepare(`
-      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending_storyboard')
+      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status, account_name)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending_storyboard', ?)
     `).run(
       campaignId,
       campaign_name,
@@ -135,7 +137,8 @@ export async function POST(request) {
       bridging_mode,
       target_product_id || null,
       ephemeral_product_data ? (typeof ephemeral_product_data === 'object' ? JSON.stringify(ephemeral_product_data) : ephemeral_product_data) : null,
-      custom_instruction || null
+      custom_instruction || null,
+      account_name || null
     );
 
     // 2. Selesaikan polymorphic data produk

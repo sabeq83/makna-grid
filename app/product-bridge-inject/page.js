@@ -121,7 +121,8 @@ export default function ProductBridgeInjectPage() {
             ]),
             product_url: getRowVal(row, ['url produk', 'url_produk', 'produk_url', 'produk url', 'product_url', 'product url']),
             nextcloud_folder: getRowVal(row, ['folder nextcloud', 'nextcloud_folder', 'folder_nextcloud', 'nextcloud folder']),
-            custom_instruction: getRowVal(row, ['custom_instruction', 'custom instruction', 'instruksi khusus', 'instruksi', 'catatan', 'instruction'])
+            custom_instruction: getRowVal(row, ['custom_instruction', 'custom instruction', 'instruksi khusus', 'instruksi', 'catatan', 'instruction']),
+            account_name: getRowVal(row, ['nama akun', 'akun brand', 'account_name', 'account name', 'brand_account', 'brand'])
           };
         });
 
@@ -163,7 +164,8 @@ export default function ProductBridgeInjectPage() {
           campaign_type: 'bulk',
           items: parsedRows,
           custom_instruction: customInstruction,
-          enable_vo_audit: enableVoAudit
+          enable_vo_audit: enableVoAudit,
+          account_name: accountName
         })
       });
 
@@ -490,6 +492,23 @@ export default function ProductBridgeInjectPage() {
       }
     } catch (err) {
       showToast('Gagal menghapus kampanye', 'error');
+    }
+  }
+
+  async function handleSyncContentFlow(campaignId) {
+    showToast('Menyinkronkan kampanye ke Content Flow...', 'info');
+    try {
+      const res = await fetch(`/api/v2/bridge-injector/${campaignId}/sync-contentflow`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'Kampanye berhasil disinkronkan ke Content Flow!');
+      } else {
+        showToast(data.error || 'Gagal sinkronisasi Content Flow', 'error');
+      }
+    } catch (err) {
+      showToast('Gagal menyinkronkan kampanye ke Content Flow', 'error');
     }
   }
 
@@ -953,6 +972,25 @@ export default function ProductBridgeInjectPage() {
               ) : (
                 <form onSubmit={handleCreateBulkCampaign} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="form-group">
+                    <label className="form-label">🏷️ Nama Akun (Brand Account) - Global Fallback</label>
+                    <select
+                      className="form-input"
+                      value={accountName}
+                      onChange={e => setAccountName(e.target.value)}
+                      style={{ background: 'var(--bg-primary)' }}
+                    >
+                      <option value="">-- Pilih Nama Akun Brand --</option>
+                      {brandProfiles.map(bp => (
+                        <option key={bp.id} value={bp.account_name || bp.brand_name}>
+                          {bp.brand_name} ({bp.account_name || bp.brand_name})
+                        </option>
+                      ))}
+                      <option value="nutribake">nutribake</option>
+                      <option value="siasatsehat">siasatsehat</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
                     <label className="form-label">Nama Kampanye Bridging Massal</label>
                     <input
                       type="text"
@@ -1015,6 +1053,7 @@ export default function ProductBridgeInjectPage() {
                             <th style={{ padding: '8px 12px' }}>URL Folder Aset</th>
                             <th style={{ padding: '8px 12px' }}>URL Produk</th>
                             <th style={{ padding: '8px 12px' }}>Folder Nextcloud</th>
+                            <th style={{ padding: '8px 12px' }}>Akun Brand (Row)</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1024,6 +1063,7 @@ export default function ProductBridgeInjectPage() {
                               <td style={{ padding: '6px 12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{row.original_script_url}</td>
                               <td style={{ padding: '6px 12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>{row.product_url}</td>
                               <td style={{ padding: '6px 12px' }}>{row.nextcloud_folder}</td>
+                              <td style={{ padding: '6px 12px' }}>{row.account_name || '-'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -1138,6 +1178,25 @@ export default function ProductBridgeInjectPage() {
                         }}>
                           {c.status.toUpperCase()}
                         </span>
+
+                        {(c.status === 'completed' || c.campaign_type === 'bulk') && (
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handleSyncContentFlow(c.id); }}
+                            title="Push ke Content Flow"
+                            style={{
+                              background: 'rgba(52, 152, 219, 0.1)',
+                              border: '1px solid var(--accent-light)',
+                              color: 'var(--accent-light)',
+                              fontSize: '0.72rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              padding: '3px 8px',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            🔄 Sync Content Flow
+                          </button>
+                        )}
 
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleDeleteCampaign(c.id); }}
