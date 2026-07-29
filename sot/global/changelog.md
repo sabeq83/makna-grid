@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.2.95 — Perbaikan visual truth & geometry lock di menu RE dan Bridge Injector (29/07/2026)
+- Menyisipkan placeholder Product Truth dan parameter nama file pada t2i_prompt RE Campaign
+- Menambahkan logika ekstraksi nama file dan tag referensi gambar pada Bridge Injector
+
+## V2.2.95 — Perbaikan visual truth & geometry lock di menu RE dan Bridge Injector (29/07/2026)
+- Fix 1: Menyisipkan placeholder Product Truth dan parameter nama file `${reRefFilenameTag}` pada Layer 2 template output `t2i_prompt` di menu RE (`buildReverseEngineeringBridgePrompt`) agar geometry_lock tidak patah.
+- Fix 2: Menambahkan logika ekstraksi nama file dan tag referensi gambar serta menyisipkannya ke template output `clip2_t2i_prompt` di Bridge Injector (`buildProductBridgingInjectorPrompt`).
+
 ## V2.2.94 — Fix hash collision folder Nextcloud OPC (last-6-chars) (29/07/2026)
 - Fix kritis: formatVideoId dan getCampaignParentFolderName kini ambil 6 karakter TERAKHIR campaign ID sebagai hash unik
 - Sebelumnya opc_260728_w6o1hy dan opc_260728_kxnf2w sama-sama hash opc260 lalu bertabrakan di folder yang sama
