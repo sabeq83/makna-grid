@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.99 — Add account_name support and ContentFlow sync to Bridge Injector (29/07/2026)
+- Add brand account_name support to bulk bridging
+- Auto sync bridging outputs to ContentFlow after Nextcloud upload
+- Create manual sync button in UI
+
 ## V2.2.98 — Fix product-bridge-inject page missing function (29/07/2026)
 - Fix ReferenceError in product-bridge-inject page by adding missing fetchBrandProfiles function definition
 
