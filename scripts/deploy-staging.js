@@ -13,16 +13,16 @@ async function deployStaging() {
     if [ ! -d "/home/sabeqmursyid/makna-grid-staging/.git" ]; then
       echo "[1/5] Cloning repository into makna-grid-staging..."
       rm -rf /home/sabeqmursyid/makna-grid-staging-tmp
-      git clone https://github.com/sabeq83/makna-grid.git /home/sabeqmursyid/makna-grid-staging-tmp
+      git clone -b staging https://github.com/sabeq83/makna-grid.git /home/sabeqmursyid/makna-grid-staging-tmp
       rm -rf /home/sabeqmursyid/makna-grid-staging
       mv /home/sabeqmursyid/makna-grid-staging-tmp /home/sabeqmursyid/makna-grid-staging
     fi
 
     cd /home/sabeqmursyid/makna-grid-staging
     
-    echo "[2/5] Fetching latest main branch code..."
-    git fetch origin main || true
-    git reset --hard origin/main || true
+    echo "[2/5] Fetching latest staging branch code..."
+    git fetch origin staging || true
+    git reset --hard origin/staging || true
 
     echo "[3/5] Setup environment file .env.local for staging..."
     cat << 'EOF' > .env.local

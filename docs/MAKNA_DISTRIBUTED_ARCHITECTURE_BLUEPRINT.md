@@ -13,9 +13,11 @@ Dokumen ini merinci alamat IP jaringan (*Tailscale / LAN Network*) yang dikonfig
 
 | Node | Peran Server | OS & Perangkat | IP Address Produksi | Port Layanan |
 | :--- | :--- | :--- | :--- | :--- |
-| **Node 1** | **Server UI (Gateway Node)** | Ubuntu Desktop | `100.65.62.63` | `3000` (Next.js App) |
+| **Node 1 (Prod)** | **Server UI (Gateway Node)** | Ubuntu Desktop | `100.65.62.63` | `3000` (Web UI), `4000` (API) |
+| **Node 1 (Staging)**| **Staging Gateway** | Ubuntu Desktop | `100.65.62.63` | `3010` (Web UI), `4010` (API) |
 | **Node 2** | **Server Worker (Compute GPU Node)** | Windows PC | `100.117.59.92` | `3000` (Worker App), `8765` (G-Labs Local) |
-| **Node 3** | **Server DB & Media Storage Node** | Linux / Storage Server | `100.78.186.123` | `3001` (ContentFlow API), `5432/8080` (DB/Vault) |
+| **Node 3 (Prod)** | **Server DB & Media Storage** | Linux Server | `100.78.186.123` | `3001` (ContentFlow API), `5432` (PostgreSQL - `public` schema) |
+| **Node 3 (Staging)**| **Server DB Staging** | Linux Server | `100.78.186.123` | `5432` (PostgreSQL - `staging` schema) |
 
 ---
 
@@ -161,4 +163,18 @@ sequenceDiagram
    Node 3 (`100.78.186.123`) sekaligus mengurusi Central DB, Vault Media, dan ContentFlow API Ingest (`:3001`).
 
 ---
-*Dokumen ini diperbarui dengan IP produksi oleh MAKNA Assistant.*
+
+## 🔬 Isolasi Lingkungan Staging & Skema Data
+Untuk mendukung siklus pengujian yang andal tanpa risiko merusak data produksi:
+1. **Isolasi Folder**: Server staging berjalan pada folder terpisah `/home/sabeqmursyid/makna-grid-staging` di Node 1.
+2. **Isolasi Port**:
+   - Web UI Staging: Port **3010**
+   - Headless API Staging: Port **4010**
+3. **Isolasi PostgreSQL (Schema-Based)**:
+   - Staging dan Produksi menggunakan instance PostgreSQL Node 3 yang sama (`100.78.186.123`).
+   - Isolasi data dilakukan di tingkat **Schema** PostgreSQL.
+   - Tabel produksi berada di schema `public`, sedangkan tabel staging berada di schema `staging`.
+   - Hal ini diatur via environment variable `PG_SEARCH_PATH=staging` di `.env.local` staging server.
+
+---
+*Dokumen ini diperbarui dengan spesifikasi topologi staging oleh MAKNA Assistant.*

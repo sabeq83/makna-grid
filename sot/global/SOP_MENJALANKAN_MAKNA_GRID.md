@@ -18,11 +18,13 @@ Panduan ini mengatur tata cara standar untuk mengaktifkan, menguji, dan memeliha
 
 ## 📐 2. Ringkasan Topologi Cluster & SSH Quick Access
 
-| Node | Peran Cluster | Operating System | IP Address | Port Utama | SSH Command | Path Repository |
+| Node | Peran Cluster | Operating System | IP Address | Port Utama | SSH Command | Path Repository / DB |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Node 1** | **UI Gateway** | Ubuntu Desktop (NUC) | `100.65.62.63` | `:3000` (Web UI) | `ssh makna-ui` | `/home/sabeqmursyid/makna-grid` |
+| **Node 1 (Prod)** | **UI Gateway (Production)** | Ubuntu Desktop (NUC) | `100.65.62.63` | `:3000` (Web UI), `:4000` (API) | `ssh makna-ui` | `/home/sabeqmursyid/makna-grid` (branch: `main`) |
+| **Node 1 (Staging)**| **Staging Gateway** | Ubuntu Desktop (NUC) | `100.65.62.63` | `:3010` (Web UI), `:4010` (API) | `ssh makna-ui` | `/home/sabeqmursyid/makna-grid-staging` (branch: `staging`) |
 | **Node 2** | **Worker GPU** | Windows PC | `100.117.59.92` | `:3000` (Worker Engine), `:8765` (G-Labs) | `ssh vibe-server -p 2222` | `D:\server\makna-grid` |
-| **Node 3** | **DB & Vault** | Linux Storage | `100.78.186.123` | `:3001` (ContentFlow), `:5432` (PostgreSQL) | `ssh makna-db` | `/var/www/contentflow` |
+| **Node 3 (Prod)** | **DB & Vault Master** | Linux Storage | `100.78.186.123` | `:3001` (ContentFlow), `:5432` (PostgreSQL) | `ssh makna-db` | `/var/www/contentflow` (DB: `public` schema) |
+| **Node 3 (Staging)**| **DB Staging** | Linux Storage | `100.78.186.123` | `:5432` (PostgreSQL) | `ssh makna-db` | DB: `staging` schema pada database `makna_grid_db` |
 
 ---
 
@@ -39,6 +41,21 @@ PORT=3005
 DATABASE_HOST=100.78.186.123
 ```
 > **Catatan Port**: Untuk pengujian lokal di komputer development agar tidak bentrok dengan `maknagen` yang menggunakan Port `3000`, gunakan Port **`3005`** (`PORT=3005`). Node 1 **TIDAK** menjalankan Background Queue Worker (`ENABLE_SCHEDULER_WORKER=false`).
+
+### 🖥️ Node 1 Staging (Ubuntu Staging UI — `100.65.62.63`)
+```env
+NODE_ENV=production
+NODE_ROLE=gateway
+ENABLE_SCHEDULER_WORKER=true
+PORT=3010
+DATABASE_HOST=100.78.186.123
+PGDATABASE=makna_grid_db
+PG_SEARCH_PATH=staging
+CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
+WEBHOOK_HOST=100.117.59.92
+WEBHOOK_PORT=8765
+```
+> **Catatan Port Staging**: Staging berjalan pada Port **`3010`** (Web UI) dan Port **`4010`** (API Server) dengan schema database PostgreSQL bernama **`staging`** yang terisolasi dari data produksi utama (`public` schema).
 
 ### 💻 Node 2 (Windows Worker GPU — `100.117.59.92`)
 ```env
@@ -141,6 +158,71 @@ Jalankan rilis non-interaktif otomatis:
 ```bash
 npm run release-non-interactive -- --type patch --title "Judul Perubahan" --points "Detail poin 1|Detail poin 2"
 ```
+
+---
+
+## 🌿 8. SOP Alur Kerja Git Staging & Deploy (Development Pipeline)
+
+Untuk menjamin kualitas dan stabilitas sistem sebelum menyentuh server produksi, seluruh pengembang wajib mengikuti prosedur branching dan deployment pipeline berikut:
+
+```
+[Dev Lokal & Build Localhost] 
+          │
+          ▼
+[Push ke cabang 'staging'] ──► [Deploy ke Server Staging] (Port 3010)
+                                        │
+                                        ▼
+                                 [Uji di Staging]
+                                        │
+                         ┌──────────────┴──────────────┐
+                    (Ada Bug)                     (Lolos Uji)
+                         │                             │
+                         ▼                             ▼
+                  [Perbaikan Bug]            [Merge Staging ke Main]
+                                                       │
+                                                       ▼
+                                             [Rilis Otomatis Versi]
+                                           (Auto-Tag, Changelog, Git Push)
+                                                       │
+                                                       ▼
+                                             [Deploy ke Produksi]
+```
+
+### 1. Pengembangan & Uji Coba Lokal
+- Selesaikan pembuatan fitur atau perbaikan bug di server lokal (localhost).
+- Jalankan perintah build lokal (`npm run build`) untuk memverifikasi tidak ada kesalahan sintaksis atau error kompilasi Next.js.
+
+### 2. Push ke Cabang `staging` & Deploy Staging
+- Kirim perubahan kode ke cabang `staging` di GitHub:
+  ```bash
+  git checkout staging
+  git merge <nama-cabang-fitur>   # Atau lakukan commit langsung di staging
+  git push origin staging
+  ```
+- Lakukan deployment ke server staging secara otomatis dari terminal Anda:
+  ```bash
+  npm run deploy:staging
+  ```
+- *Catatan*: Skrip ini akan melakukan SSH ke Node 1, memperbarui kode di folder `/home/sabeqmursyid/makna-grid-staging` (cabang `staging`), melakukan build, dan me-restart servis staging di Port `3010` (UI) & `4010` (API).
+
+### 3. Validasi & Pengujian di Server Staging
+- Uji fitur yang baru ditambahkan melalui browser di alamat: **`http://100.65.62.63:3010`**.
+- Lakukan integrasi fungsional dan pastikan data tersimpan dengan benar di schema `staging` PostgreSQL Node 3.
+
+### 4. Penggabungan ke `main` & Rilis Produksi
+- Setelah tervalidasi di server staging, gabungkan kode ke cabang `main`:
+  ```bash
+  git checkout main
+  git merge staging
+  ```
+- Jalankan perintah rilis otomatis untuk memperbarui versi rilis, memperbarui changelog, dan mengunggah git tag:
+  ```bash
+  npm run release-non-interactive -- --type patch --title "Judul Rilis" --points "Poin perubahan 1|Poin perubahan 2"
+  ```
+- Jalankan deployment ke server produksi utama:
+  ```bash
+  npm run deploy:node1  # Atau npm run deploy:cluster
+  ```
 
 ---
 *Dokumen ini merupakan SOP Resmi Operasional MAKNA Grid Multi-Node Cluster.*
