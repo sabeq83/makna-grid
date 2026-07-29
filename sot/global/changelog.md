@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.94 — Fix hash collision folder Nextcloud OPC (last-6-chars) (29/07/2026)
+- Fix kritis: formatVideoId dan getCampaignParentFolderName kini ambil 6 karakter TERAKHIR campaign ID sebagai hash unik
+- Sebelumnya opc_260728_w6o1hy dan opc_260728_kxnf2w sama-sama hash opc260 lalu bertabrakan di folder yang sama
+- Setelah fix: w6o1hy kxnf2w i0s8vb 0v062z 7wzmh7 st7iof semua unik per kampanye
+
 ## V2.2.93 — Fix folder Nextcloud OPC per-produk & per-brand (Dapur Botani) (29/07/2026)
 - Fix 1: getProductSlug strip prefix OPC campaign_name agar slug unik per produk (nutrifarm_jahe bukan opc_20260728)
 - Fix 2a: getCampaignParentFolderName self-heal account_name dari brand_profile_id agar folder dimulai dapurbotani bukan umum
