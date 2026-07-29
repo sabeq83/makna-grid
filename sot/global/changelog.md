@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.97 — Fix migration search_path and sync staging tables (29/07/2026)
+- Fix scripts/migrate-sqlite-to-postgres.js client connection search_path
+- Sync all tables to PostgreSQL staging schema on Node 3
+
 ## V2.2.96 — Add Staging Deployment Support (29/07/2026)
 - Add scripts/deploy-staging.js for automated staging deploy
 - Add scripts/init-staging-db.js for PostgreSQL schema isolation

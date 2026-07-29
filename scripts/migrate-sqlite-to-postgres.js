@@ -21,7 +21,9 @@ async function migrateSqliteToPostgres() {
   });
 
   await pgClient.connect();
-  console.log('✓ Connected to PostgreSQL Node 3 successfully!');
+  const searchPath = process.env.PG_SEARCH_PATH || 'public';
+  await pgClient.query(`SET search_path TO ${searchPath};`);
+  console.log(`✓ Connected to PostgreSQL Node 3 successfully! (search_path: ${searchPath})`);
 
   const sqliteDb = getDb();
   const tables = sqliteDb.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").all();
