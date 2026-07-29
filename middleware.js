@@ -10,7 +10,8 @@ export function middleware(req) {
     pathname.startsWith('/api/auth/logout') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon.ico') ||
-    pathname.startsWith('/public')
+    pathname.startsWith('/public') ||
+    pathname.startsWith('/uploads/')
   ) {
     return NextResponse.next();
   }
