@@ -245,6 +245,18 @@ export default function ProductBridgeInjectPage() {
     }
   }
 
+  async function fetchBrandProfiles() {
+    try {
+      const res = await fetch('/api/v2/brand-profiles');
+      const data = await res.json();
+      if (data.success) {
+        setBrandProfiles(data.data || []);
+      }
+    } catch (err) {
+      console.error('Failed to load brand profiles:', err);
+    }
+  }
+
   async function pollLogs() {
     try {
       const res = await fetch(`/api/system-logs?type=bridge_injector&t=${Date.now()}`);
