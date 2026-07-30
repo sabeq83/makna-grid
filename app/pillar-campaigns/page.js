@@ -83,6 +83,7 @@ export default function OrganicPillarPage() {
   const [customInstruction, setCustomInstruction] = useState('akhiran skrip/voiceover : produk ori ada di keranjang ya!');
   const [brandProfiles, setBrandProfiles] = useState([]);
   const [selectedBrandId, setSelectedBrandId] = useState('');
+  const [filterBrandId, setFilterBrandId] = useState('all');
 
   // Section 2: Aesthetics & Visual Settings
   const [narrativeMode, setNarrativeMode] = useState('Storytelling');
@@ -1957,141 +1958,204 @@ export default function OrganicPillarPage() {
           </div>
 
           {/* ACCORDION CAMPAIGN LIST */}
+          {/* Brand Filter Selector */}
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '12px 20px',
+            marginBottom: '20px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 12
+          }}>
+            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>🎬 Daftar Kampanye OPC</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>🔍 FILTER BRAND:</span>
+              <select
+                value={filterBrandId}
+                onChange={e => setFilterBrandId(e.target.value)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-primary)',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: 600
+                }}
+              >
+                <option value="all">Semua Brand</option>
+                {brandProfiles.map(bp => (
+                  <option key={bp.id} value={bp.id}>{bp.brand_name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {loading ? (
             <div style={{ color: 'var(--text-muted)', padding: 32, textAlign: 'center' }}>Memuat riwayat kampanye...</div>
-          ) : campaigns.length === 0 ? (
+          ) : campaigns.filter(c => filterBrandId === 'all' || c.brand_profile_id === filterBrandId).length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>🌱</div>
-              <p style={{ color: 'var(--text-muted)' }}>Belum ada kampanye organik terdaftar. Klik "+ New OPC Campaign" untuk membuat baru.</p>
+              <p style={{ color: 'var(--text-muted)' }}>Tidak ada kampanye yang cocok dengan filter brand ini.</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {campaigns.map(c => {
-                const isExpanded = expandedCampaignId === c.id;
-                let statusColor = 'var(--text-muted)';
-                let statusBg = 'rgba(255,255,255,0.06)';
-                let statusBorder = 'rgba(255,255,255,0.1)';
-                if (c.status === 'completed') { statusColor = 'var(--success)'; statusBg = 'rgba(46,204,113,0.15)'; statusBorder = 'rgba(46,204,113,0.3)'; }
-                else if (c.status === 'running') { statusColor = '#3b82f6'; statusBg = 'rgba(59,130,246,0.15)'; statusBorder = 'rgba(59,130,246,0.3)'; }
-                else if (c.status === 'paused') { statusColor = '#fdcb6e'; statusBg = 'rgba(253,203,110,0.15)'; statusBorder = 'rgba(253,203,110,0.3)'; }
+              {campaigns
+                .filter(c => filterBrandId === 'all' || c.brand_profile_id === filterBrandId)
+                .map(c => {
+                  const isExpanded = expandedCampaignId === c.id;
+                  let statusColor = 'var(--text-muted)';
+                  let statusBg = 'rgba(255,255,255,0.06)';
+                  let statusBorder = 'rgba(255,255,255,0.1)';
+                  if (c.status === 'completed') { statusColor = 'var(--success)'; statusBg = 'rgba(46,204,113,0.15)'; statusBorder = 'rgba(46,204,113,0.3)'; }
+                  else if (c.status === 'running') { statusColor = '#3b82f6'; statusBg = 'rgba(59,130,246,0.15)'; statusBorder = 'rgba(59,130,246,0.3)'; }
+                  else if (c.status === 'paused') { statusColor = '#fdcb6e'; statusBg = 'rgba(253,203,110,0.15)'; statusBorder = 'rgba(253,203,110,0.3)'; }
 
-                return (
-                  <div
-                    key={c.id}
-                    className="card"
-                    style={{ cursor: 'pointer', transition: 'all 0.2s ease', border: '1px solid var(--border)', background: 'var(--bg-card)', padding: '20px', borderRadius: 'var(--radius-sm)' }}
-                    onClick={() => router.push(`/pillar-campaigns/${c.id}`)}
-                  >
-                    {/* Card Header */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '1.1rem' }}>🌱</span>
-                        <strong style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>{c.campaign_name}</strong>
-                        {c.is_mass_production === 1 && <span style={{ fontSize: '0.65rem', background: 'var(--accent)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>MASS</span>}
-                        <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', padding: '3px 8px', borderRadius: 8, background: statusBg, color: statusColor, border: `1px solid ${statusBorder}` }}>
-                          {c.status}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        {new Date(c.created_at).toLocaleString('id-ID')}
-                      </div>
-                    </div>
-
-                    {/* Metadata Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10, fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 12 }}>
-                      <div><strong>Jumlah Konten:</strong> {c.stats ? c.stats.total : 0}</div>
-                      <div><strong>Progress:</strong> {c.stats ? c.stats.generated : 0}/{c.stats ? c.stats.total : 0} Video Selesai</div>
-                    </div>
-
-                    {/* Pipeline Status Badges */}
-                    {c.stats && c.stats.total > 0 && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
-                        {[
-                          { label: 'Generate', count: c.stats.generated, total: c.stats.total },
-                          { label: 'TTS', count: c.stats.tts_completed, total: c.stats.total },
-                          { label: 'AI Visual', count: c.stats.visual_completed, total: c.stats.total }
-                        ].map((st, idx) => {
-                          const pct = c.stats.total > 0 ? Math.round((st.count / st.total) * 100) : 0;
-                          const isDone = pct === 100;
-                          return (
-                            <span key={idx} style={{
-                              padding: '3px 8px', borderRadius: 4, fontSize: '0.68rem', fontWeight: 600,
-                              background: isDone ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
-                              color: isDone ? '#10b981' : 'var(--text-muted)',
-                              border: `1px solid ${isDone ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.1)'}`
+                  return (
+                    <div
+                      key={c.id}
+                      className="card"
+                      style={{ cursor: 'pointer', transition: 'all 0.2s ease', border: '1px solid var(--border)', background: 'var(--bg-card)', padding: '20px', borderRadius: 'var(--radius-sm)' }}
+                      onClick={() => router.push(`/pillar-campaigns/${c.id}`)}
+                    >
+                      {/* Card Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                            <span style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 700,
+                              background: c.brand_name ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                              border: c.brand_name ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+                              color: c.brand_name ? '#d8b4fe' : 'var(--text-muted)',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
                             }}>
-                              {isDone ? '✓ ' : ''}{st.label} {pct}%
+                              🏷️ Brand: {c.brand_name || 'Tidak Ditentukan'}
                             </span>
-                          );
-                        })}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '1.1rem' }}>🌱</span>
+                            <strong style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>{c.campaign_name}</strong>
+                            {c.is_mass_production === 1 && <span style={{ fontSize: '0.65rem', background: 'var(--accent)', color: '#fff', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>MASS</span>}
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', padding: '3px 8px', borderRadius: 8, background: statusBg, color: statusColor, border: `1px solid ${statusBorder}` }}>
+                              {c.status}
+                            </span>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                          {new Date(c.created_at).toLocaleString('id-ID')}
+                        </div>
                       </div>
-                    )}
 
-                    {/* Action Buttons — rata KIRI, selalu terlihat */}
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-start', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 12 }} onClick={e => e.stopPropagation()}>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        onClick={() => router.push(`/pillar-campaigns/${c.id}`)}
-                        style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                      >
-                        🔍 Detail
-                      </button>
+                      {/* Metadata Grid */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 10, fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 12 }}>
+                        <div><strong>Jumlah Konten:</strong> {c.stats ? c.stats.total : 0}</div>
+                        <div><strong>Progress:</strong> {c.stats ? c.stats.generated : 0}/{c.stats ? c.stats.total : 0} Video Selesai</div>
+                      </div>
 
-                      {c.status !== 'completed' && (
-                        <button
-                          type="button"
-                          className={`btn btn-sm ${c.status === 'running' ? 'btn-danger' : 'btn-success'}`}
-                          onClick={() => toggleStatus(c)}
-                          disabled={processingId !== null}
-                          style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                        >
-                          {c.status === 'draft' ? '▶ Run' : (c.status === 'running' ? '⏸ Pause' : '▶ Resume')}
-                        </button>
+                      {/* Pipeline Status Badges */}
+                      {c.stats && c.stats.total > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
+                          {[
+                            { label: 'Generate', count: c.stats.generated, total: c.stats.total },
+                            { label: 'TTS', count: c.stats.tts_completed, total: c.stats.total },
+                            { label: 'AI Visual', count: c.stats.visual_completed, total: c.stats.total }
+                          ].map((st, idx) => {
+                            const pct = c.stats.total > 0 ? Math.round((st.count / st.total) * 100) : 0;
+                            const isDone = pct === 100;
+                            return (
+                              <span key={idx} style={{
+                                padding: '3px 8px', borderRadius: 4, fontSize: '0.68rem', fontWeight: 600,
+                                background: isDone ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
+                                color: isDone ? '#10b981' : 'var(--text-muted)',
+                                border: `1px solid ${isDone ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.1)'}`
+                              }}>
+                                {isDone ? '✓ ' : ''}{st.label} {pct}%
+                              </span>
+                            );
+                          })}
+                        </div>
                       )}
 
-                      {c.target_spreadsheet_id && (
-                        <a
-                          href={`https://docs.google.com/spreadsheets/d/${c.target_spreadsheet_id}`}
-                          target="_blank" rel="noopener noreferrer"
-                          className="btn btn-secondary btn-sm"
-                          style={{ textDecoration: 'none', fontSize: '0.75rem', padding: '6px 12px' }}
-                        >
-                          📊 Sheet
-                        </a>
-                      )}
+                      {/* Action Buttons — rata KIRI, selalu terlihat */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 12, flexWrap: 'wrap', gap: 10 }} onClick={e => e.stopPropagation()}>
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={() => router.push(`/pillar-campaigns/${c.id}`)}
+                            style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                          >
+                            🔍 Detail
+                          </button>
 
-                      <a
-                        href={`/api/campaign-portability/export?campaignId=${c.id}&type=OPC`}
-                        className="btn btn-secondary btn-sm"
-                        style={{ textDecoration: 'none', fontSize: '0.75rem', padding: '6px 12px' }}
-                      >
-                        📤 Export
-                      </a>
+                          {c.status !== 'completed' && (
+                            <button
+                              type="button"
+                              className={`btn btn-sm ${c.status === 'running' ? 'btn-danger' : 'btn-success'}`}
+                              onClick={() => toggleStatus(c)}
+                              disabled={processingId !== null}
+                              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                            >
+                              {c.status === 'draft' ? '▶ Run' : (c.status === 'running' ? '⏸ Pause' : '▶ Resume')}
+                            </button>
+                          )}
 
-                      <button
-                        type="button"
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => handleCopy(c)}
-                        disabled={processingId !== null}
-                        style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                      >
-                        📋 Copy
-                      </button>
+                          {c.target_spreadsheet_id && (
+                            <a
+                              href={`https://docs.google.com/spreadsheets/d/${c.target_spreadsheet_id}`}
+                              target="_blank" rel="noopener noreferrer"
+                              className="btn btn-secondary btn-sm"
+                              style={{ textDecoration: 'none', fontSize: '0.75rem', padding: '6px 12px' }}
+                            >
+                              📊 Sheet
+                            </a>
+                          )}
 
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm"
-                        onClick={() => deleteCampaign(c.id)}
-                        disabled={processingId !== null}
-                        style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                      >
-                        🗑 Hapus
-                      </button>
+                          <a
+                            href={`/api/campaign-portability/export?campaignId=${c.id}&type=OPC`}
+                            className="btn btn-secondary btn-sm"
+                            style={{ textDecoration: 'none', fontSize: '0.75rem', padding: '6px 12px' }}
+                          >
+                            📤 Export
+                          </a>
+
+                          <button
+                            type="button"
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => handleCopy(c)}
+                            disabled={processingId !== null}
+                            style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                          >
+                            📋 Copy
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() => deleteCampaign(c.id)}
+                            disabled={processingId !== null}
+                            style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                          >
+                            🗑 Hapus
+                          </button>
+                        </div>
+                        
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-muted)', background: 'rgba(255, 255, 255, 0.04)', padding: '2px 8px', borderRadius: '4px' }}>
+                          🔑 ID: {c.id}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           )}
 

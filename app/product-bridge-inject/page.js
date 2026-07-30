@@ -19,6 +19,8 @@ export default function ProductBridgeInjectPage() {
   const [accountName, setAccountName] = useState('');
   const [campaignName, setCampaignName] = useState('');
   const [brandProfiles, setBrandProfiles] = useState([]);
+  const [selectedBrandId, setSelectedBrandId] = useState('');
+  const [filterBrandId, setFilterBrandId] = useState('all');
   
   // Bulk Campaign State
   const [formMode, setFormMode] = useState('single'); // 'single' or 'bulk'
@@ -190,7 +192,8 @@ export default function ProductBridgeInjectPage() {
           custom_instruction: customInstruction,
           enable_vo_audit: enableVoAudit,
           account_name: accountName,
-          status: submitStatus === 'draft' ? 'draft' : 'active'
+          status: submitStatus === 'draft' ? 'draft' : 'active',
+          brand_profile_id: selectedBrandId
         })
       });
 
@@ -399,7 +402,8 @@ export default function ProductBridgeInjectPage() {
           ephemeral_product_data: ephemeralData,
           custom_instruction: customInstruction,
           enable_vo_audit: enableVoAudit,
-          status: submitStatus === 'draft' ? 'draft' : 'active'
+          status: submitStatus === 'draft' ? 'draft' : 'active',
+          brand_profile_id: selectedBrandId
         })
       });
 
@@ -934,6 +938,24 @@ export default function ProductBridgeInjectPage() {
                         />
                       </div>
 
+                      {brandProfiles.length > 0 && (
+                        <div className="form-group">
+                          <label className="form-label">🧬 Brand Profile (Opsional)</label>
+                          <select
+                            className="form-input"
+                            value={selectedBrandId}
+                            onChange={e => setSelectedBrandId(e.target.value)}
+                          >
+                            <option value="">-- Tanpa Brand (Generik) --</option>
+                            {brandProfiles.map(bp => (
+                              <option key={bp.id} value={bp.id}>
+                                {bp.brand_name} ({bp.tone_of_voice})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
                       <div className="form-group">
                         <label className="form-label">Metode Sourcing Produk</label>
                         <select
@@ -1169,6 +1191,24 @@ export default function ProductBridgeInjectPage() {
                     />
                   </div>
 
+                  {brandProfiles.length > 0 && (
+                    <div className="form-group">
+                      <label className="form-label">🧬 Brand Profile (Opsional)</label>
+                      <select
+                        className="form-input"
+                        value={selectedBrandId}
+                        onChange={e => setSelectedBrandId(e.target.value)}
+                      >
+                        <option value="">-- Tanpa Brand (Generik) --</option>
+                        {brandProfiles.map(bp => (
+                          <option key={bp.id} value={bp.id}>
+                            {bp.brand_name} ({bp.tone_of_voice})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
                   <div className="form-group" style={{ 
                     border: '2px dashed var(--border)', 
                     borderRadius: 'var(--radius-sm)', 
@@ -1290,14 +1330,50 @@ export default function ProductBridgeInjectPage() {
 
           {/* 5. Campaign Queue (Riwayat Kampanye) - Expandable Vertical List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: '#fff' }}>📁 Daftar Antrean & Status Kampanye</h3>
+            <div style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '12px 20px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 12
+            }}>
+              <h3 style={{ margin: 0, fontSize: '1rem', color: '#fff' }}>📁 Daftar Antrean & Status Kampanye</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>🔍 FILTER BRAND:</span>
+                <select
+                  value={filterBrandId}
+                  onChange={e => setFilterBrandId(e.target.value)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="all">Semua Brand</option>
+                  {brandProfiles.map(bp => (
+                    <option key={bp.id} value={bp.id}>{bp.brand_name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             
             {loadingList && campaigns.length === 0 ? (
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>Memuat daftar kampanye...</p>
-            ) : campaigns.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>Belum ada kampanye bridging.</p>
+            ) : campaigns.filter(c => filterBrandId === 'all' || c.brand_profile_id === filterBrandId).length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>Tidak ada kampanye yang cocok dengan filter brand ini.</p>
             ) : (
-              campaigns.map(c => {
+              campaigns
+                .filter(c => filterBrandId === 'all' || c.brand_profile_id === filterBrandId)
+                .map(c => {
                 const isExpanded = expandedCampaignId === c.id;
                 const badge = getStatusBadgeStyle(c.status);
                 
@@ -1337,6 +1413,21 @@ export default function ProductBridgeInjectPage() {
                           {c.campaign_type === 'bulk' ? '🔗' : (isExpanded ? '▼' : '▶')}
                         </span>
                         <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                            <span style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 700,
+                              background: c.brand_name ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                              border: c.brand_name ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+                              color: c.brand_name ? '#d8b4fe' : 'var(--text-muted)',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
+                            }}>
+                              🏷️ Brand: {c.brand_name || 'Tidak Ditentukan'}
+                            </span>
+                          </div>
                           <strong style={{ fontSize: '0.95rem', color: '#fff' }}>{c.campaign_name}</strong>
                           {c.campaign_type === 'bulk' ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
@@ -1350,12 +1441,12 @@ export default function ProductBridgeInjectPage() {
                                 borderRadius: '4px'
                               }}>BULK</span>
                               <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                Progress: <strong>{c.completed_items || 0} / {c.total_items || 0}</strong> Baris Selesai
+                                Progress: <strong>{c.completed_items || 0} / {c.total_items || 0}</strong> Baris Selesai | ID: <span style={{ fontFamily: 'var(--font-mono)' }}>{c.id}</span>
                               </span>
                             </div>
                           ) : (
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                              ID: <span style={{ fontFamily: 'var(--font-mono)' }}>{c.id}</span> | Produk: {c.product_name || 'Input Manual/URL'}
+                              🔑 ID: <span style={{ fontFamily: 'var(--font-mono)' }}>{c.id}</span> | Produk: {c.product_name || 'Input Manual/URL'}
                             </div>
                           )}
                         </div>

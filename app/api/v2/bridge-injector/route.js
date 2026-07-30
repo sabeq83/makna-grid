@@ -13,12 +13,13 @@ export async function GET() {
   try {
     const db = getDb();
     const campaigns = db.prepare(`
-      SELECT c.*, p.product_name, o.injected_script_md_path, o.clip2_video_path,
+      SELECT c.*, p.product_name, o.injected_script_md_path, o.clip2_video_path, b.brand_name,
              (SELECT COUNT(*) FROM bridge_injector_items WHERE campaign_id = c.id) as total_items,
              (SELECT COUNT(*) FROM bridge_injector_items WHERE campaign_id = c.id AND workflow_status = 'completed') as completed_items
       FROM bridge_injector_campaigns c
       LEFT JOIN product_extractions p ON c.target_product_id = p.id
       LEFT JOIN bridge_injector_outputs o ON c.id = o.campaign_id
+      LEFT JOIN brand_profiles b ON c.brand_profile_id = b.id
       ORDER BY c.created_at DESC
     `).all();
 
@@ -67,7 +68,8 @@ export async function POST(request) {
       ephemeral_product_data,
       custom_instruction,
       account_name,
-      status
+      status,
+      brand_profile_id // Tambahkan brand_profile_id
     } = body;
 
     if (campaign_type === 'bulk') {
@@ -83,30 +85,32 @@ export async function POST(request) {
 
       // 1. Simpan kampanye ke database dengan default Minimax
       db.prepare(`
-        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction, account_name, voice_provider, voice_persona)
-        VALUES (?, ?, '[CSV Bulk Campaign]', ?, 'bulk', ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2')
-      `).run(campaignId, campaign_name, initialStatus, custom_instruction || null, account_name || null);
+        INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, status, campaign_type, custom_instruction, account_name, voice_provider, voice_persona, brand_profile_id)
+        VALUES (?, ?, '[CSV Bulk Campaign]', ?, 'bulk', ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2', ?)
+      `).run(campaignId, campaign_name, initialStatus, custom_instruction || null, account_name || null, brand_profile_id || null);
 
       // 2. Simpan items ke database
       const insertItem = db.prepare(`
-        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status, account_name, voice_provider, voice_persona)
-        VALUES (?, ?, ?, ?, ?, 'pending', ?, 'minimax', 'Indonesian_casual_reporter_vv2')
+        INSERT INTO bridge_injector_items (campaign_id, original_script_url, product_url, nextcloud_folder, custom_instruction, workflow_status, account_name, voice_provider, voice_persona, target_product_id, brand_profile_id)
+        VALUES (?, ?, ?, ?, ?, 'pending', ?, 'minimax', 'Indonesian_casual_reporter_vv2', ?, ?)
       `);
 
-      const insertMany = db.transaction((campaignId, itemsList, globalAccount) => {
+      const insertMany = db.transaction((campaignId, itemsList, globalAccount, globalBrandId) => {
         for (const item of itemsList) {
           const scriptUrl = (item.original_script_url || '').trim();
           const prodUrl = (item.product_url || '').trim();
           const ncFolder = (item.nextcloud_folder || '').trim();
           const rowInstruction = item.custom_instruction ? String(item.custom_instruction).trim() : null;
           const rowAccount = item.account_name ? String(item.account_name).trim() : globalAccount;
+          const rowBrandId = item.brand_profile_id || globalBrandId;
+          const rowProductId = item.target_product_id || null;
           if (scriptUrl && prodUrl) {
-            insertItem.run(campaignId, scriptUrl, prodUrl, ncFolder, rowInstruction, rowAccount || null);
+            insertItem.run(campaignId, scriptUrl, prodUrl, ncFolder, rowInstruction, rowAccount || null, rowProductId, rowBrandId);
           }
         }
       });
 
-      insertMany(campaignId, items, account_name);
+      insertMany(campaignId, items, account_name, brand_profile_id);
 
       logToBridgeInjector(`[${campaignId}] Sukses mengimpor ${items.length} baris ke bridge_injector_items. Status kampanye diatur ke ${initialStatus}.`);
 
@@ -131,8 +135,8 @@ export async function POST(request) {
 
     // 1. Simpan kampanye ke database dengan default Minimax
     db.prepare(`
-      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status, account_name, voice_provider, voice_persona)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2')
+      INSERT INTO bridge_injector_campaigns (id, campaign_name, original_script_md, bridging_mode, target_product_id, ephemeral_product_data, custom_instruction, status, account_name, voice_provider, voice_persona, brand_profile_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'minimax', 'Indonesian_casual_reporter_vv2', ?)
     `).run(
       campaignId,
       campaign_name,
@@ -142,7 +146,8 @@ export async function POST(request) {
       ephemeral_product_data ? (typeof ephemeral_product_data === 'object' ? JSON.stringify(ephemeral_product_data) : ephemeral_product_data) : null,
       custom_instruction || null,
       initialStatus,
-      account_name || null
+      account_name || null,
+      brand_profile_id || null
     );
 
     // 2. Selesaikan polymorphic data produk

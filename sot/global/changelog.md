@@ -1,5 +1,13 @@
 # Changelog
 
+## V2.2.109 — Implement separate staging/production deployers and align Campaign UI (30/07/2026)
+- Add brand profiles LEFT JOIN to RE OPC and Bridge Injector listing APIs
+- Add brand filter dropdown and campaign IDs to list cards
+- Standardize action buttons with gradient design and remove Export MD
+- Add 4-accordion configuration panel in RE and OPC detail pages
+- Split deploy-node1.js into deploy-staging.js and deploy-production.js
+- Add deploy:staging and deploy:production npm commands
+
 ## V2.2.108 — Implement rembg background removal and batch photos regeneration (30/07/2026)
 - Add rembg CLI integration with local fallback support to bg-remover.js
 - Create API endpoint app/api/v2/products/regenerate-photos/route.js to handle batch studio photo and prompt generation
