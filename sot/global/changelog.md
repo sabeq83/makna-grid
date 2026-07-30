@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.112 — Force T2I start frame generation (30/07/2026)
+- Remove the enable_vo_audit check to ensure T2I start frames are generated on Phase 1 for all RE campaigns
+
 ## V2.2.111 — Sync brand selector states in forms (30/07/2026)
 - Synchronize selectedBrandId automatically when selecting Brand Account in RE and OPC creation forms
 - Remove redundant and confusing duplicate brand selection dropdowns
