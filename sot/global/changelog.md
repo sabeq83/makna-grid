@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.111 — Sync brand selector states in forms (30/07/2026)
+- Synchronize selectedBrandId automatically when selecting Brand Account in RE and OPC creation forms
+- Remove redundant and confusing duplicate brand selection dropdowns
+
 ## V2.2.110 — Fix missing brand name and demographic configs (30/07/2026)
 - Store target_demographic and target_demographic_custom parameters in RE and OPC campaigns
 - Add LEFT JOIN brand_profiles to getReCampaign and getPillarCampaign DB operations

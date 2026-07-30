@@ -1058,6 +1058,12 @@ export default function OrganicPillarPage() {
                           onChange={e => {
                             const newAcc = e.target.value;
                             setAccountName(newAcc);
+                            const matchingProfile = brandProfiles.find(bp => (bp.account_name || bp.brand_name) === newAcc);
+                            if (matchingProfile) {
+                              setSelectedBrandId(matchingProfile.id);
+                            } else {
+                              setSelectedBrandId('');
+                            }
                             const now = new Date();
                             const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
                             setCampaignName(`[ OPC ${dateStr} ] - ${newAcc ? newAcc + ' - ' : ''}`);
@@ -1362,23 +1368,7 @@ export default function OrganicPillarPage() {
                           )}
                         </div>
                       )}
-                      {brandProfiles.length > 0 && (
-                        <div className="form-group">
-                          <label className="form-label">🧬 Brand Profile (Opsional)</label>
-                          <select
-                            className="form-input"
-                            value={selectedBrandId}
-                            onChange={e => setSelectedBrandId(e.target.value)}
-                          >
-                            <option value="">-- Tanpa Brand (Generik) --</option>
-                            {brandProfiles.map(bp => (
-                              <option key={bp.id} value={bp.id}>
-                                {bp.brand_name} ({bp.tone_of_voice})
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
+
                     </div>
                   )}
                 </div>
