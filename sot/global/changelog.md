@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.113 — Perbaikan productData ReferenceError di Scheduler (31/07/2026)
+- Memperbaiki ReferenceError productData is not defined pada processReAnalyzer
+- Mendeklarasikan productData = null pada G-Labs scheduler lainnya
+
 ## V2.2.112 — Force T2I start frame generation (30/07/2026)
 - Remove the enable_vo_audit check to ensure T2I start frames are generated on Phase 1 for all RE campaigns
 
