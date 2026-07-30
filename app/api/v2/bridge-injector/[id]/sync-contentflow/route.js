@@ -3,7 +3,7 @@ import { syncBridgeCampaignToContentFlow } from '@/lib/contentflow-ingest';
 
 export async function POST(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     if (!id) {
       return NextResponse.json({ success: false, error: 'ID kampanye wajib disertakan.' }, { status: 400 });
     }

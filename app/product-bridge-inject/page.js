@@ -25,6 +25,9 @@ export default function ProductBridgeInjectPage() {
   const [parsedRows, setParsedRows] = useState([]);
   const [bulkCsvFileName, setBulkCsvFileName] = useState('');
   const [bulkCsvFile, setBulkCsvFile] = useState(null);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verifiedRows, setVerifiedRows] = useState([]);
+  const [isVerificationComplete, setIsVerificationComplete] = useState(false);
   const [originalScript, setOriginalScript] = useState('');
   const [sourceMode, setSourceMode] = useState('select_existing');
   const [targetProductId, setTargetProductId] = useState('');
@@ -135,6 +138,26 @@ export default function ProductBridgeInjectPage() {
 
         setParsedRows(validMapped);
         showToast(`Berhasil membaca ${validMapped.length} baris dari file.`);
+
+        // Lakukan pencocokan otomatis dengan database produk lokal untuk verifikasi manual
+        const matched = validMapped.map(row => {
+          const cleanUrl = (row.product_url || '').trim().toLowerCase().replace(/\/$/, "");
+          const matchedProd = products.find(p => {
+            const pUrl = (p.input_source || p.source_url || '').trim().toLowerCase().replace(/\/$/, "");
+            return pUrl && pUrl === cleanUrl;
+          });
+
+          return {
+            ...row,
+            matched_product_name: matchedProd ? matchedProd.product_name : '⚠️ Tidak Ditemukan di Database (Mesin akan melakukan JIT)',
+            matched_product_image: matchedProd ? matchedProd.photo_url : null,
+            matched_product_id: matchedProd ? matchedProd.id : null,
+            is_matched: !!matchedProd
+          };
+        });
+
+        setVerifiedRows(matched);
+        setIsVerificationComplete(false); // Kunci submit button sampai terkonfirmasi
       } catch (err) {
         showToast(`Gagal membaca file: ${err.message}`, 'error');
       }
@@ -585,6 +608,129 @@ export default function ProductBridgeInjectPage() {
               transition: 'all 0.3s ease'
             }}>
               {toast.type === 'error' ? '❌ ' : (toast.type === 'info' ? 'ℹ️ ' : '✅ ')} {toast.message}
+            </div>
+          )}
+
+          {/* Verification Modal Popup */}
+          {showVerificationModal && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0, 0, 0, 0.75)',
+              backdropFilter: 'blur(5px)',
+              zIndex: 9998,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '20px'
+            }}>
+              <div style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                width: '100%',
+                maxWidth: '850px',
+                maxHeight: '85vh',
+                display: 'flex',
+                flexDirection: 'column',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+              }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', padding: '16px 24px' }}>
+                  <h3 style={{ margin: 0, color: '#fff', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🔍 Verifikasi Manual Produk (Bulk Matcher)
+                  </h3>
+                  <button 
+                    onClick={() => setShowVerificationModal(false)}
+                    style={{ border: 'none', background: 'none', color: 'var(--text-muted)', fontSize: '1.2rem', cursor: 'pointer' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Content Area */}
+                <div style={{ padding: '24px', overflowY: 'auto', flex: 1 }}>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: 0, marginBottom: '20px' }}>
+                    Sistem mencocokkan URL produk dari CSV dengan database lokal. Silakan verifikasi kesesuaian gambar dan detail produk sebelum melanjutkan.
+                  </p>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--border)', textAlign: 'left' }}>
+                        <th style={{ padding: '10px', color: 'var(--text-muted)' }}>Row</th>
+                        <th style={{ padding: '10px', color: 'var(--text-muted)' }}>URL Produk (Trimmed)</th>
+                        <th style={{ padding: '10px', color: 'var(--text-muted)' }}>Status Match</th>
+                        <th style={{ padding: '10px', color: 'var(--text-muted)' }}>Produk Database</th>
+                        <th style={{ padding: '10px', color: 'var(--text-muted)', textAlign: 'center' }}>Foto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {verifiedRows.map((row, idx) => (
+                        <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <td style={{ padding: '12px 10px', color: '#fff', fontWeight: 600 }}>{row.row_number}</td>
+                          <td style={{ padding: '12px 10px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
+                            {row.product_url ? (row.product_url.length > 40 ? row.product_url.substring(0, 40) + '...' : row.product_url) : '-'}
+                          </td>
+                          <td style={{ padding: '12px 10px' }}>
+                            {row.is_matched ? (
+                              <span style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ecc71', padding: '3px 8px', borderRadius: '4px', fontWeight: 700, fontSize: '0.7rem' }}>
+                                MATCHED
+                              </span>
+                            ) : (
+                              <span style={{ background: 'rgba(241, 196, 15, 0.15)', color: '#f1c40f', padding: '3px 8px', borderRadius: '4px', fontWeight: 700, fontSize: '0.7rem' }}>
+                                UNMATCHED (JIT)
+                              </span>
+                            )}
+                          </td>
+                          <td style={{ padding: '12px 10px', color: row.is_matched ? '#fff' : 'var(--text-muted)', fontWeight: row.is_matched ? 600 : 400 }}>
+                            {row.matched_product_name}
+                          </td>
+                          <td style={{ padding: '12px 10px', textAlign: 'center' }}>
+                            {row.matched_product_image ? (
+                              <img 
+                                src={row.matched_product_image} 
+                                alt={row.matched_product_name} 
+                                style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--border)' }} 
+                              />
+                            ) : (
+                              <div style={{ width: '40px', height: '40px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', fontSize: '1rem', color: 'var(--text-muted)' }}>
+                                📦
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Footer Buttons */}
+                <div style={{ borderTop: '1px solid var(--border)', padding: '16px 24px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowVerificationModal(false)}
+                    className="btn btn-secondary"
+                    style={{ padding: '8px 18px', fontSize: '0.8rem' }}
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setIsVerificationComplete(true);
+                      setShowVerificationModal(false);
+                      showToast('Kesesuaian produk berhasil diverifikasi secara manual.');
+                    }}
+                    className="btn btn-success"
+                    style={{ padding: '8px 24px', fontSize: '0.8rem', background: '#2ecc71', border: 'none', color: '#fff', fontWeight: 700 }}
+                  >
+                    💾 Simpan Verifikasi & Lanjutkan
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1104,13 +1250,26 @@ export default function ProductBridgeInjectPage() {
                     />
                   </div>
 
+                  {parsedRows.length > 0 && !isVerificationComplete && (
+                    <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowVerificationModal(true)}
+                        className="btn btn-warning"
+                        style={{ padding: '12px 30px', fontWeight: 700, fontSize: '0.9rem', width: '100%', boxShadow: '0 0 15px rgba(241, 196, 15, 0.2)' }}
+                      >
+                        🔍 Verifikasi Produk Massal ({parsedRows.length} item)
+                      </button>
+                    </div>
+                  )}
+
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                     <button 
                       type="submit" 
                       onClick={() => setSubmitStatus('draft')} 
                       className="btn" 
-                      style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '10px 24px' }} 
-                      disabled={loadingSetup}
+                      style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '10px 24px', opacity: isVerificationComplete ? 1 : 0.4 }} 
+                      disabled={loadingSetup || !isVerificationComplete}
                     >
                       💾 Save as Draft
                     </button>
@@ -1118,8 +1277,8 @@ export default function ProductBridgeInjectPage() {
                       type="submit" 
                       onClick={() => setSubmitStatus('active')} 
                       className="btn btn-primary" 
-                      style={{ padding: '10px 24px' }} 
-                      disabled={loadingSetup}
+                      style={{ padding: '10px 24px', opacity: isVerificationComplete ? 1 : 0.4 }} 
+                      disabled={loadingSetup || !isVerificationComplete}
                     >
                       {loadingSetup ? '⏳ Sedang Mengimpor...' : '⚡ Luncurkan Kampanye Massal'}
                     </button>
