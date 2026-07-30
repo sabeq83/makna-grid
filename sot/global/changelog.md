@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.101 — Fix Nextcloud uploads, video dynamic suffix naming, manual product verification modal, and Content Flow sync route params (30/07/2026)
+- Check and upload bulk video final to Nextcloud using public share tokens or fallback admin global credentials
+- Dinamically add original clip 1 filename suffix to final video output uploads
+- Add premium interactive VerificationModal to verify CSV products before execution
+- Await route params promise in sync-contentflow route handler
+
 ## V2.2.100 — Add play/pause/run controls, save as draft, and minimax default for bridging injector (30/07/2026)
 - Add Play/Pause/Resume action buttons to campaign cards
 - Add Save as Draft button to campaign forms
