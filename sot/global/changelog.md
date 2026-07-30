@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.107 — Enforce English for product and geometric truths (30/07/2026)
+- Update buildBatchProductTruthsPrompt to strictly enforce English output for generated truths
+
 ## V2.2.106 — Implement product truths regeneration and visual UUIDs (30/07/2026)
 - Add API endpoint to batch regenerate product truths and geometry truths via Gemini AI
 - Implement visual UUID display and copy clipboard action on product cards
