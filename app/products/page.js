@@ -56,6 +56,7 @@ export default function ProductDatabasePage() {
   const [importing, setImporting] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [regeneratingTruths, setRegeneratingTruths] = useState(false);
+  const [regeneratingPhotos, setRegeneratingPhotos] = useState(false);
 
   // CSV Import and Logging states (v10.14.0)
   const [showCsvImportModal, setShowCsvImportModal] = useState(false);
@@ -479,6 +480,31 @@ export default function ProductDatabasePage() {
       showToast(err.message, 'error');
     } finally {
       setRegeneratingTruths(false);
+    }
+  }
+
+  // Regenerate clean studio photos and prompts in a batch
+  async function handleBulkRegeneratePhotos() {
+    if (selectedIds.length === 0) return;
+    setRegeneratingPhotos(true);
+    try {
+      const res = await fetch('/api/v2/products/regenerate-photos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✅ ${data.message}`);
+        fetchProducts(); // Refresh list
+        setSelectedIds([]);
+      } else {
+        showToast(data.error || 'Gagal men-generate ulang foto & prompt', 'error');
+      }
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setRegeneratingPhotos(false);
     }
   }
 
@@ -918,6 +944,34 @@ export default function ProductDatabasePage() {
                         </>
                       ) : (
                         <>🔄 RE-Generate Truths</>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleBulkRegeneratePhotos}
+                      disabled={regeneratingPhotos}
+                      style={{
+                        background: 'linear-gradient(135deg, #ffa502 0%, #ff7f50 100%)',
+                        border: 'none',
+                        color: '#fff',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 2px 8px rgba(255, 127, 80, 0.4)'
+                      }}
+                    >
+                      {regeneratingPhotos ? (
+                        <>
+                          <div className="spinner" style={{ width: '12px', height: '12px', borderTopColor: '#fff' }} />
+                          Rendering...
+                        </>
+                      ) : (
+                        <>📷 RE-Generate Photos</>
                       )}
                     </button>
                   </div>
