@@ -36,6 +36,7 @@ PG_SEARCH_PATH=staging
 CONTENT_FLOW_API_URL=http://100.78.186.123:3001/api/v1/content/ingest
 WEBHOOK_HOST=100.117.59.92
 WEBHOOK_PORT=8765
+SESSION_COOKIE_NAME=makna_session_staging
 EOF
 
     echo "[4/5] Installing dependencies and building production bundle..."

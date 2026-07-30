@@ -23,7 +23,7 @@ export async function POST(req) {
 
     // Set HTTP-Only Session Cookie
     response.cookies.set({
-      name: 'makna_session',
+      name: process.env.SESSION_COOKIE_NAME || 'makna_session',
       value: result.token,
       httpOnly: true,
       path: '/',

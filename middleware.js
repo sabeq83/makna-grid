@@ -17,7 +17,8 @@ export function middleware(req) {
   }
 
   // Check for session cookie
-  const sessionToken = req.cookies.get('makna_session')?.value;
+  const cookieName = process.env.SESSION_COOKIE_NAME || 'makna_session';
+  const sessionToken = req.cookies.get(cookieName)?.value;
 
   if (!sessionToken) {
     // If API request, return 401 Unauthorized
