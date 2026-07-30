@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.97 — Align Campaign UI & Config Accordions (30/07/2026)
+- Add brand profiles LEFT JOIN to RE OPC and Bridge Injector listing APIs
+- Add brand filter dropdown and campaign IDs to list cards
+- Standardize action buttons with gradient design and remove Export MD
+- Add 4-accordion configuration panel in RE and OPC detail pages
+
 ## V2.2.96 — Add Staging Deployment Support (29/07/2026)
 - Add scripts/deploy-staging.js for automated staging deploy
 - Add scripts/init-staging-db.js for PostgreSQL schema isolation
