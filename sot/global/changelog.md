@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.102 — Isolate session cookies dynamically between staging and production (30/07/2026)
+- Prevent browser cookie collision between ports 3000 and 3010 on the same host
+- Allow dynamic cookie name via SESSION_COOKIE_NAME environment variable
+
 ## V2.2.101 — Fix Nextcloud uploads, video dynamic suffix naming, manual product verification modal, and Content Flow sync route params (30/07/2026)
 - Check and upload bulk video final to Nextcloud using public share tokens or fallback admin global credentials
 - Dinamically add original clip 1 filename suffix to final video output uploads
