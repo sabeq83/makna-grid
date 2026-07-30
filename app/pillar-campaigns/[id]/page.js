@@ -2859,380 +2859,224 @@ export default function PillarCampaignDetailPage() {
             </div>
           )}
 
-          {/* CAMPAIGN TITLE BAR */}
-          <div className="card" style={{ marginBottom: 24 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase' }}>OPC CAMPAIGN MONITOR</div>
-                <h1 style={{ margin: '4px 0 0 0', fontSize: '1.8rem', fontWeight: 700 }}>{campaign.campaign_name}</h1>
-                <p style={{ color: 'var(--text-muted)', margin: '4px 0 0 0', fontSize: '0.88rem' }}>
-                  ID: <code style={{ fontSize: '0.78rem' }}>{campaign.id}</code> | Dibuat: {new Date(campaign.created_at).toLocaleString('id-ID')}
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <button 
-                  className="btn"
-                  onClick={toggleStatus}
-                  style={{
-                    background: campaign.status === 'running' ? 'linear-gradient(135deg, #e67e22 0%, #d35400 100%)' : 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
-                    color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
-                    boxShadow: campaign.status === 'running' ? '0 4px 12px rgba(230, 126, 34, 0.3)' : '0 4px 12px rgba(46, 204, 113, 0.3)'
-                  }}
-                >
-                  {campaign.status === 'running' ? '⏸️ Pause Campaign' : '🟢 Start Campaign'}
-                </button>
-                <button 
-                  className="btn"
-                  onClick={handleSyncContentFlow}
-                  disabled={syncing}
-                  style={{
-                    background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
-                    color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(52, 152, 219, 0.3)'
-                  }}
-                >
-                  🚀 Push to Contentflow
-                </button>
-                <button 
-                  className="btn"
-                  onClick={handleSyncDrive}
-                  disabled={syncing}
-                  style={{
-                    background: 'linear-gradient(135deg, #1abc9c 0%, #16a085 100%)',
-                    color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(26, 188, 156, 0.3)'
-                  }}
-                >
-                  {syncing ? '⏳ Syncing...' : '☁️ Sync to Cloud'}
-                </button>
-                {campaign.target_spreadsheet_id && (
-                  <a
-                    href={`https://docs.google.com/spreadsheets/d/${campaign.target_spreadsheet_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-secondary"
-                    style={{
-                      padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer', textDecoration: 'none'
-                    }}
-                  >
-                    📊 Open Google Sheet
-                  </a>
-                )}
-              </div>
-            </div>
-
-            {/* Scheduler Settings Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
-
-              {/* TTS Toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-secondary)', padding: '6px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', fontSize: '0.78rem' }}>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={campaign.enable_tts === 1}
-                    onChange={async (e) => {
-                      const active = e.target.checked;
-                      try {
-                        const res = await fetch(`/api/v2/pillar-campaigns/${campaign.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ enable_tts: active })
-                        });
-                        if (!res.ok) throw new Error('Gagal mengupdate status TTS');
-                        fetchDetail();
-                      } catch (err) {
-                        alert(err.message);
-                      }
-                    }}
-                  />
-                  <span className="slider"></span>
-                </label>
-                <span style={{ color: campaign.enable_tts === 1 ? 'var(--accent-color)' : 'var(--text-muted)', fontWeight: 600 }}>
-                  🎙️ TTS: {campaign.enable_tts === 1 ? 'Aktif' : 'Nonaktif'}
-                </span>
-              </div>
-
-              {/* G-Labs Toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-secondary)', padding: '6px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', fontSize: '0.78rem' }}>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={campaign.enable_glabs === 1}
-                    onChange={async (e) => {
-                      const active = e.target.checked;
-                      try {
-                        const res = await fetch(`/api/v2/pillar-campaigns/${campaign.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ enable_glabs: active })
-                        });
-                        if (!res.ok) throw new Error('Gagal mengupdate status G-Labs');
-                        fetchDetail();
-                      } catch (err) {
-                        alert(err.message);
-                      }
-                    }}
-                  />
-                  <span className="slider"></span>
-                </label>
-                <span style={{ color: campaign.enable_glabs === 1 ? 'var(--accent-color)' : 'var(--text-muted)', fontWeight: 600 }}>
-                  🖼️ G-Labs: {campaign.enable_glabs === 1 ? 'Aktif' : 'Nonaktif'}
-                </span>
-              </div>
-
-              {/* FFmpeg Toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-secondary)', padding: '6px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', fontSize: '0.78rem' }}>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={campaign.enable_ffmpeg === 1}
-                    onChange={async (e) => {
-                      const active = e.target.checked;
-                      try {
-                        const res = await fetch(`/api/v2/pillar-campaigns/${campaign.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ enable_ffmpeg: active })
-                        });
-                        if (!res.ok) throw new Error('Gagal mengupdate status FFmpeg');
-                        fetchDetail();
-                      } catch (err) {
-                        alert(err.message);
-                      }
-                    }}
-                  />
-                  <span className="slider"></span>
-                </label>
-                <span style={{ color: campaign.enable_ffmpeg === 1 ? 'var(--accent-color)' : 'var(--text-muted)', fontWeight: 600 }}>
-                  🎬 FFmpeg: {campaign.enable_ffmpeg === 1 ? 'Aktif' : 'Nonaktif'}
-                </span>
-              </div>
-
-              {/* Social Post Toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-secondary)', padding: '6px 16px', borderRadius: '24px', border: '1px solid var(--border-color)', fontSize: '0.78rem' }}>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={campaign.enable_social_post === 1}
-                    onChange={async (e) => {
-                      const active = e.target.checked;
-                      try {
-                        const res = await fetch(`/api/v2/pillar-campaigns/${campaign.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ enable_social_post: active })
-                        });
-                        if (!res.ok) throw new Error('Gagal mengupdate status Social Post');
-                        fetchDetail();
-                      } catch (err) {
-                        alert(err.message);
-                      }
-                    }}
-                  />
-                  <span className="slider"></span>
-                </label>
-                <span style={{ color: campaign.enable_social_post === 1 ? 'var(--accent-color)' : 'var(--text-muted)', fontWeight: 600 }}>
-                  📲 Sosmed: {campaign.enable_social_post === 1 ? 'Aktif' : 'Nonaktif'}
-                </span>
-              </div>
+          {/* 1 & 2: Header Card Detail Kampanye */}
+          <div className="card" style={{ marginBottom: 24, padding: 32 }}>
+            {/* 1. Judul Kampanye */}
+            <div>
+              <Link href="/pillar-campaigns" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textDecoration: 'none', display: 'inline-block', marginBottom: 8 }}>
+                ← Kembali ke Dashboard
+              </Link>
+              <h1 style={{ margin: '4px 0 0 0', fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.5px' }}>🎬 {campaign.campaign_name}</h1>
               
-
-            </div>
-
-            {/* Config summary badges */}
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16 }}>
-              {(campaign.enable_social_post === 1 || campaign.post_facebook_draft === 1) && (
-                <span className="badge badge-primary" style={{ background: '#3b82f6', color: '#fff' }}>
-                  📲 FB Page: {campaign.facebook_page_id || 'Global Default'} {campaign.facebook_server_url ? `(${campaign.facebook_server_url})` : ''}
-                </span>
-              )}
-              <span className="badge badge-secondary">AI: {campaign.target_ai}</span>
-              <span className="badge badge-secondary">Model: {campaign.video_model}</span>
-              <span className="badge badge-secondary">Rasio: {campaign.aspect_ratio}</span>
-              <span className="badge badge-secondary">Style: {campaign.visual_style}</span>
-              <span className="badge badge-secondary">Face: {campaign.face_visibility}</span>
-              <span className="badge badge-secondary">SFX: {campaign.sfx_setting === 'without_sfx' ? 'Tanpa SFX' : 'Dengan SFX'}</span>
-              <span className="badge badge-secondary">G-Labs: {campaign.enable_glabs === 1 ? 'Aktif' : 'Nonaktif'}</span>
-              {campaign.is_bridging_active === 1 && (
-                <span className="badge badge-primary" style={{ background: '#3b82f6', color: '#fff' }}>
-                  🌉 Bridge Aktif (Klip {campaign.bridge_at_clip})
-                </span>
-              )}
-              {isVsoActive && (
-                <span className="badge badge-primary" style={{ background: '#ec4899', color: '#fff' }}>
-                  🎭 VSO Aktif
-                </span>
-              )}
-            </div>
-
-            {/* Markdown Script Link */}
-            {campaign.target_markdown_url && (
-              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border-color)' }}>
-                <a 
-                  href={campaign.target_markdown_url} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="btn btn-secondary"
-                  style={{ fontSize: '0.8rem', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                >
-                  📝 Naskah Markdown (.md)
-                </a>
+              {/* 2. ID Kampanye | Nama Akun Brand | Created Date */}
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, fontSize: '0.9rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-color)', paddingBottom: 16, marginBottom: 20 }}>
+                <span>🔑 ID: <code style={{ background: 'rgba(255,255,255,0.05)', padding: '3px 8px', borderRadius: '4px', color: 'var(--accent-light)', fontFamily: 'monospace', fontSize: '0.85rem' }}>{campaign.id}</code></span>
+                <span style={{ opacity: 0.3 }}>|</span>
+                <span>🏷️ Brand: <strong>{campaign.brand_name || 'Tidak Ditentukan'}</strong></span>
+                <span style={{ opacity: 0.3 }}>|</span>
+                <span>📅 Dibuat: <strong>{new Date(campaign.created_at).toLocaleString('id-ID')}</strong></span>
               </div>
-            )}
+            </div>
+
+            {/* 3. Tombol Aksi Utama */}
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button 
+                className="btn"
+                onClick={toggleStatus}
+                style={{
+                  background: campaign.status === 'running' ? 'linear-gradient(135deg, #e67e22 0%, #d35400 100%)' : 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)',
+                  color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
+                  boxShadow: campaign.status === 'running' ? '0 4px 12px rgba(230, 126, 34, 0.3)' : '0 4px 12px rgba(46, 204, 113, 0.3)'
+                }}
+              >
+                {campaign.status === 'running' ? '⏸️ Pause Campaign' : '🟢 Start Campaign'}
+              </button>
+              <button 
+                className="btn"
+                onClick={handleSyncContentFlow}
+                disabled={syncing}
+                style={{
+                  background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
+                  color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(52, 152, 219, 0.3)'
+                }}
+              >
+                🚀 Push to Contentflow
+              </button>
+              <button 
+                className="btn"
+                onClick={handleSyncDrive}
+                disabled={syncing}
+                style={{
+                  background: 'linear-gradient(135deg, #1abc9c 0%, #16a085 100%)',
+                  color: '#fff', border: 'none', padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(26, 188, 156, 0.3)'
+                }}
+              >
+                {syncing ? '⏳ Syncing...' : '☁️ Sync to Cloud'}
+              </button>
+              {campaign.target_spreadsheet_id && (
+                <a
+                  href={`https://docs.google.com/spreadsheets/d/${campaign.target_spreadsheet_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                  style={{
+                    padding: '10px 16px', fontWeight: 600, borderRadius: '6px', cursor: 'pointer', textDecoration: 'none'
+                  }}
+                >
+                  📊 Open Google Sheet
+                </a>
+              )}
+            </div>
           </div>
 
-          {/* 4-Accordion Configuration Details */}
+          {/* 4. Accordion Info Konfigurasi */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '24px', marginBottom: '24px' }}>
             
-            {/* Accordion 1: Pillar & Brand Strategy */}
-            <details style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+            {/* Accordion A: Info Konfigurasi Basic Creative Strategy */}
+            <details open style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               <summary style={{ padding: '16px 20px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', outline: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)' }}>
-                <span>📂 Accordion 1: Pillar & Brand Strategy</span>
+                <span>📂 Info Konfigurasi Basic Creative Strategy</span>
               </summary>
               <div style={{ padding: '20px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Nama Brand</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🏷️ Nama Akun (Brand Account)</span>
                   <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.brand_name || 'Tidak Ditentukan'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Model Narasi / Demografi</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_demographic || 'Generik / Kasual'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Parent Folder Nextcloud</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.nextcloud_parent_folder || 'Default Parent Folder'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Bahasa Target</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Bahasa Naskah Voiceover (Script Language)</span>
                   <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_language || 'id-ID'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Bridging Mode</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.is_bridging_active === 1 ? 'Aktif (Promosi Produk)' : 'Nonaktif'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🎯 Target Demografi & Tone Bahasa</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_demographic || 'Generik / Kasual'}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🎙 Audio Segment (per Klip)</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Provider: {campaign.voice_provider || 'minimax'} | Persona: {campaign.voice_persona || 'reporter_vv2'} | Speed: {campaign.voice_speed || 1.0}x</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>SFX Setting</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.sfx_setting === 'without_sfx' ? 'Tanpa SFX' : 'Dengan SFX'}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Audit Kepatuhan Voiceover (TikTok Safe)</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.compliance_audit || 'Aktif (TikTok Safe)'}</span>
                 </div>
                 {campaign.custom_instruction && (
                   <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Instruksi Khusus</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Custom Instruction (Opsional)</span>
                     <pre style={{ margin: 0, padding: '12px', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)', fontSize: '0.82rem', fontFamily: 'monospace', whiteSpace: 'pre-wrap', color: 'var(--text-primary)' }}>
                       {campaign.custom_instruction}
                     </pre>
                   </div>
                 )}
+                {campaign.brand_profile_desc && (
+                  <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🧬 Brand Profile (Opsional)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 500 }}>{campaign.brand_profile_desc}</span>
+                  </div>
+                )}
               </div>
             </details>
 
-            {/* Accordion 2: Video Engine (AI Generation) */}
+            {/* Accordion B: Info Konfigurasi Aesthetics & Visual Settings */}
             <details style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               <summary style={{ padding: '16px 20px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', outline: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)' }}>
-                <span>🎬 Accordion 2: Video Engine (AI Generation)</span>
+                <span>🎬 Info Konfigurasi Aesthetics & Visual Settings</span>
               </summary>
               <div style={{ padding: '20px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>AI Video Model</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.video_model || 'Google Veo'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Narrative Mode</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.narrative_mode || 'Storytelling / Casual'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Aspek Rasio</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Aspect Ratio</span>
                   <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.aspect_ratio || '9:16'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Gaya Estetika Visual (VSO Preset)</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.visual_style || 'Cinematic'} ({campaign.vso_preset || 'Default'})</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Target AI</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_ai || 'Google Gemini 3.6-flash'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Karakter & Framing Wajah</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Video Model</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.video_model || 'Google Veo'}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Face Visibility</span>
                   <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.face_visibility || 'Faceless'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Target Klip Promosi</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Klip Ke-{campaign.bridge_at_clip || 2} (Durasi {campaign.bridge_duration_clips || 1} klip)</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Jumlah Klip Video (N)</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_clips_count || 3} clips</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Jumlah Klip Video</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_clips_count || 3} Klip</span>
-                </div>
-              </div>
-            </details>
-
-            {/* Accordion 3: Voice Over (TTS) & Audio Config */}
-            <details style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
-              <summary style={{ padding: '16px 20px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', outline: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)' }}>
-                <span>🎙 Accordion 3: Voice Over (TTS) & Audio Config</span>
-              </summary>
-              <div style={{ padding: '20px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Penyedia TTS</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.voice_provider || 'minimax'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Jumlah Kata Per Klip</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.words_per_clip || '15 - 20 Kata'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Persona Suara</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.voice_persona || 'Indonesian_casual_reporter_vv2'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Visual Style</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.visual_style || 'Cinematic'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Volume & Kecepatan Suara</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Speed: {campaign.voice_speed || 1.0}x | Vol: {campaign.voice_volume || 1.0}</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Pengaturan Audio</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>SFX: {campaign.sfx_setting === 'without_sfx' ? 'OFF' : 'ON'} | BGM Volume: {campaign.bgm_volume || 0.15}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Visual Mode</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.visual_mode || 'T2V & I2V'}</span>
                 </div>
               </div>
             </details>
 
-            {/* Accordion 4: Integration & Automations */}
+            {/* Accordion C: Info Konfigurasi Product Bridging Settings */}
             <details style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               <summary style={{ padding: '16px 20px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', outline: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)' }}>
-                <span>🔗 Accordion 4: Integration & Automations</span>
+                <span>🌉 Info Konfigurasi Product Bridging Settings</span>
               </summary>
               <div style={{ padding: '20px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Facebook Page ID</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.facebook_page_id || 'Global Default'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Bridging Promosi Produk</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.is_bridging_active === 1 ? 'Aktif' : 'Nonaktif'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Nextcloud Folder</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.nextcloud_parent_folder || 'Default Parent Folder'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Klip Target Promosi</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Klip Ke-{campaign.bridge_at_clip || 2}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Mode FB Post</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.post_facebook_draft === 1 ? 'Draft (Menunggu Review)' : 'Publish Langsung'}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Durasi Bridge</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.bridge_duration_clips || 1} Klip</span>
+                </div>
+                <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Instruksi Transisi Bridge</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.bridge_instruction || 'Default transition layout'}</span>
+                </div>
+              </div>
+            </details>
+
+            {/* Accordion D: Info Konfigurasi Visual Swap Overrides */}
+            <details style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+              <summary style={{ padding: '16px 20px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', outline: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)' }}>
+                <span>🎭 Info Konfigurasi Visual Swap Overrides</span>
+              </summary>
+              <div style={{ padding: '20px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Konsep Karakter (Framing)</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.face_visibility || 'Faceless Close-Up Shot'}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Status Modul Otomatis</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-light)' }}>
-                    TTS: {campaign.enable_tts === 1 ? 'ON' : 'OFF'} | G-Labs: {campaign.enable_glabs === 1 ? 'ON' : 'OFF'} | FFmpeg: {campaign.enable_ffmpeg === 1 ? 'ON' : 'OFF'}
-                  </span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Demografi Subjek / Model</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_demographic || 'Generik / Kasual'}</span>
+                </div>
+                <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Pencahayaan & Gaya Sinematik (Lighting Ambiance)</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.visual_style || 'Cinematic Warm Moody Accent'}</span>
                 </div>
               </div>
             </details>
             
           </div>
-
-          {/* BASIC CREATIVE CONFIG DETAIL CARD */}
-          {campaign.is_mass_production !== 1 && (
-            <div className="card" style={{ marginBottom: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-              <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, fontSize: '0.9rem' }}>🎯 Pilar Konten Utama</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: 12, borderRadius: 6, margin: 0, minHeight: 60, lineHeight: 1.4 }}>
-                  {campaign.content_pillar}
-                </p>
-                <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginTop: 16, marginBottom: 8, fontSize: '0.9rem' }}>🎬 Aksi Visual Global</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: 12, borderRadius: 6, margin: 0, minHeight: 60, lineHeight: 1.4 }}>
-                  {campaign.visual_action_guideline}
-                </p>
-              </div>
-              <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, fontSize: '0.9rem' }}>🪝 Naskah Hook (Klip 1)</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: 12, borderRadius: 6, margin: 0, minHeight: 60, lineHeight: 1.4 }}>
-                  "{campaign.custom_hook}"
-                </p>
-                {campaign.custom_instruction && (
-                  <>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginTop: 16, marginBottom: 8, fontSize: '0.9rem' }}>💡 Instruksi Tambahan</div>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: 12, borderRadius: 6, margin: 0, minHeight: 40, lineHeight: 1.4 }}>
-                      {campaign.custom_instruction}
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
 
 
 

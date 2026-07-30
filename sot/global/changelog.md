@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.109 — Streamline RE and OPC detail pages (30/07/2026)
+- Clean up campaign detail layout to exactly 5 sections
+- Apply new standardized 4-accordion configuration panel with precise key values
+- Remove legacy schedulers and old info elements
+
 ## V2.2.109 — Implement separate staging/production deployers and align Campaign UI (30/07/2026)
 - Add brand profiles LEFT JOIN to RE OPC and Bridge Injector listing APIs
 - Add brand filter dropdown and campaign IDs to list cards
