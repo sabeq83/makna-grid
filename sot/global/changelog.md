@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.114 — Sentralisasi Model Gemini (31/07/2026)
+- Sentralisasi konfigurasi model Gemini ke GEMINI_MODELS di gemini.js
+- Menghilangkan hardcoding model gemini-3.5-flash di workers, processors, dan re-recomm-engine
+
 ## V2.2.113 — Perbaikan productData ReferenceError di Scheduler (31/07/2026)
 - Memperbaiki ReferenceError productData is not defined pada processReAnalyzer
 - Mendeklarasikan productData = null pada G-Labs scheduler lainnya
