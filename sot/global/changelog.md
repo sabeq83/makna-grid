@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.99 — Implement separate staging and production deployers (30/07/2026)
+- Split deploy-node1.js into deploy-staging.js and deploy-production.js
+- Add deploy:staging and deploy:production npm commands
+
 ## V2.2.98 — Update deployer script for production and staging ports (30/07/2026)
 - Modify deploy-node1.js to update and restart both port 3000 and port 3010 on gateway
 
