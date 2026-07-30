@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.98 — Update deployer script for production and staging ports (30/07/2026)
+- Modify deploy-node1.js to update and restart both port 3000 and port 3010 on gateway
+
 ## V2.2.97 — Align Campaign UI & Config Accordions (30/07/2026)
 - Add brand profiles LEFT JOIN to RE OPC and Bridge Injector listing APIs
 - Add brand filter dropdown and campaign IDs to list cards
