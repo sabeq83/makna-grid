@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.106 — Implement product truths regeneration and visual UUIDs (30/07/2026)
+- Add API endpoint to batch regenerate product truths and geometry truths via Gemini AI
+- Implement visual UUID display and copy clipboard action on product cards
+- Render product truth and geometric truth status badges on UI cards
+
 ## V2.2.105 — Retain start frames and scripts during local media cleanup (30/07/2026)
 - Optimize local file cleanup logic to keep start frame images and markdown script files
 - Remove only heavy video and audio files from the temporary local directories
