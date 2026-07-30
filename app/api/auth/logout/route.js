@@ -10,7 +10,8 @@ export async function POST(req) {
         return [k, decodeURIComponent(v || '')];
       })
     );
-    const token = cookies['makna_session'];
+    const cookieName = process.env.SESSION_COOKIE_NAME || 'makna_session';
+    const token = cookies[cookieName];
 
     if (token) {
       destroySession(token);
@@ -18,7 +19,7 @@ export async function POST(req) {
 
     const response = NextResponse.json({ success: true, message: 'Logout berhasil' });
     response.cookies.set({
-      name: 'makna_session',
+      name: cookieName,
       value: '',
       httpOnly: true,
       path: '/',
