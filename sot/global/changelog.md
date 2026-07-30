@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.104 — Fix Next.js static files cache 404 via dynamic uploads routing (30/07/2026)
+- Add custom Next.js uploads route handler to serve dynamic assets at runtime
+- Sanitize paths to prevent directory traversal and protect local files
+- Whitelist uploads folder path in middleware to allow access without login redirect
+
 ## V2.2.103 — Standardize Nextcloud upload folders and filenames for Bridge Injector (30/07/2026)
 - Upload all source clips, TTS audio, scripts, and output videos to a newly generated public share folder
 - Apply standardized naming conventions using cloud-naming-helper
