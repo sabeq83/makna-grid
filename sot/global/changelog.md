@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.108 — Implement rembg background removal and batch photos regeneration (30/07/2026)
+- Add rembg CLI integration with local fallback support to bg-remover.js
+- Create API endpoint app/api/v2/products/regenerate-photos/route.js to handle batch studio photo and prompt generation
+- Integrate RE-Generate Photos orange-coral action button on products page UI
+
 ## V2.2.107 — Enforce English for product and geometric truths (30/07/2026)
 - Update buildBatchProductTruthsPrompt to strictly enforce English output for generated truths
 
