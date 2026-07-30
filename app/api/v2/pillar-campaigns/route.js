@@ -103,7 +103,9 @@ export async function POST(request) {
         target_spreadsheet_id: formData.get('target_spreadsheet_id') || null,
         sfx_setting: formData.get('sfx_setting') || 'without_sfx',
         enable_vo_audit: Number(formData.get('enable_vo_audit') || 0),
-        enable_audio_segment: Number(formData.get('enable_audio_segment') || 0)
+        enable_audio_segment: Number(formData.get('enable_audio_segment') || 0),
+        target_demographic: formData.get('target_demographic') || null,
+        target_demographic_custom: formData.get('target_demographic_custom') || null
       };
 
       // Handle file upload
@@ -212,7 +214,9 @@ export async function POST(request) {
       target_spreadsheet_id,
       sfx_setting,
       enable_vo_audit,
-      enable_audio_segment
+      enable_audio_segment,
+      target_demographic,
+      target_demographic_custom
     } = parsedBody;
 
     if (!campaign_name?.trim()) {
@@ -282,7 +286,9 @@ export async function POST(request) {
       fb_draft_mode: fb_draft_mode || 'auto',
       sfx_setting: sfx_setting || 'without_sfx',
       enable_vo_audit: enable_vo_audit || 0,
-      enable_audio_segment: enable_audio_segment || 0
+      enable_audio_segment: enable_audio_segment || 0,
+      target_demographic: target_demographic || null,
+      target_demographic_custom: target_demographic_custom || null
     });
 
     createPillarCampaignItem({ campaign_id: id });

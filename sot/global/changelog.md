@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.110 — Fix missing brand name and demographic configs (30/07/2026)
+- Store target_demographic and target_demographic_custom parameters in RE and OPC campaigns
+- Add LEFT JOIN brand_profiles to getReCampaign and getPillarCampaign DB operations
+- Correct demographic rendering using a layout helper in RE and OPC detail views
+
 ## V2.2.109 — Streamline RE and OPC detail pages (30/07/2026)
 - Clean up campaign detail layout to exactly 5 sections
 - Apply new standardized 4-accordion configuration panel with precise key values

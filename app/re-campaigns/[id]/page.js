@@ -62,6 +62,14 @@ const getFormattedPrompt = (val) => {
   return val;
 };
 
+const getDemographicLabel = (demographic, custom) => {
+  if (demographic === 'custom') return custom || 'Custom';
+  if (demographic === 'genz_casual') return 'Gen Z (Casual / Slang)';
+  if (demographic === 'millennial_professional') return 'Millennial (Professional / Formal)';
+  if (demographic === 'parent_warm') return 'Parents / Warm & Caring';
+  return demographic || 'Generik / Kasual';
+};
+
 
 const GEMINI_VOICES = [
   { id: 'Kore', name: 'Kore (Female)', avatar: '👩', desc: 'Standard Female (Skincare/Cosmetic)' },
@@ -4539,7 +4547,7 @@ export default function RECampaignDetailPage() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🎯 Target Demografi & Tone Bahasa</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_demographic || 'Generik / Kasual'}</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{getDemographicLabel(campaign.target_demographic, campaign.target_demographic_custom)}</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>🎙 Audio Segment (per Klip)</span>
@@ -4652,7 +4660,7 @@ export default function RECampaignDetailPage() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Demografi Subjek / Model</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{campaign.target_demographic || 'Generik / Kasual'}</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{getDemographicLabel(campaign.target_demographic, campaign.target_demographic_custom)}</span>
                   </div>
                   <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>Pencahayaan & Gaya Sinematik (Lighting Ambiance)</span>

@@ -80,6 +80,8 @@ export async function POST(request) {
         sfx_setting: formData.get('sfx_setting') || 'without_sfx',
         enable_vo_audit: Number(formData.get('enable_vo_audit') || 0),
         enable_audio_segment: Number(formData.get('enable_audio_segment') || 0),
+        target_demographic: formData.get('target_demographic') || null,
+        target_demographic_custom: formData.get('target_demographic_custom') || null,
       };
 
       const urlsRaw = formData.get('urls');
@@ -183,7 +185,9 @@ export async function POST(request) {
       target_spreadsheet_id,
       sfx_setting,
       enable_vo_audit,
-      enable_audio_segment
+      enable_audio_segment,
+      target_demographic,
+      target_demographic_custom
     } = parsedBody;
 
     if (!campaign_name?.trim()) {
@@ -243,7 +247,9 @@ export async function POST(request) {
       target_spreadsheet_id: extractSpreadsheetId(target_spreadsheet_id),
       sfx_setting: sfx_setting || 'without_sfx',
       enable_vo_audit: enable_vo_audit || 0,
-      enable_audio_segment: enable_audio_segment || 0
+      enable_audio_segment: enable_audio_segment || 0,
+      target_demographic: target_demographic || null,
+      target_demographic_custom: target_demographic_custom || null
     });
     addReCampaignItems(id, urls);
 
