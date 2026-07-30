@@ -55,6 +55,7 @@ export default function ProductDatabasePage() {
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [regeneratingTruths, setRegeneratingTruths] = useState(false);
 
   // CSV Import and Logging states (v10.14.0)
   const [showCsvImportModal, setShowCsvImportModal] = useState(false);
@@ -453,6 +454,31 @@ export default function ProductDatabasePage() {
       showToast(err.message, 'error');
     } finally {
       setExportingSheets(false);
+    }
+  }
+
+  // Regenerate Product Truths & Geometry Truths in a batch
+  async function handleBulkRegenerateTruths() {
+    if (selectedIds.length === 0) return;
+    setRegeneratingTruths(true);
+    try {
+      const res = await fetch('/api/v2/products/regenerate-truths', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✅ ${data.message}`);
+        fetchProducts(); // Refresh list
+        setSelectedIds([]);
+      } else {
+        showToast(data.error || 'Gagal men-generate ulang truths', 'error');
+      }
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setRegeneratingTruths(false);
     }
   }
 
@@ -862,8 +888,38 @@ export default function ProductDatabasePage() {
                   )}
                 </div>
                 {selectedIds.length > 0 && (
-                  <div style={{ color: 'var(--accent-light)', fontWeight: 600, fontSize: '0.82rem' }}>
-                    🔔 {selectedIds.length} produk terpilih untuk diekspor
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{ color: 'var(--accent-light)', fontWeight: 600, fontSize: '0.82rem' }}>
+                      🔔 {selectedIds.length} produk terpilih untuk diekspor
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleBulkRegenerateTruths}
+                      disabled={regeneratingTruths}
+                      style={{
+                        background: 'linear-gradient(135deg, #a855f7 0%, #6c5ce7 100%)',
+                        border: 'none',
+                        color: '#fff',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 2px 8px rgba(108, 92, 231, 0.4)'
+                      }}
+                    >
+                      {regeneratingTruths ? (
+                        <>
+                          <div className="spinner" style={{ width: '12px', height: '12px', borderTopColor: '#fff' }} />
+                          Memproses...
+                        </>
+                      ) : (
+                        <>🔄 RE-Generate Truths</>
+                      )}
+                    </button>
                   </div>
                 )}
               </div>
@@ -1208,6 +1264,44 @@ export default function ProductDatabasePage() {
                           {p.product_name}
                         </h3>
 
+                        {/* Tampilkan Product UUID */}
+                        <div style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          marginBottom: '10px',
+                          fontSize: '0.68rem',
+                          fontFamily: 'var(--font-mono)',
+                          background: 'rgba(255, 255, 255, 0.04)',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          color: 'var(--text-muted)'
+                        }}>
+                          <span>ID: {p.id.slice(0, 8)}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(p.id);
+                              alert('ID produk berhasil disalin!');
+                            }}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: 'var(--accent-light)',
+                              cursor: 'pointer',
+                              padding: 0,
+                              fontSize: '0.68rem',
+                              display: 'inline-flex',
+                              alignItems: 'center'
+                            }}
+                            title="Salin ID Lengkap"
+                          >
+                            📋
+                          </button>
+                        </div>
+
                         {/* Tags list */}
                         {tagsList.length > 0 && (
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '12px' }}>
@@ -1258,6 +1352,35 @@ export default function ProductDatabasePage() {
                             </span>
                           </div>
                         )}
+
+                        {/* Status Badges for Product Truth & Geometric Truth */}
+                        <div style={{
+                          display: 'flex',
+                          gap: '8px',
+                          marginBottom: '12px',
+                          fontSize: '0.68rem'
+                        }}>
+                          <span style={{
+                            background: p.product_truth ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.03)',
+                            border: p.product_truth ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.08)',
+                            color: p.product_truth ? '#10b981' : 'var(--text-muted)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontWeight: 600
+                          }}>
+                            🛡️ {p.product_truth ? 'Product Truth OK' : 'No Product Truth'}
+                          </span>
+                          <span style={{
+                            background: p.geometric_truth ? 'rgba(168, 85, 247, 0.1)' : 'rgba(255, 255, 255, 0.03)',
+                            border: p.geometric_truth ? '1px solid rgba(168, 85, 247, 0.2)' : '1px solid rgba(255, 255, 255, 0.08)',
+                            color: p.geometric_truth ? '#a855f7' : 'var(--text-muted)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontWeight: 600
+                          }}>
+                            📐 {p.geometric_truth ? 'Geometry Truth OK' : 'No Geometry Truth'}
+                          </span>
+                        </div>
 
                         {/* Description */}
                         {p.product_description && (
