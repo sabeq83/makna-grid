@@ -1,5 +1,11 @@
 # Changelog
 
+## V2.2.103 — Standardize Nextcloud upload folders and filenames for Bridge Injector (30/07/2026)
+- Upload all source clips, TTS audio, scripts, and output videos to a newly generated public share folder
+- Apply standardized naming conventions using cloud-naming-helper
+- Automatically delete local temporary files post-upload
+- Align Content Flow ingestion to use the newly generated Nextcloud share link
+
 ## V2.2.102 — Isolate session cookies dynamically between staging and production (30/07/2026)
 - Prevent browser cookie collision between ports 3000 and 3010 on the same host
 - Allow dynamic cookie name via SESSION_COOKIE_NAME environment variable
