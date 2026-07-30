@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.105 — Retain start frames and scripts during local media cleanup (30/07/2026)
+- Optimize local file cleanup logic to keep start frame images and markdown script files
+- Remove only heavy video and audio files from the temporary local directories
+
 ## V2.2.104 — Fix Next.js static files cache 404 via dynamic uploads routing (30/07/2026)
 - Add custom Next.js uploads route handler to serve dynamic assets at runtime
 - Sanitize paths to prevent directory traversal and protect local files
