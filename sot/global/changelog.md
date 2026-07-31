@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.117 — Rencana B Gabungan (31/07/2026)
+- Penyempurnaan Ingestion & Sinkronisasi DB Gambar Produk OPC
+- Pemberian Failsafe Upload Markdown ke Nextcloud & Drive
+- Pembaruan UI card video dengan Completed & Published dates
+
 ## V2.2.116 — Fix SQL Quote Identifiers (31/07/2026)
 - Mengubah string literal SQL dari kutip ganda ke kutip tunggal di scheduler-processors.js
 - Membetulkan string literal SQL bermasalah serupa di dashboard stats route.js

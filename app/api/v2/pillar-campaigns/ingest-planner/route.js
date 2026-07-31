@@ -83,8 +83,14 @@ export async function POST(request) {
       if (targetProdId) {
         prodMatch = db.prepare("SELECT * FROM product_extractions WHERE id = ?").get(targetProdId);
       } else if (planner.product_name) {
-        const queryTerm = planner.product_name.split(' ')[0] || planner.product_name;
-        prodMatch = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${queryTerm}%`);
+        // Coba cari nama produk penuh/ketat terlebih dahulu demi mencegah salah pilih produk berprefix nama sama
+        prodMatch = db.prepare("SELECT * FROM product_extractions WHERE LOWER(product_name) = LOWER(?) LIMIT 1").get(planner.product_name);
+        
+        // Jika tidak ditemukan kecocokan ketat, gunakan fallback pencarian kata pertama (parsial)
+        if (!prodMatch) {
+          const queryTerm = planner.product_name.split(' ')[0] || planner.product_name;
+          prodMatch = db.prepare("SELECT * FROM product_extractions WHERE product_name LIKE ? ORDER BY id DESC LIMIT 1").get(`%${queryTerm}%`);
+        }
       }
       if (prodMatch) {
         if (!targetProdId) targetProdId = prodMatch.id;

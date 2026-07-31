@@ -82,6 +82,13 @@ const getBrandBadgeStyle = (accountName) => {
   };
 };
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
 function ContentFlowHubPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -1192,6 +1199,14 @@ function ContentFlowHubPageContent() {
                             {item.video_id}
                           </span>
                         </div>
+
+                        {item.production_date && (
+                          <div style={{ position: 'absolute', bottom: '8px', right: '8px', zIndex: 2 }}>
+                            <span style={{ padding: '3px 6px', borderRadius: '4px', background: 'rgba(15, 23, 42, 0.95)', border: '1px solid #334155', color: '#94a3b8', fontSize: '8px', fontWeight: 700 }}>
+                              📅 Selesai: {formatDate(item.production_date)}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Link Asset Button */}
@@ -1279,7 +1294,7 @@ function ContentFlowHubPageContent() {
                           color: isTkPub ? '#34d399' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
                         }}>
                           <span>🎵 TikTok</span>
-                          <span>{item.tiktok_status === 'Published' ? '✓ Published' : item.tiktok_status === 'Skipped' ? '⏭️ Skipped' : item.tiktok_status}</span>
+                          <span>{item.tiktok_status === 'Published' ? `✓ Published (${formatDate(item.tiktok_publish_date)})` : item.tiktok_status === 'Skipped' ? '⏭️ Skipped' : item.tiktok_status}</span>
                         </div>
 
                         {/* FB Chip */}
@@ -1290,7 +1305,7 @@ function ContentFlowHubPageContent() {
                           color: isFbPub ? '#60a5fa' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
                         }}>
                           <span>📘 FB</span>
-                          <span>{item.facebook_status === 'Published' ? '✓ Published' : item.facebook_status === 'Skipped' ? '⏭️ Skipped' : item.facebook_status}</span>
+                          <span>{item.facebook_status === 'Published' ? `✓ Published (${formatDate(item.facebook_publish_date)})` : item.facebook_status === 'Skipped' ? '⏭️ Skipped' : item.facebook_status}</span>
                         </div>
 
                         {/* IG Chip */}
@@ -1301,7 +1316,7 @@ function ContentFlowHubPageContent() {
                           color: isIgPub ? '#f87171' : '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px'
                         }}>
                           <span>📸 IG</span>
-                          <span>{item.instagram_status === 'Published' ? '✓ Published' : item.instagram_status === 'Skipped' ? '⏭️ Skipped' : item.instagram_status}</span>
+                          <span>{item.instagram_status === 'Published' ? `✓ Published (${formatDate(item.instagram_publish_date)})` : item.instagram_status === 'Skipped' ? '⏭️ Skipped' : item.instagram_status}</span>
                         </div>
                       </div>
                     </div>
