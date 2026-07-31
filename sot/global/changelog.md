@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.120 — Remove redundant inline require in campaign-scheduler (31/07/2026)
+- Remove redundant require('./db') which caused TypeError due to dynamic module bundling
+
 ## V2.2.119 — Fix imports extension in campaign-scheduler (31/07/2026)
 - Fix missing extensions in campaign-scheduler imports to resolve Next.js production build TypeError
 
