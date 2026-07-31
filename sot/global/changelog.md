@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.119 — Fix imports extension in campaign-scheduler (31/07/2026)
+- Fix missing extensions in campaign-scheduler imports to resolve Next.js production build TypeError
+
 ## V2.2.118 — Fix Casing & Duplikasi ContentFlow RE (31/07/2026)
 - Normalisasi account_name ke lowercase pada sinkronisasi ContentFlow
 - Gunakan ILIKE dan LOWER untuk query case-insensitive di API & DB
