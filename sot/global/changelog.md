@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.115 — Fix RE Sheets Warning (31/07/2026)
+- Failsafe Google Sheets check pada RE Analyzer
+- Mencegah warning log 'Cannot read properties of null (reading spreadsheets)' jika kampanye tidak terhubung ke Sheets
+
 ## V2.2.114 — Sentralisasi Model Gemini (31/07/2026)
 - Sentralisasi konfigurasi model Gemini ke GEMINI_MODELS di gemini.js
 - Menghilangkan hardcoding model gemini-3.5-flash di workers, processors, dan re-recomm-engine
