@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.116 — Fix SQL Quote Identifiers (31/07/2026)
+- Mengubah string literal SQL dari kutip ganda ke kutip tunggal di scheduler-processors.js
+- Membetulkan string literal SQL bermasalah serupa di dashboard stats route.js
+
 ## V2.2.115 — Fix RE Sheets Warning (31/07/2026)
 - Failsafe Google Sheets check pada RE Analyzer
 - Mencegah warning log 'Cannot read properties of null (reading spreadsheets)' jika kampanye tidak terhubung ke Sheets

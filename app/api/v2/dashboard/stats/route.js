@@ -9,7 +9,7 @@ export async function GET() {
     const brandProfiles = db.prepare('SELECT id, brand_name FROM brand_profiles ORDER BY brand_name ASC').all();
     
     // Get distinct account names from content_flow_items
-    const cfiAccounts = db.prepare('SELECT DISTINCT account_name FROM content_flow_items WHERE account_name IS NOT NULL AND account_name != "" AND account_name != "Umum"').all();
+    const cfiAccounts = db.prepare("SELECT DISTINCT account_name FROM content_flow_items WHERE account_name IS NOT NULL AND account_name != '' AND account_name != 'Umum'").all();
     
     const accountSet = new Set([
       ...brandProfiles.map(b => b.brand_name),
