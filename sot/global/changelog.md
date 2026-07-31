@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.118 — Fix Casing & Duplikasi ContentFlow RE (31/07/2026)
+- Normalisasi account_name ke lowercase pada sinkronisasi ContentFlow
+- Gunakan ILIKE dan LOWER untuk query case-insensitive di API & DB
+- Pemberantasan duplikasi ID cf_nutribake_re_* di script import
+
 ## V2.2.117 — Rencana B Gabungan (31/07/2026)
 - Penyempurnaan Ingestion & Sinkronisasi DB Gambar Produk OPC
 - Pemberian Failsafe Upload Markdown ke Nextcloud & Drive

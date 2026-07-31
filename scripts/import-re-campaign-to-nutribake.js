@@ -84,7 +84,7 @@ async function importReCampaignToNutribake() {
       campaignId: CAMPAIGN_ID,
       sequence: insertedCount
     });
-    const cfId = `cf_nutribake_re_${item.id}`;
+    const cfId = `re_${item.id}`;
 
     // Parse JSON fields
     const resJsonStr = typeof item.result_json === 'object' ? JSON.stringify(item.result_json) : (item.result_json || '');

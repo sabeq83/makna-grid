@@ -27,7 +27,7 @@ export async function GET(request) {
       }
       if (accountName && accountName !== 'all') {
         params.push(accountName);
-        baseSql += ` AND account_name = $${params.length}`;
+        baseSql += ` AND account_name ILIKE $${params.length}`;
       }
       if (productName && productName !== 'all') {
         params.push(productName);
