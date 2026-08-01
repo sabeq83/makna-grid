@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.129 — Fix column name in recovery script (01/08/2026)
+- Fix campaign selection column sheets_campaigns.id
+
 ## V2.2.128 — Add caption recovery script for autopilot campaigns (01/08/2026)
 - Create scripts/recover-autopilot-captions.js to generate and sync captions from SQLite storyboard/voiceover data
 

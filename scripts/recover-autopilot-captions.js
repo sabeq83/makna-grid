@@ -7,12 +7,12 @@ import { updateCell } from '../lib/sheets-autopilot-worker.js';
 const CAMPAIGN_ID = 'sheets_260801_0vmu98';
 
 async function recover() {
-  console.log(`\n🚀 === RECOVERING CAPTIONS FOR CAMPAIGN: ${CAMPAIGN_ID} === 🚀`);
+  console.log(`\n🚀 === 1-CALL CAPTION RECOVERY FOR CAMPAIGN: ${CAMPAIGN_ID} === 🚀`);
   
   const db = getDb();
   
   // 1. Fetch the campaign to get spreadsheet_id
-  const campaign = db.prepare("SELECT * FROM sheets_campaigns WHERE campaign_id = ?").get(CAMPAIGN_ID);
+  const campaign = db.prepare("SELECT * FROM sheets_campaigns WHERE id = ?").get(CAMPAIGN_ID);
   if (!campaign) {
     console.error(`Error: Campaign ${CAMPAIGN_ID} not found in database!`);
     return;
@@ -21,7 +21,7 @@ async function recover() {
   console.log(`✓ Campaign found: ${campaign.campaign_name}`);
   console.log(`✓ Spreadsheet ID: ${campaign.spreadsheet_id}`);
   
-  // 2. Fetch all processed jobs for this campaign
+  // 2. Fetch all jobs for this campaign
   const jobs = db.prepare(`
     SELECT * FROM sheets_jobs 
     WHERE campaign_id = ? 
@@ -44,15 +44,80 @@ async function recover() {
     return;
   }
   
-  // 3. Connect to Google Sheets
-  console.log("Connecting to Google Sheets API...");
+  // 3. Build a single structured prompt for all jobs
+  let promptItemsText = '';
+  for (const job of targetJobs) {
+    let storyboard = [];
+    let voiceover = [];
+    try {
+      storyboard = JSON.parse(job.storyboard || '[]');
+      voiceover = JSON.parse(job.voiceover || '[]');
+    } catch (e) {
+      continue;
+    }
+    const narrationText = voiceover.map(v => v.narration || '').join('\n');
+    const visualText = storyboard.map(s => s.visual_description || '').join('\n');
+    
+    promptItemsText += `
+--- Video Row Index: ${job.row_index} ---
+Voiceover Script:
+${narrationText}
+Storyboard Visuals:
+${visualText}
+`;
+  }
+  
+  const prompt = `
+You are a professional social media copywriter.
+Generate a highly engaging, persuasive, and custom social media caption for each of the following video scripts.
+Each caption must have a strong hook, clear value, natural call to action (CTA), and relevant hashtags.
+
+Here are the video details:
+${promptItemsText}
+
+Format the response strictly as a JSON array of objects, where each object has:
+- "row_index" (integer)
+- "caption" (string, the generated caption in Indonesian)
+
+Do NOT include any extra formatting, explanations, or wrapping markdown code blocks (e.g. do not wrap in \`\`\`json). Respond ONLY with raw parseable JSON array.
+`;
+
+  // 4. Call Gemini in a single 1x API Call
+  console.log(`\nCalling Gemini AI (1x API Call) to generate captions for all ${targetJobs.length} rows...`);
+  let rawResponse = '';
+  try {
+    rawResponse = await generateContentFlexible({
+      prompt,
+      modelName: GEMINI_MODELS.PRIMARY
+    });
+  } catch (err) {
+    console.error(`Error calling Gemini AI:`, err.message);
+    return;
+  }
+  
+  // Clean potential markdown wrapping if returned anyway
+  let cleanJson = rawResponse.trim();
+  if (cleanJson.startsWith('```')) {
+    cleanJson = cleanJson.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+  }
+  
+  let results = [];
+  try {
+    results = JSON.parse(cleanJson);
+  } catch (err) {
+    console.error("Error parsing JSON response from Gemini:", err.message);
+    console.log("Raw Response received:", rawResponse);
+    return;
+  }
+  
+  console.log(`✓ Successfully received and parsed captions for ${results.length} rows.`);
+  
+  // 5. Connect to Google Sheets to update cells
+  console.log("\nConnecting to Google Sheets API...");
   const auth = getAuthorizedClient();
   const sheets = google.sheets({ version: 'v4', auth });
   
   const sheetName = campaign.campaign_type === 'RE' ? 'CAMPAIGN_RE' : (campaign.campaign_type === 'OPC' ? 'CAMPAIGN_OPC' : 'CAMPAIGN_IFC');
-  console.log(`✓ Target sheet tab: ${sheetName}`);
-  
-  // Read headers to find caption columns
   const meta = await sheets.spreadsheets.get({ spreadsheetId: campaign.spreadsheet_id });
   const sheetExists = meta.data.sheets.some(s => s.properties.title === sheetName);
   if (!sheetExists) {
@@ -64,82 +129,28 @@ async function recover() {
     spreadsheetId: campaign.spreadsheet_id,
     range: `'${sheetName}'!A1:Z1`
   });
-  
   const headers = (response.data.values || [[]])[0].map(h => h.trim().toLowerCase());
-  
   const tiktokColIdx = headers.indexOf('tiktok_caption');
   const igColIdx = headers.indexOf('ig_caption');
   
-  console.log(`✓ TikTok Caption column index: ${tiktokColIdx}`);
-  console.log(`✓ IG Caption column index: ${igColIdx}`);
+  console.log(`✓ TikTok Column: ${tiktokColIdx !== -1 ? 'Found' : 'Not Found'}, IG Column: ${igColIdx !== -1 ? 'Found' : 'Not Found'}`);
   
-  // 4. Loop and recover each job
-  for (let i = 0; i < targetJobs.length; i++) {
-    const job = targetJobs[i];
-    console.log(`\n[${i + 1}/${targetJobs.length}] Processing Row ${job.row_index} (Job ID: ${job.id})...`);
+  // 6. Write back to database and Google Sheets
+  for (const item of results) {
+    const rowIndex = item.row_index;
+    const generatedCaption = item.caption;
     
-    // Parse storyboard and voiceover
-    let storyboard = [];
-    let voiceover = [];
-    try {
-      storyboard = JSON.parse(job.storyboard || '[]');
-      voiceover = JSON.parse(job.voiceover || '[]');
-    } catch (e) {
-      console.warn(`  Warning: Failed to parse storyboard or voiceover for Row ${job.row_index}. Skipping.`);
+    if (!rowIndex || !generatedCaption) continue;
+    
+    const job = targetJobs.find(j => j.row_index === rowIndex);
+    if (!job) {
+      console.warn(`  Warning: Received result for row ${rowIndex} but no matching job found. Skipping.`);
       continue;
     }
     
-    const narrationText = voiceover.map(v => v.narration || '').join('\n');
-    const visualText = storyboard.map(s => s.visual_description || '').join('\n');
+    console.log(`Updating Row ${rowIndex}...`);
     
-    if (!narrationText && !visualText) {
-      console.warn(`  Warning: Narrative text and visual text are both empty. Skipping.`);
-      continue;
-    }
-    
-    // Build Prompt
-    const prompt = `
-You are a professional social media copywriter.
-Given the voiceover narration script and visual storyboard of a short promotional video, generate an engaging, highly persuasive social media Caption.
-The caption should have:
-1. A strong hook to capture attention.
-2. Clear explanation of value.
-3. Natural call to action (CTA).
-4. Relevantly selected hashtags.
-
-Voiceover Script:
-${narrationText}
-
-Visual Storyboard:
-${visualText}
-
-Generate a single unified Social Media Caption in Indonesian. Do NOT include any intro or outro. Respond ONLY with the final caption text.
-`;
-
-    console.log(`  Calling Gemini to generate caption...`);
-    let generatedCaption = '';
-    try {
-      const geminiResponse = await generateContentFlexible({
-        prompt,
-        modelName: GEMINI_MODELS.PRIMARY
-      });
-      generatedCaption = geminiResponse.trim();
-    } catch (err) {
-      console.error(`  Error calling Gemini:`, err.message);
-      continue;
-    }
-    
-    if (!generatedCaption) {
-      console.warn(`  Warning: Gemini returned empty caption. Skipping.`);
-      continue;
-    }
-    
-    console.log(`  Generated Caption (length: ${generatedCaption.length}):`);
-    console.log(`  -----------------------------`);
-    console.log(generatedCaption.substring(0, 150) + '...');
-    console.log(`  -----------------------------`);
-    
-    // Update local database
+    // Save to SQLite
     const newCaptionsJson = JSON.stringify({
       caption: generatedCaption,
       tiktok_caption: generatedCaption,
@@ -149,23 +160,19 @@ Generate a single unified Social Media Caption in Indonesian. Do NOT include any
     });
     
     db.prepare("UPDATE sheets_jobs SET captions_json = ? WHERE id = ?").run(newCaptionsJson, job.id);
-    console.log(`  ✓ Database updated.`);
     
-    // Write back to Google Sheets
+    // Save to Google Sheets
     if (tiktokColIdx !== -1) {
-      await updateCell(sheets, campaign.spreadsheet_id, sheetName, tiktokColIdx, job.row_index, generatedCaption);
-      console.log(`  ✓ Google Sheets TikTok Column updated.`);
+      await updateCell(sheets, campaign.spreadsheet_id, sheetName, tiktokColIdx, rowIndex, generatedCaption);
     }
     if (igColIdx !== -1) {
-      await updateCell(sheets, campaign.spreadsheet_id, sheetName, igColIdx, job.row_index, generatedCaption);
-      console.log(`  ✓ Google Sheets IG Column updated.`);
+      await updateCell(sheets, campaign.spreadsheet_id, sheetName, igColIdx, rowIndex, generatedCaption);
     }
     
-    // Throttle slightly to be nice to APIs
-    await new Promise(r => setTimeout(r, 1000));
+    console.log(`  ✓ Row ${rowIndex} successfully updated in database and Sheets.`);
   }
   
-  console.log("\n🎉 Recovery complete! All empty captions have been successfully generated and synchronized.");
+  console.log("\n🎉 Recovery complete! All captions synchronized in 1x Gemini API call.");
 }
 
 recover().catch(err => {
