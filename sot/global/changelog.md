@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.124 — Fix clothing compliance and nested parentheses in prompt templates (01/08/2026)
+- Align Subject tag to Biometric Anchor in T2I templates
+- Improve applyReplacements regex to handle Subject tag and nested parentheses
+
 ## V2.2.123 — Sanitize T2I download logs for OPC and RE campaigns (01/08/2026)
 - Clean up Downloading start frame for clip logs in UI terminal
 - Support both OPC and RE campaign prefixes in log-sanitizer
