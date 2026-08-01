@@ -23,8 +23,8 @@ async function deployProduction() {
     fuser -k -9 4000/tcp 2>/dev/null || true
     sleep 1
 
-    HOSTNAME=0.0.0.0 PORT=4000 nohup /home/sabeqmursyid/.local/bin/node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
-    HOSTNAME=0.0.0.0 PORT=3000 nohup /home/sabeqmursyid/.local/bin/node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
+    PORT=4000 nohup /home/sabeqmursyid/.local/bin/node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
+    PORT=3000 nohup /home/sabeqmursyid/.local/bin/node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
 
     echo "[4/4] Node 1 Production Services Deployment Complete!"
   `;

@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.121 — Implement dynamic header-based Google OAuth redirect URI (01/08/2026)
+- Dynamically parse host and proto from request headers to construct redirect URI
+- Remove HOSTNAME=0.0.0.0 from deploy scripts
+
 ## V2.2.120 — Remove redundant inline require in campaign-scheduler (31/07/2026)
 - Remove redundant require('./db') which caused TypeError due to dynamic module bundling
 

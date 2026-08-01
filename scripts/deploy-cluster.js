@@ -57,8 +57,8 @@ async function deploy() {
     rm -rf .next
     npm install
     npm run build
-    HOSTNAME=0.0.0.0 PORT=4000 nohup node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
-    HOSTNAME=0.0.0.0 PORT=3000 nohup node node_modules/.bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
+    PORT=4000 nohup node apps/api/server.js < /dev/null > backend-api.log 2>&1 &
+    PORT=3000 nohup node node_modules/.bin/next start -H 0.0.0.0 -p 3000 < /dev/null > gateway.log 2>&1 &
     echo "Node 1 Decoupled V2.0 (Frontend Port 3000 & API Engine Port 4000) active on 100.65.62.63!"
   `;
   runSsh('makna-ui', node1Cmd);
