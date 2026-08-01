@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.131 — Add sync-contentflow route for RE Campaigns (02/08/2026)
+- Create app/api/v2/re-campaigns/[id]/sync-contentflow/route.js
+- Optimize scanAndSyncExistingCampaigns query in contentflow-ingest.js
+
 ## V2.2.130 — Support caption column aliases in recovery script (01/08/2026)
 - Add tiktok_caption/ig_caption aliases lookup
 - Allow reuse of already generated SQLite captions to avoid Gemini API calls
