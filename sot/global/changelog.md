@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.122 — Import generateCampaignId in sheets-autopilot and recipe-labs (01/08/2026)
+- Fix ReferenceError for generateCampaignId in sheets-autopilot route
+- Fix ReferenceError for generateCampaignId in recipe-labs route
+
 ## V2.2.121 — Implement dynamic header-based Google OAuth redirect URI (01/08/2026)
 - Dynamically parse host and proto from request headers to construct redirect URI
 - Remove HOSTNAME=0.0.0.0 from deploy scripts
