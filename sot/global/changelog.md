@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.127 — Migrate legacy separate captions to unified Social Media Package and Caption (01/08/2026)
+- Consolidate captions_json in sheets-autopilot-worker
+- Update UI details pages for autopilot, re-campaigns, pipeline, production, and reverse to show unified caption block
+- Enable draft saving of captions in RE campaigns approve route
+
 ## V2.2.126 — Fix RE campaigns scheduler processors to support Pure T2V mode dynamically (01/08/2026)
 - Make isHybridLockClip dynamic in RE scheduler processor
 - Make isHybridLockClip dynamic in RE angle variants scheduler processor

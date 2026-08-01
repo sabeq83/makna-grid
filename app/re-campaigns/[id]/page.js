@@ -1002,6 +1002,14 @@ export default function RECampaignDetailPage() {
   const [regeneratingItemSF, setRegeneratingItemSF] = useState({});
   const [workflowSettings, setWorkflowSettings] = useState({}); // { [itemId]: { enable_tts, enable_glabs, enable_ffmpeg } }
   const [activeRowTabs, setActiveRowTabs] = useState({}); // { [itemId]: 'decon' | 'storyboard' | 'dna' | 'assets' }
+  const [socialCaptions, setSocialCaptions] = useState({}); // { [itemId]: string }
+
+  const updateSocialField = (itemId, field, value) => {
+    setSocialCaptions(prev => ({
+      ...prev,
+      [itemId]: value
+    }));
+  };
   const [syncingAssets, setSyncingAssets] = useState({});
   const [retryingI2V, setRetryingI2V] = useState({});
   const [selectedVoVersions, setSelectedVoVersions] = useState({}); // { [itemId]: 'original' | 'safe' }
@@ -1388,20 +1396,11 @@ export default function RECampaignDetailPage() {
         lines.push('');
       }
 
-      // 📲 Captions & Metadata
-      lines.push('### 📲 Captions & Metadata');
-      lines.push('- **TikTok Caption:**');
+      // 📲 Social Media Package & Caption
+      lines.push('### 📲 Social Media Package & Caption');
+      const universalCap = parsed.caption || parsed.universal_caption || parsed.social_media_package?.caption || parsed.tiktok_caption || parsed.ig_caption || '';
       lines.push('  ```');
-      lines.push(`  ${parsed.tiktok_caption || ''}`);
-      lines.push('  ```');
-      lines.push('- **Instagram Caption:**');
-      lines.push('  ```');
-      lines.push(`  ${parsed.ig_caption || ''}`);
-      lines.push('  ```');
-      lines.push(`- **YouTube Title:** \`${parsed.yt_title || ''}\``);
-      lines.push('- **YouTube Description:**');
-      lines.push('  ```');
-      lines.push(`  ${parsed.yt_desc || ''}`);
+      lines.push(`  ${universalCap || ''}`);
       lines.push('  ```');
       lines.push('');
     });
@@ -2568,12 +2567,12 @@ export default function RECampaignDetailPage() {
                 {/* Universal Social Caption */}
                 {(() => {
                   const capKey = `cap_${item.id}`;
-                  const universalCap = parsed.caption || parsed.universal_caption || (typeof parsed.social_media_package === 'object' ? parsed.social_media_package?.caption : '') || parsed.tiktok_caption || parsed.ig_caption || '';
+                  const universalCap = socialCaptions[item.id] || '';
                   const isCopied = copySuccess[capKey];
                   return (
                     <div style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.85rem' }}>📱 Universal Social Media Caption</span>
+                        <span style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontSize: '0.85rem' }}>📲 Social Media Package & Caption</span>
                         <button
                           type="button"
                           disabled={!universalCap}
@@ -2589,7 +2588,7 @@ export default function RECampaignDetailPage() {
                         style={{ width: '100%', minHeight: '120px', fontSize: '0.82rem', background: '#09090b', color: '#fff', borderRadius: '6px', padding: '10px', lineHeight: 1.4 }}
                         value={universalCap}
                         onChange={(e) => updateSocialField(item.id, 'caption', e.target.value)}
-                        placeholder="Naskah caption universal media sosial (TikTok, Instagram, Facebook, Shorts)..."
+                        placeholder="Naskah caption media sosial lengkap..."
                       />
                     </div>
                   );
@@ -2602,6 +2601,18 @@ export default function RECampaignDetailPage() {
     };
 
     const renderV2Workbench = (item) => {
+      if (!socialCaptions.hasOwnProperty(item.id)) {
+        let capVal = '';
+        try {
+          const parsed = JSON.parse(item.result_json || '{}');
+          capVal = parsed.caption || parsed.universal_caption || (typeof parsed.social_media_package === 'object' ? parsed.social_media_package?.caption : '') || parsed.tiktok_caption || parsed.ig_caption || '';
+        } catch {}
+        setTimeout(() => {
+          setSocialCaptions(prev => ({ ...prev, [item.id]: capVal }));
+        }, 0);
+        return <div style={{ padding: '20px', color: 'var(--text-muted)' }}>Memuat Caption...</div>;
+      }
+
       if (!editedVideoPlans.hasOwnProperty(item.id)) {
         let plan = [];
         try { plan = JSON.parse(item.new_video_plan_json || '[]'); } catch {}
@@ -2866,6 +2877,7 @@ export default function RECampaignDetailPage() {
             body: JSON.stringify({
               new_video_plan: plan,
               video_dna: dna,
+              caption: socialCaptions[item.id] || '',
               enable_tts: settings.enable_tts,
               enable_glabs: settings.enable_glabs,
               enable_ffmpeg: settings.enable_ffmpeg,
@@ -2912,6 +2924,7 @@ export default function RECampaignDetailPage() {
             body: JSON.stringify({
               new_video_plan: plan,
               video_dna: dna,
+              caption: socialCaptions[item.id] || '',
               enable_tts: settings.enable_tts,
               enable_glabs: settings.enable_glabs,
               enable_ffmpeg: settings.enable_ffmpeg,

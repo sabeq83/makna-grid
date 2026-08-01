@@ -543,18 +543,16 @@ export default function ProductionPage() {
               {/* Captions Tab */}
               {tab === 'captions' && (
                 <div>
-                  {[
-                    { label: 'TikTok Caption', value: activeAsset.tiktok_caption, icon: '🎵' },
-                    { label: 'Instagram Caption', value: activeAsset.ig_caption, icon: '📸' },
-                    { label: 'YouTube Title', value: activeAsset.yt_title, icon: '🎬' },
-                    { label: 'YouTube Description', value: activeAsset.yt_desc, icon: '📺' },
-                  ].map((cap, i) => (
-                    <div key={i} className="caption-block">
-                      <button className="copy-btn" onClick={() => copyToClipboard(cap.value, cap.label)}>Copy</button>
-                      <div className="caption-label">{cap.icon} {cap.label}</div>
-                      <div className="caption-text">{cap.value || '—'}</div>
-                    </div>
-                  ))}
+                  {(() => {
+                    const universalCap = activeAsset.caption || activeAsset.universal_caption || (typeof activeAsset.social_media_package === 'object' ? activeAsset.social_media_package?.caption : '') || activeAsset.tiktok_caption || activeAsset.ig_caption || '';
+                    return (
+                      <div className="caption-block">
+                        <button className="copy-btn" onClick={() => copyToClipboard(universalCap, 'Social Media Package & Caption')}>Copy</button>
+                        <div className="caption-label">📲 Social Media Package & Caption</div>
+                        <div className="caption-text" style={{ whiteSpace: 'pre-wrap' }}>{universalCap || '—'}</div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
