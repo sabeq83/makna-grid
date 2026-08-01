@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.123 — Sanitize T2I download logs for OPC and RE campaigns (01/08/2026)
+- Clean up Downloading start frame for clip logs in UI terminal
+- Support both OPC and RE campaign prefixes in log-sanitizer
+
 ## V2.2.122 — Import generateCampaignId in sheets-autopilot and recipe-labs (01/08/2026)
 - Fix ReferenceError for generateCampaignId in sheets-autopilot route
 - Fix ReferenceError for generateCampaignId in recipe-labs route
