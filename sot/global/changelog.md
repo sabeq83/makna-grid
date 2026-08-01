@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.132 — Fix account name sanitization in content flow sync (02/08/2026)
+- Add sanitizeAccountName function to contentflow-ingest.js
+- Clean accountName in all campaign scanning scopes
+
 ## V2.2.131 — Add sync-contentflow route for RE Campaigns (02/08/2026)
 - Create app/api/v2/re-campaigns/[id]/sync-contentflow/route.js
 - Optimize scanAndSyncExistingCampaigns query in contentflow-ingest.js
