@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.130 — Support caption column aliases in recovery script (01/08/2026)
+- Add tiktok_caption/ig_caption aliases lookup
+- Allow reuse of already generated SQLite captions to avoid Gemini API calls
+
 ## V2.2.129 — Fix column name in recovery script (01/08/2026)
 - Fix campaign selection column sheets_campaigns.id
 

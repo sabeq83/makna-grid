@@ -27,47 +27,55 @@ async function recover() {
     WHERE campaign_id = ? 
   `).all(CAMPAIGN_ID);
   
-  const targetJobs = jobs.filter(job => {
+  const targetJobs = [];
+  const results = [];
+  
+  for (const job of jobs) {
+    let existingCaption = '';
     try {
       const caps = JSON.parse(job.captions_json || '{}');
-      return !caps.caption && !caps.tiktok_caption && !caps.ig_caption;
-    } catch {
-      return true;
+      existingCaption = caps.caption || caps.tiktok_caption || caps.ig_caption || '';
+    } catch {}
+    
+    if (existingCaption) {
+      console.log(`✓ Row ${job.row_index} already has caption in database. Re-using.`);
+      results.push({
+        row_index: job.row_index,
+        caption: existingCaption
+      });
+    } else {
+      targetJobs.push(job);
     }
-  });
-  
-  console.log(`✓ Total jobs: ${jobs.length}`);
-  console.log(`✓ Jobs needing caption recovery: ${targetJobs.length}`);
-  
-  if (targetJobs.length === 0) {
-    console.log("No jobs need recovery. Exiting.");
-    return;
   }
   
-  // 3. Build a single structured prompt for all jobs
-  let promptItemsText = '';
-  for (const job of targetJobs) {
-    let storyboard = [];
-    let voiceover = [];
-    try {
-      storyboard = JSON.parse(job.storyboard || '[]');
-      voiceover = JSON.parse(job.voiceover || '[]');
-    } catch (e) {
-      continue;
-    }
-    const narrationText = voiceover.map(v => v.narration || '').join('\n');
-    const visualText = storyboard.map(s => s.visual_description || '').join('\n');
-    
-    promptItemsText += `
+  console.log(`✓ Total jobs: ${jobs.length}`);
+  console.log(`✓ Jobs needing Gemini recovery: ${targetJobs.length}`);
+  
+  if (targetJobs.length > 0) {
+    // 3. Build a single structured prompt for all jobs
+    let promptItemsText = '';
+    for (const job of targetJobs) {
+      let storyboard = [];
+      let voiceover = [];
+      try {
+        storyboard = JSON.parse(job.storyboard || '[]');
+        voiceover = JSON.parse(job.voiceover || '[]');
+      } catch (e) {
+        continue;
+      }
+      const narrationText = voiceover.map(v => v.narration || '').join('\n');
+      const visualText = storyboard.map(s => s.visual_description || '').join('\n');
+      
+      promptItemsText += `
 --- Video Row Index: ${job.row_index} ---
 Voiceover Script:
 ${narrationText}
 Storyboard Visuals:
 ${visualText}
 `;
-  }
-  
-  const prompt = `
+    }
+    
+    const prompt = `
 You are a professional social media copywriter.
 Generate a highly engaging, persuasive, and custom social media caption for each of the following video scripts.
 Each caption must have a strong hook, clear value, natural call to action (CTA), and relevant hashtags.
@@ -82,35 +90,38 @@ Format the response strictly as a JSON array of objects, where each object has:
 Do NOT include any extra formatting, explanations, or wrapping markdown code blocks (e.g. do not wrap in \`\`\`json). Respond ONLY with raw parseable JSON array.
 `;
 
-  // 4. Call Gemini in a single 1x API Call
-  console.log(`\nCalling Gemini AI (1x API Call) to generate captions for all ${targetJobs.length} rows...`);
-  let rawResponse = '';
-  try {
-    rawResponse = await generateContentFlexible({
-      prompt,
-      modelName: GEMINI_MODELS.PRIMARY
-    });
-  } catch (err) {
-    console.error(`Error calling Gemini AI:`, err.message);
-    return;
+    // 4. Call Gemini in a single 1x API Call
+    console.log(`\nCalling Gemini AI (1x API Call) to generate captions for ${targetJobs.length} rows...`);
+    let rawResponse = '';
+    try {
+      rawResponse = await generateContentFlexible({
+        prompt,
+        modelName: GEMINI_MODELS.PRIMARY
+      });
+    } catch (err) {
+      console.error(`Error calling Gemini AI:`, err.message);
+      return;
+    }
+    
+    // Clean potential markdown wrapping if returned anyway
+    let cleanJson = rawResponse.trim();
+    if (cleanJson.startsWith('```')) {
+      cleanJson = cleanJson.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+    }
+    
+    try {
+      const generatedResults = JSON.parse(cleanJson);
+      for (const res of generatedResults) {
+        results.push(res);
+      }
+    } catch (err) {
+      console.error("Error parsing JSON response from Gemini:", err.message);
+      console.log("Raw Response received:", rawResponse);
+      return;
+    }
   }
   
-  // Clean potential markdown wrapping if returned anyway
-  let cleanJson = rawResponse.trim();
-  if (cleanJson.startsWith('```')) {
-    cleanJson = cleanJson.replace(/^```json\s*/, '').replace(/```$/, '').trim();
-  }
-  
-  let results = [];
-  try {
-    results = JSON.parse(cleanJson);
-  } catch (err) {
-    console.error("Error parsing JSON response from Gemini:", err.message);
-    console.log("Raw Response received:", rawResponse);
-    return;
-  }
-  
-  console.log(`✓ Successfully received and parsed captions for ${results.length} rows.`);
+  console.log(`✓ Preparing to write captions for ${results.length} rows.`);
   
   // 5. Connect to Google Sheets to update cells
   console.log("\nConnecting to Google Sheets API...");
@@ -130,10 +141,28 @@ Do NOT include any extra formatting, explanations, or wrapping markdown code blo
     range: `'${sheetName}'!A1:Z1`
   });
   const headers = (response.data.values || [[]])[0].map(h => h.trim().toLowerCase());
-  const tiktokColIdx = headers.indexOf('tiktok_caption');
-  const igColIdx = headers.indexOf('ig_caption');
   
-  console.log(`✓ TikTok Column: ${tiktokColIdx !== -1 ? 'Found' : 'Not Found'}, IG Column: ${igColIdx !== -1 ? 'Found' : 'Not Found'}`);
+  const tiktokColAliases = ['tiktok_caption', 'tiktok caption', 'caption_tiktok', 'caption tiktok'];
+  let tiktokColIdx = -1;
+  for (const alias of tiktokColAliases) {
+    const idx = headers.indexOf(alias.toLowerCase());
+    if (idx !== -1) {
+      tiktokColIdx = idx;
+      break;
+    }
+  }
+
+  const igColAliases = ['ig_caption', 'ig caption', 'instagram_caption', 'instagram caption', 'caption_ig', 'caption ig'];
+  let igColIdx = -1;
+  for (const alias of igColAliases) {
+    const idx = headers.indexOf(alias.toLowerCase());
+    if (idx !== -1) {
+      igColIdx = idx;
+      break;
+    }
+  }
+  
+  console.log(`✓ TikTok Column Index: ${tiktokColIdx}, IG Column Index: ${igColIdx}`);
   
   // 6. Write back to database and Google Sheets
   for (const item of results) {
@@ -142,7 +171,7 @@ Do NOT include any extra formatting, explanations, or wrapping markdown code blo
     
     if (!rowIndex || !generatedCaption) continue;
     
-    const job = targetJobs.find(j => j.row_index === rowIndex);
+    const job = jobs.find(j => j.row_index === rowIndex);
     if (!job) {
       console.warn(`  Warning: Received result for row ${rowIndex} but no matching job found. Skipping.`);
       continue;
