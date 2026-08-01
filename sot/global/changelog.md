@@ -1,5 +1,8 @@
 # Changelog
 
+## V2.2.128 — Add caption recovery script for autopilot campaigns (01/08/2026)
+- Create scripts/recover-autopilot-captions.js to generate and sync captions from SQLite storyboard/voiceover data
+
 ## V2.2.127 — Migrate legacy separate captions to unified Social Media Package and Caption (01/08/2026)
 - Consolidate captions_json in sheets-autopilot-worker
 - Update UI details pages for autopilot, re-campaigns, pipeline, production, and reverse to show unified caption block
