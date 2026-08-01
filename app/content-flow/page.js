@@ -99,6 +99,8 @@ function ContentFlowHubPageContent() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   // Filter States
   const [searchTerm, setSearchTerm] = useState('');
@@ -276,10 +278,10 @@ function ContentFlowHubPageContent() {
     }
   }, []);
 
-  const loadContent = useCallback(async () => {
+  const loadContent = useCallback(async (pageToLoad = 1) => {
     try {
       setLoading(true);
-      let url = `/api/content-flow?page=1&limit=50&`;
+      let url = `/api/content-flow?page=${pageToLoad}&limit=50&`;
       if (searchTerm.trim()) url += `q=${encodeURIComponent(searchTerm.trim())}&`;
       if (sourceFilter !== 'all') url += `source_type=${encodeURIComponent(sourceFilter)}&`;
       if (accountFilter !== 'all') url += `account=${encodeURIComponent(accountFilter)}&`;
@@ -292,10 +294,12 @@ function ContentFlowHubPageContent() {
       const res = await fetch(url);
       const data = await res.json();
       if (data.success) {
-        setItems(data.items || []);
+        const newItems = data.items || [];
+        setItems(prev => pageToLoad === 1 ? newItems : [...prev, ...newItems]);
         setTotalItems(data.total_items || 0);
         setAvailableAccounts(data.available_accounts || []);
         setAvailableProducts(data.available_products || []);
+        setHasMore(newItems.length === 50 && (pageToLoad * 50 < data.total_items));
       }
     } catch (err) {
       console.error('Failed to load content flow:', err);
@@ -305,12 +309,34 @@ function ContentFlowHubPageContent() {
     }
   }, [searchTerm, sourceFilter, accountFilter, productFilter, pipelineFilter, tiktokFilter, fbFilter, igFilter, showToast]);
 
+  // Load content based on page changes
   useEffect(() => {
-    loadContent();
+    loadContent(currentPage);
+  }, [currentPage, loadContent]);
+
+  // Reset page when any filter changes
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    } else {
+      loadContent(1);
+    }
     if (accountFilter && accountFilter !== 'all') {
       fetchBrandSchedules(accountFilter);
     }
-  }, [loadContent, accountFilter, fetchBrandSchedules]);
+  }, [searchTerm, sourceFilter, accountFilter, productFilter, pipelineFilter, tiktokFilter, fbFilter, igFilter]);
+
+  // Dynamic window scroll detection to trigger next page load
+  useEffect(() => {
+    const handleScroll = () => {
+      if (loading || !hasMore) return;
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+        setCurrentPage(prev => prev + 1);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, hasMore]);
 
   function openAdminScheduleModal() {
     let targetBrand = accountFilter;
@@ -1354,6 +1380,31 @@ function ContentFlowHubPageContent() {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Spinner Pemuatan atau Status Selesai */}
+          {loading && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
+              <div style={{
+                width: '28px', height: '28px',
+                border: '3px solid rgba(59, 130, 246, 0.15)',
+                borderTop: '3px solid #3b82f6',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }} />
+              <style>{`
+                @keyframes spin {
+                  0% { transform: rotate(0deg); }
+                  100% { transform: rotate(360deg); }
+                }
+              `}</style>
+            </div>
+          )}
+
+          {!hasMore && items.length > 0 && !loading && (
+            <div style={{ textAlign: 'center', color: '#71717a', fontSize: '12px', padding: '32px 0 16px', letterSpacing: '0.05em' }}>
+              ✨ Semua konten telah dimuat ({items.length} video)
             </div>
           )}
 

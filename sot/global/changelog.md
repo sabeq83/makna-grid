@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.125 — Fix product name ingestion and implement Infinite Scroll in ContentFlow UI (01/08/2026)
+- Prioritize payload-defined product name in contentflow-ingest
+- Fix campaign_title search filter mismatch in Postgres route
+- Implement window-scroll based Infinite Scroll with animated spinner in ContentFlow UI
+
 ## V2.2.124 — Fix clothing compliance and nested parentheses in prompt templates (01/08/2026)
 - Align Subject tag to Biometric Anchor in T2I templates
 - Improve applyReplacements regex to handle Subject tag and nested parentheses
