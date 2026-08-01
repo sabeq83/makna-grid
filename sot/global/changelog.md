@@ -1,5 +1,9 @@
 # Changelog
 
+## V2.2.126 — Fix RE campaigns scheduler processors to support Pure T2V mode dynamically (01/08/2026)
+- Make isHybridLockClip dynamic in RE scheduler processor
+- Make isHybridLockClip dynamic in RE angle variants scheduler processor
+
 ## V2.2.125 — Fix product name ingestion and implement Infinite Scroll in ContentFlow UI (01/08/2026)
 - Prioritize payload-defined product name in contentflow-ingest
 - Fix campaign_title search filter mismatch in Postgres route
