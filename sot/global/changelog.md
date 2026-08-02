@@ -1,5 +1,10 @@
 # Changelog
 
+## V2.2.133 — Fix: auto-reset visual_status deadlock on 404 expired file (03/08/2026)
+- Reset visual_status pending saat file video expired di G-Labs Worker
+- Berlaku untuk RE Campaign dan OPC Pillar Campaign polling loop
+- Tambah statusCode pada Error objek di fungsi download helper
+
 ## V2.2.132 — Fix account name sanitization in content flow sync (02/08/2026)
 - Add sanitizeAccountName function to contentflow-ingest.js
 - Clean accountName in all campaign scanning scopes
